@@ -44,7 +44,8 @@ class AuthState {
       status: status ?? this.status,
       currentUser: currentUser ?? this.currentUser,
       errorMessage: errorMessage,
-      isOnboardingCompleted: isOnboardingCompleted ?? this.isOnboardingCompleted,
+      isOnboardingCompleted:
+          isOnboardingCompleted ?? this.isOnboardingCompleted,
     );
   }
 }
@@ -57,12 +58,14 @@ final authProvider = StateNotifierProvider<AuthNotifier, AuthState>((ref) {
 
 class AuthNotifier extends StateNotifier<AuthState> {
   final AuthRepository _repository;
+  final Ref _ref;
   StreamSubscription? _authSubscription;
 
   AuthNotifier({
     required AuthRepository repository,
     required Ref ref,
   })  : _repository = repository,
+        _ref = ref,
         super(const AuthState(status: AuthStatus.initializing)) {
     _init();
   }
@@ -89,7 +92,6 @@ class AuthNotifier extends StateNotifier<AuthState> {
             }
             break;
           case AuthChangeEvent.signedOut:
-          // ignore: deprecated_member_use
           case AuthChangeEvent.userDeleted:
             state = const AuthState(
               status: AuthStatus.unauthenticated,
@@ -135,7 +137,8 @@ class AuthNotifier extends StateNotifier<AuthState> {
   }
 
   Future<bool> login({required String email, required String password}) async {
-    state = state.copyWith(status: AuthStatus.authenticating, errorMessage: null);
+    state =
+        state.copyWith(status: AuthStatus.authenticating, errorMessage: null);
 
     try {
       final user = await _repository.login(email: email, password: password);
@@ -170,7 +173,8 @@ class AuthNotifier extends StateNotifier<AuthState> {
     String? phone,
     String? dateOfBirth,
   }) async {
-    state = state.copyWith(status: AuthStatus.authenticating, errorMessage: null);
+    state =
+        state.copyWith(status: AuthStatus.authenticating, errorMessage: null);
 
     try {
       final user = await _repository.register(

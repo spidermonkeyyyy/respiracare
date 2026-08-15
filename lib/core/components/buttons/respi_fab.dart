@@ -27,8 +27,10 @@ class RespiFAB extends StatelessWidget {
         foregroundColor: Colors.white,
         elevation: 4,
         icon: const Icon(Icons.emergency, size: 24),
-        label: Text(label ?? 'SOS', style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
-        shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(RespiShapes.full)),
+        label: Text(label ?? 'SOS',
+            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+        shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(RespiShapes.full)),
       );
     }
 
@@ -40,7 +42,8 @@ class RespiFAB extends StatelessWidget {
         elevation: 2,
         icon: Icon(icon),
         label: Text(label!),
-        shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(RespiShapes.full)),
+        shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(RespiShapes.full)),
       );
     }
 
@@ -49,7 +52,8 @@ class RespiFAB extends StatelessWidget {
       backgroundColor: cs.primaryContainer,
       foregroundColor: cs.onPrimaryContainer,
       elevation: 2,
-      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(RespiShapes.full)),
+      shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(RespiShapes.full)),
       child: Icon(icon),
     );
   }

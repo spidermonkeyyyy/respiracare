@@ -26,7 +26,7 @@ abstract class RespiTheme {
       onSecondary: RespiColors.onSecondary,
       surface: RespiColors.surface,
       onSurface: RespiColors.onSurface,
-      surfaceContainerHighest: RespiColors.surfaceVariant,
+      surfaceVariant: RespiColors.surfaceVariant,
       onSurfaceVariant: RespiColors.onSurfaceVariant,
       error: RespiColors.error,
       onError: RespiColors.onError,
@@ -49,7 +49,7 @@ abstract class RespiTheme {
       onSecondary: RespiColors.onSurfaceDark,
       surface: RespiColors.surfaceDark,
       onSurface: RespiColors.onSurfaceDark,
-      surfaceContainerHighest: RespiColors.surfaceVariantDark,
+      surfaceVariant: RespiColors.surfaceVariantDark,
       onSurfaceVariant: RespiColors.onSurfaceVariantDark,
       error: RespiColors.errorDark,
       onError: RespiColors.onError,
@@ -65,7 +65,8 @@ abstract class RespiTheme {
     return ThemeData(
       useMaterial3: true,
       colorScheme: cs,
-      scaffoldBackgroundColor: isDark ? RespiColors.backgroundDark : RespiColors.background,
+      scaffoldBackgroundColor:
+          isDark ? RespiColors.backgroundDark : RespiColors.background,
       fontFamily: RespiTypography.fontFamily,
       textTheme: const TextTheme(
         displayLarge: RespiTypography.displayLarge,
@@ -84,12 +85,15 @@ abstract class RespiTheme {
       cardTheme: CardThemeData(
         color: isDark ? RespiColors.surfaceVariantDark : RespiColors.surface,
         elevation: 0,
-        shape: const RoundedRectangleBorder(borderRadius: RespiShapes.xlRadius),
+        shape: const RoundedRectangleBorder(borderRadius: RespiShapes.mdRadius),
       ),
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
-        fillColor: isDark ? RespiColors.surfaceVariantDark : RespiColors.surfaceVariant,
-        contentPadding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 14.0),
+        fillColor: isDark
+            ? RespiColors.surfaceVariantDark
+            : RespiColors.surfaceVariant,
+        contentPadding:
+            const EdgeInsets.symmetric(horizontal: 16.0, vertical: 14.0),
         border: const OutlineInputBorder(borderRadius: RespiShapes.smRadius),
         enabledBorder: OutlineInputBorder(
           borderRadius: RespiShapes.smRadius,
@@ -103,26 +107,30 @@ abstract class RespiTheme {
           borderRadius: RespiShapes.smRadius,
           borderSide: BorderSide(color: cs.error),
         ),
-        labelStyle: RespiTypography.labelLarge.copyWith(color: cs.onSurfaceVariant),
+        labelStyle:
+            RespiTypography.labelLarge.copyWith(color: cs.onSurfaceVariant),
       ),
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
           minimumSize: const Size(48, 48),
-          shape: const RoundedRectangleBorder(borderRadius: RespiShapes.mdRadius),
+          shape:
+              const RoundedRectangleBorder(borderRadius: RespiShapes.mdRadius),
           textStyle: RespiTypography.labelLarge,
         ),
       ),
       outlinedButtonTheme: OutlinedButtonThemeData(
         style: OutlinedButton.styleFrom(
           minimumSize: const Size(48, 48),
-          shape: const RoundedRectangleBorder(borderRadius: RespiShapes.mdRadius),
+          shape:
+              const RoundedRectangleBorder(borderRadius: RespiShapes.mdRadius),
           textStyle: RespiTypography.labelLarge,
         ),
       ),
       textButtonTheme: TextButtonThemeData(
         style: TextButton.styleFrom(
           minimumSize: const Size(48, 48),
-          shape: const RoundedRectangleBorder(borderRadius: RespiShapes.mdRadius),
+          shape:
+              const RoundedRectangleBorder(borderRadius: RespiShapes.mdRadius),
           textStyle: RespiTypography.labelLarge,
         ),
       ),
