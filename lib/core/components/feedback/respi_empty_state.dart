@@ -30,17 +30,27 @@ class RespiEmptyState extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             if (icon != null) ...[
-              Icon(icon, size: 64, color: cs.onSurfaceVariant.withValues(alpha: 0.5)),
+              Icon(icon,
+                  size: 64, color: cs.onSurfaceVariant.withValues(alpha: 0.5)),
               const SizedBox(height: RespiSpacing.lg),
             ],
-            Text(title, style: RespiTypography.headlineSmall.copyWith(color: cs.onSurface), textAlign: TextAlign.center),
+            Text(title,
+                style:
+                    RespiTypography.headlineSmall.copyWith(color: cs.onSurface),
+                textAlign: TextAlign.center),
             if (message != null) ...[
               const SizedBox(height: RespiSpacing.sm),
-              Text(message!, style: RespiTypography.bodyLarge.copyWith(color: cs.onSurfaceVariant), textAlign: TextAlign.center),
+              Text(message!,
+                  style: RespiTypography.bodyLarge
+                      .copyWith(color: cs.onSurfaceVariant),
+                  textAlign: TextAlign.center),
             ],
             if (actionLabel != null && onAction != null) ...[
               const SizedBox(height: RespiSpacing.xl),
-              RespiButton(label: actionLabel!, onPressed: onAction, variant: RespiButtonVariant.outlined),
+              RespiButton(
+                  label: actionLabel!,
+                  onPressed: onAction,
+                  variant: RespiButtonVariant.outlined),
             ],
           ],
         ),
