@@ -1,0 +1,12 @@
+C:\testing\souffli\respiracare\test\alerts\alert_group_test.dart
+C:\testing\souffli\respiracare\test\alerts\mock_alert_repository_test.dart
+C:\testing\souffli\respiracare\test\core\accessibility\accessibility_test_helpers.dart
+C:\testing\souffli\respiracare\test\core\accessibility\accessibility_test.dart
+C:\testing\souffli\respiracare\test\features\authentication\auth_provider_test.dart
+C:\testing\souffli\respiracare\test\features\communication\conversation_repository_test.dart
+C:\testing\souffli\respiracare\test\features\communication\nurse_messages_provider_test.dart
+C:\testing\souffli\respiracare\test\features\monitoring\monitoring_provider_test.dart
+C:\testing\souffli\respiracare\test\features\nurse\alerts\alert_repository_test.dart
+C:\testing\souffli\respiracare\test\features\nurse\alerts\rule_repository_test.dart
+C:\testing\souffli\respiracare\test\features\patient_dashboard\patient_dashboard_provider_test.dart
+C:\testing\souffli\respiracare\test\widget_test.dart

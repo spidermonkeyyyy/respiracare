@@ -1,198 +1,387 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
+import "package:flutter/material.dart";
+import "package:flutter_riverpod/flutter_riverpod.dart";
+import "package:go_router/go_router.dart";
+import "package:shared_preferences/shared_preferences.dart";
 
-import '../../features/authentication/models/app_user.dart';
-import '../../features/authentication/providers/auth_provider.dart';
-import '../../features/authentication/screens/login_screen.dart';
-import '../../features/authentication/screens/onboarding_screen.dart';
-import '../../features/authentication/screens/register_screen.dart';
-import '../../features/authentication/screens/splash_screen.dart';
-import '../../features/nurse/alerts/screens/alerts_screen.dart';
-import '../../features/nurse/alerts/screens/alert_detail_screen.dart';
-import '../../features/nurse/alerts/screens/rules_screen.dart';
-import '../../features/nurse/alerts/screens/rule_detail_screen.dart';
-import '../../features/nurse/alerts/screens/rule_builder_screen.dart';
-import '../../features/communication/screens/patient_messages_screen.dart';
-import '../../features/communication/screens/patient_conversation_screen.dart';
-import '../../features/communication/screens/nurse_conversation_screen.dart';
-import '../../features/communication/screens/create_care_request_screen.dart';
-import '../../features/nurse/dashboard/screens/nurse_shell_screen.dart';
-import '../../features/nurse/patients/screens/nurse_patient_list_screen.dart';
-import '../../features/nurse/patients/screens/nurse_patient_profile_screen.dart';
-import '../../features/design_preview/design_system_preview_screen.dart';
-import '../../features/monitoring/screens/monitoring_intro_screen.dart';
-import '../../features/monitoring/screens/monitoring_question_screen.dart';
-import '../../features/monitoring/screens/monitoring_result_screen.dart';
-import '../../features/monitoring/screens/monitoring_review_screen.dart';
-import '../../features/patient/education/screens/educational_content_detail_screen.dart';
-import '../../features/patient/education/screens/educational_resources_screen.dart';
-import '../../features/patient/education/screens/education_home_screen.dart';
-import '../../features/patient/education/screens/exercise_detail_screen.dart';
-import '../../features/patient/education/screens/exercise_session_screen.dart';
-import '../../features/patient/education/screens/rehabilitation_screen.dart';
-import '../../features/patient/education/screens/smoking_cessation_screen.dart';
-import '../../features/patient/education/screens/smoking_entry_screen.dart';
-import '../../features/patient/education/screens/smoking_progress_screen.dart';
-import '../../features/patient_dashboard/screens/patient_dashboard_screen.dart';
-import '../../features/patient_dashboard/screens/placeholders/patient_rehabilitation_screen.dart' show PatientCareTeamScreen;
-import '../../features/patient/treatment/screens/inhaler_education_screen.dart';
-import '../../features/patient_dashboard/screens/placeholders/patient_profile_screen.dart';
-import '../../features/patient/treatment/screens/treatment_screen.dart';
+import "../../core/navigation/route_names.dart";
+import "../../core/navigation/patient_shell.dart";
+import "../../core/navigation/nurse_shell.dart";
+import "../../core/navigation/route_observer.dart";
+import "../../features/authentication/models/app_user.dart";
+import "../../features/authentication/providers/auth_provider.dart";
+import "../../features/authentication/screens/auth_gate_page.dart";
+import "../../features/authentication/screens/forgot_password_page.dart";
+import "../../features/authentication/screens/login_screen.dart";
+import "../../features/authentication/screens/register_screen.dart";
+import "../../features/authentication/screens/splash_screen.dart";
+import "../../features/communication/screens/patient_conversation_screen.dart";
+import "../../features/communication/screens/patient_messages_screen.dart";
+import "../../features/design_preview/design_system_preview_screen.dart";
+import "../../features/monitoring/screens/monitoring_history_screen.dart";
+import "../../features/monitoring/screens/monitoring_intro_screen.dart";
+import "../../features/nurse/alerts/screens/alert_detail_screen.dart";
+import "../../features/nurse/alerts/screens/alerts_screen.dart";
+import "../../features/nurse/dashboard/screens/nurse_shell_screen.dart";
+import "../../features/nurse/patients/screens/nurse_patient_list_screen.dart";
+import "../../features/nurse/patients/screens/nurse_patient_profile_screen.dart";
+import "../../features/patient_dashboard/screens/patient_dashboard_screen.dart";
+import "../../features/patient_dashboard/screens/placeholders/patient_profile_screen.dart";
+import "../../features/patient/treatment/screens/treatment_screen.dart";
+import "../../features/patient/education/screens/education_home_screen.dart";
 
 /// Whether the signed-in user may configure surveillance rules.
-///
-/// TODO: replace with the real permission system once auth exposes per-feature
-/// capabilities. Today the decision is derived from the role as a pragmatic
-/// stand-in so the route can be gated end-to-end.
 bool canConfigureMonitoringRules(UserRole? role) {
   return role == UserRole.nurse ||
       role == UserRole.pneumologist ||
       role == UserRole.admin;
 }
 
+// Provider for SharedPreferences to use in redirect
+final sharedPreferencesProvider =
+    FutureProvider<SharedPreferences>((ref) async {
+  return await SharedPreferences.getInstance();
+});
+
 final routerProvider = Provider<GoRouter>((ref) {
-  final authState = ref.watch(authProvider);
+  final routeObserver = ref.watch(routeObserverProvider);
+  final sharedPrefsAsync = ref.watch(sharedPreferencesProvider);
+
+  // Listen to auth state changes and trigger router refresh.
+  ref.listen<AuthState>(authProvider, (_, __) {});
 
   return GoRouter(
-    initialLocation: '/splash',
+    initialLocation: RouteNames.signIn,
+    debugLogDiagnostics: true,
+    observers: [routeObserver],
+    redirect: (context, state) => _handleRedirect(
+      ref,
+      state,
+      sharedPrefsAsync.valueOrNull,
+    ),
     routes: [
-      GoRoute(path: '/splash', builder: (_, __) => const SplashScreen()),
-      GoRoute(path: '/onboarding', builder: (_, __) => const OnboardingScreen()),
-      GoRoute(path: '/login', builder: (_, __) => const LoginScreen()),
-      GoRoute(path: '/register', builder: (_, __) => const RegisterScreen()),
-
-      // Patient routes
-      GoRoute(path: '/patient/home', builder: (_, __) => const PatientDashboardScreen()),
-      GoRoute(path: '/patient/monitoring', builder: (_, __) => const MonitoringIntroScreen()),
-      GoRoute(path: '/patient/monitoring/question', builder: (_, __) => const MonitoringQuestionScreen()),
-      GoRoute(path: '/patient/monitoring/review', builder: (_, __) => const MonitoringReviewScreen()),
-      GoRoute(path: '/patient/monitoring/result', builder: (_, __) => const MonitoringResultScreen()),
-      GoRoute(path: '/patient/treatment', builder: (_, __) => const TreatmentScreen()),
-      GoRoute(path: '/patient/education', builder: (_, __) => const EducationHomeScreen()),
-      GoRoute(path: '/patient/education/rehabilitation', builder: (_, __) => const RehabilitationScreen()),
+      // ─── Auth Routes (no shell) ────────────────────────────────
       GoRoute(
-        path: '/patient/education/rehabilitation/exercise/:exerciseId',
-        builder: (context, state) => ExerciseDetailScreen(
-          exerciseId: state.pathParameters['exerciseId'] ?? '',
-        ),
+        path: RouteNames.splash,
+        builder: (_, __) => const SplashScreen(),
       ),
       GoRoute(
-        path: '/patient/education/rehabilitation/session/:exerciseId',
-        builder: (context, state) => ExerciseSessionScreen(
-          exerciseId: state.pathParameters['exerciseId'] ?? '',
-        ),
+        path: RouteNames.authGate,
+        builder: (_, __) => const AuthGatePage(),
       ),
-      GoRoute(path: '/patient/education/smoking', builder: (_, __) => const SmokingCessationScreen()),
-      GoRoute(path: '/patient/education/smoking/entry', builder: (_, __) => const SmokingEntryScreen()),
-      GoRoute(path: '/patient/education/smoking/progress', builder: (_, __) => const SmokingProgressScreen()),
-      GoRoute(path: '/patient/education/resources', builder: (_, __) => const EducationalResourcesScreen()),
+      // Onboarding route disabled - bypassed via initialLocation
+      // GoRoute(
+      //   path: RouteNames.onboarding,
+      //   builder: (_, __) => const OnboardingScreen(),
+      // ),
       GoRoute(
-        path: '/patient/education/resources/:contentId',
-        builder: (context, state) => EducationalContentDetailScreen(
-          contentId: state.pathParameters['contentId'] ?? '',
-        ),
+        path: RouteNames.signIn,
+        builder: (_, __) => const LoginScreen(),
       ),
-      GoRoute(path: '/patient/education/inhaler', builder: (_, __) => const InhalerEducationScreen()),
-      GoRoute(path: '/patient/profile', builder: (_, __) => const PatientProfileScreen()),
-      GoRoute(path: '/patient/rehabilitation', builder: (_, __) => const RehabilitationScreen()),
-      GoRoute(path: '/patient/care-team', builder: (_, __) => const PatientCareTeamScreen()),
-      GoRoute(path: '/patient/messages', builder: (_, __) => const PatientMessagesScreen()),
       GoRoute(
-        path: '/patient/messages/:conversationId',
-        builder: (context, state) => PatientConversationScreen(
-          conversationId: state.pathParameters['conversationId'] ?? '',
-        ),
+        path: RouteNames.signUp,
+        builder: (context, state) => const RegisterScreen(),
+      ),
+      GoRoute(
+        path: RouteNames.forgotPassword,
+        builder: (_, __) => const ForgotPasswordPage(),
       ),
 
-      // Nurse routes
-      GoRoute(path: '/nurse/home', builder: (_, __) => const NurseShellScreen()),
-      GoRoute(path: '/nurse/patients', builder: (_, __) => const NursePatientListScreen()),
-      GoRoute(
-        path: '/nurse/patients/:patientId',
-        builder: (context, state) => NursePatientProfileScreen(
-          patientId: state.pathParameters['patientId'] ?? '',
-        ),
+      // ─── Patient Shell (StatefulShellRoute) ────────────────────
+      StatefulShellRoute.indexedStack(
+        builder: (context, state, navigationShell) {
+          return PatientShell(navigationShell: navigationShell);
+        },
+        branches: [
+          // Branch 0: Home
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: RouteNames.patientHome,
+                builder: (context, state) => const PatientDashboardScreen(),
+              ),
+            ],
+          ),
+          // Branch 1: Monitor
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: RouteNames.patientMonitor,
+                builder: (context, state) => const MonitoringIntroScreen(),
+                routes: [
+                  GoRoute(
+                    path: "history",
+                    builder: (context, state) =>
+                        const MonitoringHistoryScreen(),
+                  ),
+                  GoRoute(
+                    path: "question",
+                    builder: (context, state) =>
+                        const PlaceholderPage(title: "Questionnaire"),
+                  ),
+                ],
+              ),
+            ],
+          ),
+          // Branch 2: Messages
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: RouteNames.patientMessages,
+                builder: (context, state) => const PatientMessagesScreen(),
+                routes: [
+                  GoRoute(
+                    path: ":conversationId",
+                    builder: (context, state) => PatientConversationScreen(
+                      conversationId:
+                          state.pathParameters["conversationId"] ?? "",
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+          // Branch 3: Treatment
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: RouteNames.patientTreatment,
+                builder: (context, state) => const TreatmentScreen(),
+              ),
+            ],
+          ),
+          // Branch 4: Education
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: RouteNames.patientEducation,
+                builder: (context, state) => const EducationHomeScreen(),
+              ),
+            ],
+          ),
+          // Branch 5: Profile
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: RouteNames.patientProfile,
+                builder: (context, state) => const PatientProfileScreen(),
+                routes: [
+                  GoRoute(
+                    path: "settings",
+                    builder: (context, state) =>
+                        const PlaceholderPage(title: "Paramètres"),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ],
       ),
 
-      // Alerts & configurable surveillance rules
-      GoRoute(path: '/nurse/alerts', builder: (_, __) => const AlertsScreen()),
-      GoRoute(
-        path: '/nurse/alerts/:alertId',
-        builder: (context, state) => AlertDetailScreen(
-          alertId: state.pathParameters['alertId'] ?? '',
-        ),
-      ),
-      GoRoute(path: '/nurse/rules', builder: (_, __) => const RulesScreen()),
-      GoRoute(
-        path: '/nurse/rules/new',
-        builder: (_, __) => const RuleBuilderScreen(ruleId: 'new'),
-      ),
-      GoRoute(
-        path: '/nurse/rules/:ruleId/edit',
-        builder: (context, state) => RuleBuilderScreen(
-          ruleId: state.pathParameters['ruleId'] ?? 'new',
-        ),
-      ),
-      GoRoute(
-        path: '/nurse/rules/:ruleId',
-        builder: (context, state) => RuleDetailScreen(
-          ruleId: state.pathParameters['ruleId'] ?? '',
-        ),
-      ),
-      GoRoute(
-        path: '/nurse/messages/:conversationId',
-        builder: (context, state) => NurseConversationScreen(
-          conversationId: state.pathParameters['conversationId'] ?? '',
-        ),
-      ),
-      GoRoute(
-        path: '/nurse/messages/:conversationId/request',
-        builder: (context, state) => CreateCareRequestScreen(
-          conversationId: state.pathParameters['conversationId'] ?? '',
-        ),
+      // ─── Nurse Shell (StatefulShellRoute) ──────────────────────
+      StatefulShellRoute.indexedStack(
+        builder: (context, state, navigationShell) {
+          return NurseShell(navigationShell: navigationShell);
+        },
+        branches: [
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: RouteNames.nurseDashboard,
+                builder: (context, state) => const NurseShellScreen(),
+              ),
+            ],
+          ),
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: RouteNames.nursePatients,
+                builder: (context, state) => const NursePatientListScreen(),
+                routes: [
+                  GoRoute(
+                    path: ":patientId",
+                    builder: (context, state) => NursePatientProfileScreen(
+                      patientId: state.pathParameters["patientId"] ?? "",
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: RouteNames.nurseTasks,
+                builder: (context, state) =>
+                    const PlaceholderPage(title: "Tâches"),
+              ),
+            ],
+          ),
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: RouteNames.nurseAlerts,
+                builder: (context, state) => const AlertsScreen(),
+                routes: [
+                  GoRoute(
+                    path: ":alertId",
+                    builder: (context, state) => AlertDetailScreen(
+                      alertId: state.pathParameters["alertId"] ?? "",
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: RouteNames.nurseProfile,
+                builder: (context, state) =>
+                    const PlaceholderPage(title: "Profil infirmier"),
+              ),
+            ],
+          ),
+        ],
       ),
 
-      // Dev tools
-      GoRoute(path: '/design-system', builder: (_, __) => const DesignSystemPreviewScreen()),
+      // ─── Shared / Dev Routes ───────────────────────────────────
+      GoRoute(
+        path: RouteNames.designSystem,
+        builder: (_, __) => const DesignSystemPreviewScreen(),
+      ),
     ],
-    redirect: (context, state) {
-      final loc = state.matchedLocation;
-      final isAuthenticated = authState.status == AuthStatus.authenticated;
-      final userRole = authState.currentUser?.role;
-
-      if (loc == '/splash' || authState.status == AuthStatus.initializing) {
-        return null;
-      }
-
-      if (!isAuthenticated) {
-        final isPublic = loc == '/login' ||
-            loc == '/register' ||
-            loc == '/onboarding' ||
-            loc == '/design-system';
-        if (!isPublic) {
-          return authState.isOnboardingCompleted ? '/login' : '/onboarding';
-        }
-        return null;
-      }
-
-      final isAuthRoute = loc == '/login' || loc == '/register' || loc == '/onboarding';
-      if (isAuthRoute) {
-        return userRole == UserRole.nurse ? '/nurse/home' : '/patient/home';
-      }
-
-      if (loc.startsWith('/nurse') && userRole != UserRole.nurse) {
-        return '/patient/home';
-      }
-      if (loc.startsWith('/patient') && userRole != UserRole.patient) {
-        return '/nurse/home';
-      }
-
-      // Configuring surveillance rules is a governed action.
-      if (loc.startsWith('/nurse/rules') && !canConfigureMonitoringRules(userRole)) {
-        return '/nurse/home';
-      }
-
-      return null;
-    },
+    // ─── Error / 404 Handler ──────────────────────────────────
+    errorBuilder: (context, state) => _NotFoundScreen(
+      onHomePressed: () => context.go(RouteNames.patientHome),
+    ),
   );
 });
+
+/// Handles auth redirects based on current state and destination.
+/// Also checks onboarding completion via SharedPreferences for unauthenticated users.
+String? _handleRedirect(
+    Ref ref, GoRouterState state, SharedPreferences? prefs) {
+  final authState = ref.read(authProvider);
+  final location = state.matchedLocation;
+
+  final isAuthRoute = location == RouteNames.onboarding ||
+      location == RouteNames.signIn ||
+      location == RouteNames.signUp ||
+      location == RouteNames.splash ||
+      location == RouteNames.authGate ||
+      location == RouteNames.forgotPassword;
+
+  // Check onboarding from SharedPreferences for unauthenticated users
+  final onboardingDone = prefs?.getBool("onboarding_completed") ?? false;
+
+  // If user hasn\'t completed onboarding and is not on onboarding/splash/auth routes
+  if (!onboardingDone &&
+      !location.startsWith("/onboarding") &&
+      location != RouteNames.splash &&
+      authState.status == AuthStatus.unauthenticated) {
+    return RouteNames.onboarding;
+  }
+
+  // If onboarding is done but user is unauthenticated and trying to access protected routes
+  if (onboardingDone &&
+      authState.status == AuthStatus.unauthenticated &&
+      !isAuthRoute &&
+      location != RouteNames.splash) {
+    return RouteNames.authGate;
+  }
+
+  return switch (authState.status) {
+    AuthStatus.initializing => null,
+    AuthStatus.authenticating || AuthStatus.error => null,
+    AuthStatus.authenticated => switch (authState.currentUser?.role) {
+        UserRole.nurse => isAuthRoute ? RouteNames.nurseDashboard : null,
+        _ => isAuthRoute ? RouteNames.patientHome : null,
+      },
+    AuthStatus.unauthenticated => isAuthRoute ? null : RouteNames.authGate,
+  };
+}
+
+/// Fallback screen for unmatched routes (404)
+class _NotFoundScreen extends StatelessWidget {
+  const _NotFoundScreen({required this.onHomePressed});
+
+  final VoidCallback onHomePressed;
+
+  @override
+  Widget build(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
+    return Scaffold(
+      body: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(24),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                Icons.search_off_rounded,
+                size: 80,
+                color: cs.onSurfaceVariant.withValues(alpha: 0.5),
+              ),
+              const SizedBox(height: 24),
+              Text(
+                "Page introuvable",
+                style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                      color: cs.onSurface,
+                    ),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 12),
+              Text(
+                "La page demandée n'existe pas ou a été déplacée.",
+                style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                      color: cs.onSurfaceVariant,
+                    ),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 32),
+              FilledButton.icon(
+                onPressed: onHomePressed,
+                icon: const Icon(Icons.home_rounded),
+                label: const Text("Retour à l'accueil"),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// Placeholder page for routes not yet implemented.
+class PlaceholderPage extends StatelessWidget {
+  const PlaceholderPage({super.key, required this.title});
+
+  final String title;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(title),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_rounded),
+          onPressed: () => context.pop(),
+          tooltip: "Retour",
+        ),
+      ),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Icon(Icons.construction, size: 64, color: Colors.grey),
+            const SizedBox(height: 16),
+            Text(title, style: Theme.of(context).textTheme.headlineSmall),
+            const SizedBox(height: 8),
+            const Text("À venir dans une prochaine étape",
+                style: TextStyle(color: Colors.grey)),
+          ],
+        ),
+      ),
+    );
+  }
+}

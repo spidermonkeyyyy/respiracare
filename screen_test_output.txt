@@ -1,0 +1,97 @@
+00:00 +0: loading C:/testing/souffli/respiracare/test/features/monitoring/monitoring_history_screen_test.dart
+00:00 +0: layout & controls shows an informational banner and range selector
+00:03 +1: layout & controls shows a chart card with readings and trend
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: at least one matching candidate
+  Actual: _TextContainingWidgetFinder:<Found 0 widgets with text containing 98: []>
+   Which: means none were found but some were expected
+
+When the exception was thrown, this was the stack:
+#4      main.<anonymous closure>.<anonymous closure> (file:///C:/testing/souffli/respiracare/test/features/monitoring/monitoring_history_screen_test.dart:64:7)
+<asynchronous suspension>
+#5      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#6      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1952:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///C:/testing/souffli/respiracare/test/features/monitoring/monitoring_history_screen_test.dart line 64
+The test description was:
+  shows a chart card with readings and trend
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:05 +1 -1: layout & controls shows a chart card with readings and trend [E]
+  Test failed. See exception logs above.
+  The test description was: shows a chart card with readings and trend
+  
+00:05 +1 -1: layout & controls shows empty state when there is no data
+00:05 +2 -1: layout & controls shows an error state with retry when loading fails
+00:06 +3 -1: user interactions toggling the heart-rate filter shows a second card
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: exactly 2 matching candidates
+  Actual: _TypeWidgetFinder:<Found 1 widget with type "ClinicalChartCard": [
+            ClinicalChartCard(dependencies: [InheritedCupertinoTheme, _InheritedTheme,
+_LocalizationsScope-[GlobalKey#1c9dc]]),
+          ]>
+   Which: is not enough
+
+When the exception was thrown, this was the stack:
+#4      main.<anonymous closure>.<anonymous closure> (file:///C:/testing/souffli/respiracare/test/features/monitoring/monitoring_history_screen_test.dart:108:7)
+<asynchronous suspension>
+#5      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#6      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1952:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///C:/testing/souffli/respiracare/test/features/monitoring/monitoring_history_screen_test.dart line 108
+The test description was:
+  toggling the heart-rate filter shows a second card
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:07 +3 -2: user interactions toggling the heart-rate filter shows a second card [E]
+  Test failed. See exception logs above.
+  The test description was: toggling the heart-rate filter shows a second card
+  
+00:07 +3 -2: user interactions retry after an error reloads data
+00:08 +4 -2: user interactions refresh pulls fresh data
+00:09 +5 -2: skeleton -> chart transition renders skeletons while loading then cards once ready
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: no matching candidates
+  Actual: _TypeWidgetFinder:<Found 1 widget with type "ClinicalChartCard": [
+            ClinicalChartCard(dependencies: [InheritedCupertinoTheme, _InheritedTheme,
+_LocalizationsScope-[GlobalKey#cf99f]]),
+          ]>
+   Which: means one was found but none were expected
+
+When the exception was thrown, this was the stack:
+#4      main.<anonymous closure>.<anonymous closure> (file:///C:/testing/souffli/respiracare/test/features/monitoring/monitoring_history_screen_test.dart:172:7)
+<asynchronous suspension>
+#5      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#6      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1952:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///C:/testing/souffli/respiracare/test/features/monitoring/monitoring_history_screen_test.dart line 172
+The test description was:
+  renders skeletons while loading then cards once ready
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:10 +5 -3: skeleton -> chart transition renders skeletons while loading then cards once ready [E]
+  Test failed. See exception logs above.
+  The test description was: renders skeletons while loading then cards once ready
+  
+00:10 +5 -3: Some tests failed.
+
+Failing tests:
+  C:/testing/souffli/respiracare/test/features/monitoring/monitoring_history_screen_test.dart: layout & controls shows a chart card with readings and trend
+  C:/testing/souffli/respiracare/test/features/monitoring/monitoring_history_screen_test.dart: skeleton -> chart transition renders skeletons while loading then cards once ready
+  C:/testing/souffli/respiracare/test/features/monitoring/monitoring_history_screen_test.dart: user interactions toggling the heart-rate filter shows a second card
+

@@ -99,7 +99,7 @@ class ExerciseProgress extends StatelessWidget {
                         ),
                         child: Center(
                           child: isCompleted
-                              ? Icon(
+                              ? const Icon(
                                   Icons.check_rounded,
                                   color: AppColors.surface,
                                   size: 18.0,

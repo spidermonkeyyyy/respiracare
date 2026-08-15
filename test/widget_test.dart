@@ -10,7 +10,10 @@ void main() {
       ),
     );
 
-    await tester.pumpAndSettle();
+    // The splash screen features a repeating breathing animation, so
+    // pumpAndSettle would never settle. Use fixed pumps instead.
+    await tester.pump(const Duration(milliseconds: 100));
+    await tester.pump(const Duration(milliseconds: 1300));
 
     expect(find.byType(RespiraCareApp), findsOneWidget);
   });

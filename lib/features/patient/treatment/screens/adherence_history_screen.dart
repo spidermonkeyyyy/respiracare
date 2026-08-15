@@ -29,12 +29,14 @@ class AdherenceHistoryScreen extends ConsumerWidget {
             children: [
               AdherenceSummary(
                 adherenceRate: state.weeklyAdherenceRate,
-                confirmedCount: state.adherenceRecords.fold(0, (sum, record) => sum + record.confirmedCount),
-                notConfirmedCount: state.adherenceRecords.fold(0, (sum, record) => sum + record.notConfirmedCount),
+                confirmedCount: state.adherenceRecords
+                    .fold(0, (sum, record) => sum + record.confirmedCount),
+                notConfirmedCount: state.adherenceRecords
+                    .fold(0, (sum, record) => sum + record.notConfirmedCount),
                 records: state.adherenceRecords,
               ),
               const SizedBox(height: AppSpacing.md),
-              Text('Historique', style: AppTypography.titleLarge),
+              const Text('Historique', style: AppTypography.titleLarge),
               const SizedBox(height: AppSpacing.sm),
               ..._buildHistoryItems(state.history),
             ],
@@ -53,7 +55,8 @@ class AdherenceHistoryScreen extends ConsumerWidget {
       if (dateLabel != currentDateLabel) {
         currentDateLabel = dateLabel;
         items.add(Padding(
-          padding: const EdgeInsets.only(top: AppSpacing.md, bottom: AppSpacing.sm),
+          padding:
+              const EdgeInsets.only(top: AppSpacing.md, bottom: AppSpacing.sm),
           child: Text(dateLabel, style: AppTypography.titleMedium),
         ));
       }
@@ -68,11 +71,15 @@ class AdherenceHistoryScreen extends ConsumerWidget {
                   reminder.status == MedicationStatus.confirmed
                       ? Icons.check_circle_outline_rounded
                       : Icons.radio_button_unchecked,
-                  color: reminder.status == MedicationStatus.confirmed ? AppColors.success : AppColors.warning,
+                  color: reminder.status == MedicationStatus.confirmed
+                      ? AppColors.success
+                      : AppColors.warning,
                 ),
                 const SizedBox(width: AppSpacing.sm),
                 Text(
-                  reminder.status == MedicationStatus.confirmed ? 'Prise confirmée' : 'Non confirmée',
+                  reminder.status == MedicationStatus.confirmed
+                      ? 'Prise confirmée'
+                      : 'Non confirmée',
                   style: AppTypography.bodyLarge,
                 ),
               ],
@@ -81,15 +88,20 @@ class AdherenceHistoryScreen extends ConsumerWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(reminder.medicationLabel, style: AppTypography.bodyMedium.copyWith(color: AppColors.textSecondary)),
-                Text(_formattedTime(reminder.scheduledAt), style: AppTypography.bodyMedium.copyWith(color: AppColors.textSecondary)),
+                Text(reminder.medicationLabel,
+                    style: AppTypography.bodyMedium
+                        .copyWith(color: AppColors.textSecondary)),
+                Text(_formattedTime(reminder.scheduledAt),
+                    style: AppTypography.bodyMedium
+                        .copyWith(color: AppColors.textSecondary)),
               ],
             ),
             if (reminder.confirmedAt != null) ...[
               const SizedBox(height: AppSpacing.xs),
               Text(
                 'Confirmé à ${_formattedTime(reminder.confirmedAt!)}',
-                style: AppTypography.bodySmall.copyWith(color: AppColors.textSecondary),
+                style: AppTypography.bodySmall
+                    .copyWith(color: AppColors.textSecondary),
               ),
             ],
           ],

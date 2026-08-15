@@ -74,8 +74,9 @@ class EducationalVideoCard extends StatelessWidget {
                 ),
                 child: Row(
                   children: [
-                    Icon(Icons.check, size: 14.0, color: AppColors.success),
-                    SizedBox(width: AppSpacing.xs),
+                    const Icon(Icons.check,
+                        size: 14.0, color: AppColors.success),
+                    const SizedBox(width: AppSpacing.xs),
                     Text(
                       'Consulté',
                       style: AppTypography.labelSmall

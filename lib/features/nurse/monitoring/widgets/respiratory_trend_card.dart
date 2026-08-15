@@ -27,7 +27,7 @@ class RespiratoryTrendCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Tendance respiratoire', style: AppTypography.titleLarge),
+          const Text('Tendance respiratoire', style: AppTypography.titleLarge),
           const SizedBox(height: AppSpacing.md),
           Row(
             children: [

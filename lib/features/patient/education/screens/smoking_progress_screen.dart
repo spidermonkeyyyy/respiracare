@@ -18,7 +18,8 @@ class SmokingProgressScreen extends ConsumerStatefulWidget {
   const SmokingProgressScreen({super.key});
 
   @override
-  ConsumerState<SmokingProgressScreen> createState() => _SmokingProgressScreenState();
+  ConsumerState<SmokingProgressScreen> createState() =>
+      _SmokingProgressScreenState();
 }
 
 class _SmokingProgressScreenState extends ConsumerState<SmokingProgressScreen> {
@@ -56,7 +57,8 @@ class _SmokingProgressScreenState extends ConsumerState<SmokingProgressScreen> {
     if (state.entries.isEmpty) {
       return AppEmptyState(
         title: 'Aucune donnée de suivi',
-        message: 'Ajoutez votre première entrée pour visualiser votre progression.',
+        message:
+            'Ajoutez votre première entrée pour visualiser votre progression.',
         icon: Icons.insights_rounded,
         actionLabel: 'Ajouter une entrée',
         onActionPressed: () => context.push('/patient/education/smoking/entry'),
@@ -77,14 +79,15 @@ class _SmokingProgressScreenState extends ConsumerState<SmokingProgressScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
+                const Text(
                   'Votre progression',
                   style: AppTypography.headlineLarge,
                 ),
                 const SizedBox(height: AppSpacing.xs),
                 Text(
                   '${state.trackedDays} jours suivis',
-                  style: AppTypography.bodyMedium.copyWith(color: AppColors.textSecondary),
+                  style: AppTypography.bodyMedium
+                      .copyWith(color: AppColors.textSecondary),
                 ),
               ],
             ),
@@ -97,7 +100,7 @@ class _SmokingProgressScreenState extends ConsumerState<SmokingProgressScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
+                  const Text(
                     'Suivi quotidien',
                     style: AppTypography.titleLarge,
                   ),
@@ -108,13 +111,15 @@ class _SmokingProgressScreenState extends ConsumerState<SmokingProgressScreen> {
                       value: state.trackingCompletionRate.clamp(0.0, 1.0),
                       minHeight: 10.0,
                       backgroundColor: AppColors.surfaceVariant,
-                      valueColor: const AlwaysStoppedAnimation<Color>(AppColors.primary),
+                      valueColor: const AlwaysStoppedAnimation<Color>(
+                          AppColors.primary),
                     ),
                   ),
                   const SizedBox(height: AppSpacing.sm),
                   Text(
                     '${(state.trackingCompletionRate * 100).toInt()}% de jours renseignés',
-                    style: AppTypography.bodyMedium.copyWith(color: AppColors.textSecondary),
+                    style: AppTypography.bodyMedium
+                        .copyWith(color: AppColors.textSecondary),
                   ),
                 ],
               ),
@@ -154,7 +159,7 @@ class _SmokingProgressScreenState extends ConsumerState<SmokingProgressScreen> {
             onPressed: () => context.push('/patient/education/smoking/entry'),
           ),
           const SizedBox(height: AppSpacing.lg),
-          Text(
+          const Text(
             'Historique récent',
             style: AppTypography.titleLarge,
           ),

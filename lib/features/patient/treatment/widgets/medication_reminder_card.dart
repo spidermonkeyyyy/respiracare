@@ -39,7 +39,7 @@ class MedicationReminderCard extends StatelessWidget {
               // Time header
               Row(
                 children: [
-                  Icon(Icons.schedule_rounded,
+                  const Icon(Icons.schedule_rounded,
                       size: 14.0, color: AppColors.textMuted),
                   const SizedBox(width: AppSpacing.xs),
                   Text(
@@ -69,7 +69,7 @@ class MedicationReminderCard extends StatelessWidget {
                       color: AppColors.primary.withValues(alpha: 0.08),
                       borderRadius: BorderRadius.circular(AppRadius.small),
                     ),
-                    child: Icon(
+                    child: const Icon(
                       Icons.air_rounded,
                       color: AppColors.primary,
                       size: 22.0,
@@ -86,7 +86,7 @@ class MedicationReminderCard extends StatelessWidget {
                             fontWeight: FontWeight.w600,
                           ),
                         ),
-                        Text(
+                        const Text(
                           'Prescrit par votre médecin',
                           style: AppTypography.labelMedium,
                         ),

@@ -255,7 +255,7 @@ class _DecisionFormState extends State<_DecisionForm> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('Décision', style: AppTypography.labelMedium),
+        const Text('Décision', style: AppTypography.labelMedium),
         const SizedBox(height: AppSpacing.xs),
         Wrap(
           spacing: AppSpacing.xs,
@@ -283,7 +283,7 @@ class _DecisionFormState extends State<_DecisionForm> {
           ),
         ],
         const SizedBox(height: AppSpacing.md),
-        Text('Action', style: AppTypography.labelMedium),
+        const Text('Action', style: AppTypography.labelMedium),
         const SizedBox(height: AppSpacing.xs),
         Wrap(
           spacing: AppSpacing.xs,

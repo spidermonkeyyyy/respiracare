@@ -1,10 +1,10 @@
 name: respiracare
-description: "RespiraCare — Mobile telemonitoring platform for COPD and chronic respiratory failure patients."
-publish_to: 'none'
+description: "Sanad — Mobile telemonitoring platform for COPD and chronic respiratory failure patients."
+publish_to: "none"
 version: 1.0.0+1
 
 environment:
-  sdk: '>=3.3.0 <4.0.0'
+  sdk: ">=3.3.0 <4.0.0"
 
 dependencies:
   flutter:
@@ -19,16 +19,28 @@ dependencies:
   # Environment Variables Management
   flutter_dotenv: ^5.1.0
 
+  # Supabase (Auth + backend)
+  supabase_flutter: ^2.8.0
+
   # Local Storage & Session Persistence
   shared_preferences: ^2.2.2
 
   # Object Value Comparison Utility
   equatable: ^2.0.5
 
+  # Typography
+  google_fonts: ^6.2.1
+
+  # Biometric Authentication (Step 9)
+  local_auth: ^2.3.0
+  local_auth_android: ^1.0.46
+  local_auth_darwin: ^1.4.0
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^3.0.0
+  flutter_launcher_icons: ^0.14.3
 
 flutter:
   uses-material-design: true
@@ -36,6 +48,7 @@ flutter:
   assets:
     - .env
     - assets/images/
+    - assets/images/logo/
     - assets/icons/
     - assets/animations/
     - assets/videos/

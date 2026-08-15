@@ -96,10 +96,10 @@ class _TasksSection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Row(
+        const Row(
           children: [
-            const Icon(Icons.checklist_rounded, color: AppColors.primary),
-            const SizedBox(width: AppSpacing.sm),
+            Icon(Icons.checklist_rounded, color: AppColors.primary),
+            SizedBox(width: AppSpacing.sm),
             Text(
               'À faire',
               style: AppTypography.titleLarge,

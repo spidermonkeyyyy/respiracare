@@ -163,7 +163,7 @@ class _NurseConversationScreenState
                         _MessagesSection(conversation: conversation),
                         if (conversation.careRequests.isNotEmpty) ...[
                           const SizedBox(height: AppSpacing.md),
-                          Text('Demandes de soins',
+                          const Text('Demandes de soins',
                               style: AppTypography.titleLarge),
                           const SizedBox(height: AppSpacing.sm),
                           for (final request in conversation.careRequests)
@@ -347,7 +347,7 @@ class _MessagesSection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('Conversation', style: AppTypography.titleLarge),
+        const Text('Conversation', style: AppTypography.titleLarge),
         const SizedBox(height: AppSpacing.sm),
         if (conversation.messages.isEmpty)
           const AppEmptyState(
@@ -455,7 +455,7 @@ class _TimelineSection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('Chronologie des soins', style: AppTypography.titleLarge),
+        const Text('Chronologie des soins', style: AppTypography.titleLarge),
         const SizedBox(height: AppSpacing.sm),
         if (events.isEmpty)
           const AppEmptyState(

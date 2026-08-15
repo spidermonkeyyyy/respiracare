@@ -62,174 +62,183 @@ class _RuleBuilderScreenState extends ConsumerState<RuleBuilderScreen> {
 
     final metrics = draft.availableMetrics;
 
-    return Scaffold(
-      backgroundColor: AppColors.background,
-      appBar: AppBar(
-        title: Text(draft.isEditing ? 'Modifier la règle' : 'Nouvelle règle'),
-        backgroundColor: AppColors.surface,
-        elevation: 0,
-      ),
-      body: SafeArea(
-        child: ListView(
-          padding: const EdgeInsets.all(AppSpacing.md),
-          children: [
-            AppCard(
-              padding: const EdgeInsets.all(AppSpacing.md),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (_, __) => context.pop(),
+      child: Scaffold(
+        backgroundColor: AppColors.background,
+        appBar: AppBar(
+          title: Text(draft.isEditing ? 'Modifier la règle' : 'Nouvelle règle'),
+          backgroundColor: AppColors.surface,
+          elevation: 0,
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back_rounded),
+            onPressed: () => context.pop(),
+          ),
+          automaticallyImplyLeading: true,
+        ),
+        body: SafeArea(
+          child: ListView(
+            padding: const EdgeInsets.all(AppSpacing.md),
+            children: [
+              AppCard(
+                padding: const EdgeInsets.all(AppSpacing.md),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    TextField(
+                      controller: TextEditingController(text: draft.name)
+                        ..selection =
+                            TextSelection.collapsed(offset: draft.name.length),
+                      decoration: InputDecoration(
+                        labelText: 'Nom de la règle',
+                        hintText: 'Ex. Aggravation respiratoire',
+                        hintStyle: AppTypography.bodySmall,
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(AppRadius.small),
+                        ),
+                      ),
+                      onChanged: draftNotifier.setName,
+                    ),
+                    const SizedBox(height: AppSpacing.sm),
+                    TextField(
+                      controller: TextEditingController(text: draft.description)
+                        ..selection = TextSelection.collapsed(
+                            offset: draft.description.length),
+                      maxLines: 2,
+                      decoration: InputDecoration(
+                        labelText: 'Description',
+                        hintText: 'Expliquez ce que surveille cette règle.',
+                        hintStyle: AppTypography.bodySmall,
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(AppRadius.small),
+                        ),
+                      ),
+                      onChanged: draftNotifier.setDescription,
+                    ),
+                    const SizedBox(height: AppSpacing.md),
+                    const Text('Priorité des alertes',
+                        style: AppTypography.labelMedium),
+                    const SizedBox(height: AppSpacing.xs),
+                    Wrap(
+                      spacing: AppSpacing.xs,
+                      children: AlertPriority.values
+                          .map((priority) => ChoiceChip(
+                                label: Text(priority.label),
+                                selected: draft.priority == priority,
+                                selectedColor:
+                                    AppColors.primary.withValues(alpha: 0.15),
+                                onSelected: (_) =>
+                                    draftNotifier.setPriority(priority),
+                              ))
+                          .toList(),
+                    ),
+                    const SizedBox(height: AppSpacing.md),
+                    const Text('Action', style: AppTypography.labelMedium),
+                    const SizedBox(height: AppSpacing.xs),
+                    Wrap(
+                      spacing: AppSpacing.xs,
+                      children: RuleAction.values
+                          .map((action) => ChoiceChip(
+                                label: Text(action.label),
+                                selected: draft.action == action,
+                                selectedColor:
+                                    AppColors.primary.withValues(alpha: 0.15),
+                                onSelected: (_) =>
+                                    draftNotifier.setAction(action),
+                              ))
+                          .toList(),
+                    ),
+                    const SizedBox(height: AppSpacing.sm),
+                    Row(
+                      children: [
+                        const Text('Active', style: AppTypography.bodyMedium),
+                        const Spacer(),
+                        Switch(
+                          value: draft.enabled,
+                          activeThumbColor: AppColors.primary,
+                          onChanged: draftNotifier.setEnabled,
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: AppSpacing.md),
+              Row(
                 children: [
-                  TextField(
-                    controller: TextEditingController(text: draft.name)
-                      ..selection =
-                          TextSelection.collapsed(offset: draft.name.length),
-                    decoration: InputDecoration(
-                      labelText: 'Nom de la règle',
-                      hintText: 'Ex. Aggravation respiratoire',
-                      hintStyle: AppTypography.bodySmall,
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(AppRadius.small),
-                      ),
-                    ),
-                    onChanged: draftNotifier.setName,
+                  Text(
+                    'Conditions',
+                    style: AppTypography.labelMedium
+                        .copyWith(fontWeight: FontWeight.w700),
                   ),
-                  const SizedBox(height: AppSpacing.sm),
-                  TextField(
-                    controller: TextEditingController(text: draft.description)
-                      ..selection = TextSelection.collapsed(
-                          offset: draft.description.length),
-                    maxLines: 2,
-                    decoration: InputDecoration(
-                      labelText: 'Description',
-                      hintText: 'Expliquez ce que surveille cette règle.',
-                      hintStyle: AppTypography.bodySmall,
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(AppRadius.small),
-                      ),
-                    ),
-                    onChanged: draftNotifier.setDescription,
-                  ),
-                  const SizedBox(height: AppSpacing.md),
-                  Text('Priorité des alertes',
-                      style: AppTypography.labelMedium),
-                  const SizedBox(height: AppSpacing.xs),
-                  Wrap(
-                    spacing: AppSpacing.xs,
-                    children: AlertPriority.values
-                        .map((priority) => ChoiceChip(
-                              label: Text(priority.label),
-                              selected: draft.priority == priority,
-                              selectedColor:
-                                  AppColors.primary.withValues(alpha: 0.15),
-                              onSelected: (_) =>
-                                  draftNotifier.setPriority(priority),
-                            ))
-                        .toList(),
-                  ),
-                  const SizedBox(height: AppSpacing.md),
-                  Text('Action', style: AppTypography.labelMedium),
-                  const SizedBox(height: AppSpacing.xs),
-                  Wrap(
-                    spacing: AppSpacing.xs,
-                    children: RuleAction.values
-                        .map((action) => ChoiceChip(
-                              label: Text(action.label),
-                              selected: draft.action == action,
-                              selectedColor:
-                                  AppColors.primary.withValues(alpha: 0.15),
-                              onSelected: (_) =>
-                                  draftNotifier.setAction(action),
-                            ))
-                        .toList(),
-                  ),
-                  const SizedBox(height: AppSpacing.sm),
-                  Row(
-                    children: [
-                      const Text('Active', style: AppTypography.bodyMedium),
-                      const Spacer(),
-                      Switch(
-                        value: draft.enabled,
-                        activeThumbColor: AppColors.primary,
-                        onChanged: draftNotifier.setEnabled,
-                      ),
-                    ],
+                  const SizedBox(width: AppSpacing.sm),
+                  _GroupModeToggle(
+                    mode: draft.conditionGroup.mode,
+                    onChanged: draftNotifier.setGroupMode,
                   ),
                 ],
               ),
-            ),
-            const SizedBox(height: AppSpacing.md),
-            Row(
-              children: [
-                Text(
-                  'Conditions',
-                  style: AppTypography.labelMedium
-                      .copyWith(fontWeight: FontWeight.w700),
-                ),
-                const SizedBox(width: AppSpacing.sm),
-                _GroupModeToggle(
-                  mode: draft.conditionGroup.mode,
-                  onChanged: draftNotifier.setGroupMode,
-                ),
-              ],
-            ),
-            const SizedBox(height: AppSpacing.sm),
-            for (final condition in draft.conditionGroup.conditions) ...[
-              RuleConditionBuilder(
-                condition: condition,
-                metrics: metrics,
-                onMetricChanged: (value) =>
-                    draftNotifier.changeConditionMetric(condition.id, value),
-                onOperatorChanged: (value) =>
-                    draftNotifier.changeConditionOperator(condition.id, value),
-                onValueChanged: (value) =>
-                    draftNotifier.changeConditionValue(condition.id, value),
-                onComparisonModeChanged: (value) => draftNotifier
-                    .changeConditionComparisonMode(condition.id, value),
-                onRemove: () => draftNotifier.removeCondition(condition.id),
-              ),
               const SizedBox(height: AppSpacing.sm),
-            ],
-            AppButton(
-              text: 'Ajouter une condition',
-              onPressed: draft.availableMetrics.isEmpty
-                  ? null
-                  : draftNotifier.addCondition,
-              variant: AppButtonVariant.outlined,
-            ),
-            const SizedBox(height: AppSpacing.md),
-            if (draft.conditionGroup.conditions.isNotEmpty)
-              RuleSummary(rule: draft.toRule()),
-            const SizedBox(height: AppSpacing.md),
-            if (draft.validationMessage != null)
-              Padding(
-                padding: const EdgeInsets.only(bottom: AppSpacing.sm),
-                child: Text(
-                  draft.validationMessage!,
-                  style: AppTypography.labelMedium
-                      .copyWith(color: AppColors.warning),
+              for (final condition in draft.conditionGroup.conditions) ...[
+                RuleConditionBuilder(
+                  condition: condition,
+                  metrics: metrics,
+                  onMetricChanged: (value) =>
+                      draftNotifier.changeConditionMetric(condition.id, value),
+                  onOperatorChanged: (value) => draftNotifier
+                      .changeConditionOperator(condition.id, value),
+                  onValueChanged: (value) =>
+                      draftNotifier.changeConditionValue(condition.id, value),
+                  onComparisonModeChanged: (value) => draftNotifier
+                      .changeConditionComparisonMode(condition.id, value),
+                  onRemove: () => draftNotifier.removeCondition(condition.id),
                 ),
+                const SizedBox(height: AppSpacing.sm),
+              ],
+              AppButton(
+                text: 'Ajouter une condition',
+                onPressed: draft.availableMetrics.isEmpty
+                    ? null
+                    : draftNotifier.addCondition,
+                variant: AppButtonVariant.outlined,
               ),
-            AppButton(
-              text: draft.isEditing ? 'Enregistrer' : 'Créer la règle',
-              onPressed: !draft.canSave
-                  ? null
-                  : () async {
-                      final saved = draft.isEditing
-                          ? await ruleNotifier.updateRule(draft.toRule())
-                          : await ruleNotifier.createRule(draft.toRule());
-                      if (saved != null && mounted) {
-                        context.pop();
-                      } else if (mounted) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text(ruleNotifier.state.errorMessage ??
-                                'La règle n\'a pas pu être enregistrée.'),
-                            backgroundColor: AppColors.danger,
-                          ),
-                        );
-                      }
-                    },
-            ),
-          ],
+              const SizedBox(height: AppSpacing.md),
+              if (draft.conditionGroup.conditions.isNotEmpty)
+                RuleSummary(rule: draft.toRule()),
+              const SizedBox(height: AppSpacing.md),
+              if (draft.validationMessage != null)
+                Padding(
+                  padding: const EdgeInsets.only(bottom: AppSpacing.sm),
+                  child: Text(
+                    draft.validationMessage!,
+                    style: AppTypography.labelMedium
+                        .copyWith(color: AppColors.warning),
+                  ),
+                ),
+              AppButton(
+                text: draft.isEditing ? 'Enregistrer' : 'Créer la règle',
+                onPressed: !draft.canSave
+                    ? null
+                    : () async {
+                        final saved = draft.isEditing
+                            ? await ruleNotifier.updateRule(draft.toRule())
+                            : await ruleNotifier.createRule(draft.toRule());
+                        if (saved != null && mounted) {
+                          context.pop();
+                        } else if (mounted) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(ruleNotifier.state.errorMessage ??
+                                  'La règle n\'a pas pu être enregistrée.'),
+                              backgroundColor: AppColors.danger,
+                            ),
+                          );
+                        }
+                      },
+              ),
+            ],
+          ),
         ),
       ),
     );

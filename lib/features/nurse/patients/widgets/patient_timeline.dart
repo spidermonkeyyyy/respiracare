@@ -13,7 +13,9 @@ class PatientTimeline extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (events.isEmpty) {
-      return Text('Aucun événement disponible.', style: AppTypography.bodyMedium.copyWith(color: AppColors.textSecondary));
+      return Text('Aucun événement disponible.',
+          style: AppTypography.bodyMedium
+              .copyWith(color: AppColors.textSecondary));
     }
 
     return Column(
@@ -23,10 +25,15 @@ class PatientTimeline extends StatelessWidget {
           children: [
             Column(
               children: [
-                Container(width: 10.0, height: 10.0, decoration: const BoxDecoration(color: AppColors.primary, shape: BoxShape.circle)),
-                SizedBox(
+                Container(
+                    width: 10.0,
+                    height: 10.0,
+                    decoration: const BoxDecoration(
+                        color: AppColors.primary, shape: BoxShape.circle)),
+                const SizedBox(
                   height: 56.0,
-                  child: VerticalDivider(color: AppColors.border, thickness: 1.5, width: 16.0),
+                  child: VerticalDivider(
+                      color: AppColors.border, thickness: 1.5, width: 16.0),
                 ),
               ],
             ),
@@ -42,9 +49,13 @@ class PatientTimeline extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(event.title, style: AppTypography.titleLarge.copyWith(fontSize: 16.0)),
+                    Text(event.title,
+                        style:
+                            AppTypography.titleLarge.copyWith(fontSize: 16.0)),
                     const SizedBox(height: AppSpacing.xs),
-                    Text(event.description, style: AppTypography.bodyMedium.copyWith(color: AppColors.textSecondary)),
+                    Text(event.description,
+                        style: AppTypography.bodyMedium
+                            .copyWith(color: AppColors.textSecondary)),
                   ],
                 ),
               ),

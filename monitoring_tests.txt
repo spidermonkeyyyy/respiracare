@@ -1,0 +1,46 @@
+00:00 +0: loading C:/testing/souffli/respiracare/test/features/monitoring/clinical_time_range_test.dart
+00:00 +0: C:/testing/souffli/respiracare/test/features/monitoring/clinical_time_range_test.dart: ClinicalTimeRange exposes human-friendly labels
+00:00 +1: C:/testing/souffli/respiracare/test/features/monitoring/clinical_time_range_test.dart: ClinicalTimeRange exposes the correct day count
+00:00 +2: C:/testing/souffli/respiracare/test/features/monitoring/clinical_time_range_test.dart: ClinicalTimeRange toDateTimeRange builds an inclusive window for 7 days
+00:00 +3: C:/testing/souffli/respiracare/test/features/monitoring/clinical_time_range_test.dart: ClinicalTimeRange toDateTimeRange includes the whole end day
+00:00 +4: C:/testing/souffli/respiracare/test/features/monitoring/clinical_time_range_test.dart: ClinicalTimeRange TimeRangeOption.all is consistent with the enum
+00:00 +5: C:/testing/souffli/respiracare/test/features/monitoring/clinical_trend_calculator_test.dart: ClinicalTrendCalculator returns insufficientData when there are fewer than 2 readings
+00:00 +6: C:/testing/souffli/respiracare/test/features/monitoring/clinical_trend_calculator_test.dart: ClinicalTrendCalculator returns insufficientData for an empty list
+00:00 +7: C:/testing/souffli/respiracare/test/features/monitoring/clinical_trend_calculator_test.dart: ClinicalTrendCalculator ignores invalid measurements (NaN / empty unit)
+00:00 +8: C:/testing/souffli/respiracare/test/features/monitoring/clinical_trend_calculator_test.dart: ClinicalTrendCalculator classifies a rise beyond the threshold as upward
+00:00 +9: C:/testing/souffli/respiracare/test/features/monitoring/clinical_trend_calculator_test.dart: ClinicalTrendCalculator classifies a fall beyond the threshold as downward
+00:00 +10: C:/testing/souffli/respiracare/test/features/monitoring/clinical_trend_calculator_test.dart: ClinicalTrendCalculator classifies small changes within threshold as stable
+00:00 +11: C:/testing/souffli/respiracare/test/features/monitoring/clinical_trend_calculator_test.dart: ClinicalTrendCalculator uses a larger threshold for heart rate (5 bpm)
+00:00 +12: C:/testing/souffli/respiracare/test/features/monitoring/clinical_trend_calculator_test.dart: ClinicalTrendCalculator sorts unsorted readings by time before classifying
+00:00 +13: C:/testing/souffli/respiracare/test/features/monitoring/clinical_trend_calculator_test.dart: ClinicalTrendCalculator description is descriptive and never diagnostic
+00:00 +14: C:/testing/souffli/respiracare/test/features/monitoring/mock_monitoring_repository_test.dart: MockMonitoringRepository.getHistoricalMeasurements filters by type set
+00:01 +15: C:/testing/souffli/respiracare/test/features/monitoring/mock_monitoring_repository_test.dart: MockMonitoringRepository.getHistoricalMeasurements returns only measurements inside the inclusive range
+00:01 +16: C:/testing/souffli/respiracare/test/features/monitoring/monitoring_history_provider_test.dart: exposes initial state with default SpO₂ selection and 7-day window
+00:01 +17: C:/testing/souffli/respiracare/test/features/monitoring/mock_monitoring_repository_test.dart: MockMonitoringRepository.getHistoricalMeasurements sorts results oldest to newest
+00:01 +18: C:/testing/souffli/respiracare/test/features/monitoring/mock_monitoring_repository_test.dart: MockMonitoringRepository.getHistoricalMeasurements sorts results oldest to newest
+00:01 +19: C:/testing/souffli/respiracare/test/features/monitoring/mock_monitoring_repository_test.dart: MockMonitoringRepository.getHistoricalMeasurements sorts results oldest to newest
+00:01 +20: C:/testing/souffli/respiracare/test/features/monitoring/mock_monitoring_repository_test.dart: MockMonitoringRepository.getHistoricalMeasurements sorts results oldest to newest
+00:01 +21: C:/testing/souffli/respiracare/test/features/monitoring/mock_monitoring_repository_test.dart: MockMonitoringRepository.getHistoricalMeasurements sorts results oldest to newest
+00:01 +22: C:/testing/souffli/respiracare/test/features/monitoring/mock_monitoring_repository_test.dart: MockMonitoringRepository.getHistoricalMeasurements sorts results oldest to newest
+00:01 +23: C:/testing/souffli/respiracare/test/features/monitoring/mock_monitoring_repository_test.dart: MockMonitoringRepository.getHistoricalMeasurements sorts results oldest to newest
+00:01 +24: C:/testing/souffli/respiracare/test/features/monitoring/mock_monitoring_repository_test.dart: MockMonitoringRepository.getHistoricalMeasurements sorts results oldest to newest
+00:01 +25: C:/testing/souffli/respiracare/test/features/monitoring/mock_monitoring_repository_test.dart: MockMonitoringRepository.getHistoricalMeasurements sorts results oldest to newest
+00:01 +26: C:/testing/souffli/respiracare/test/features/monitoring/mock_monitoring_repository_test.dart: MockMonitoringRepository.getHistoricalMeasurements sorts results oldest to newest
+00:01 +27: C:/testing/souffli/respiracare/test/features/monitoring/mock_monitoring_repository_test.dart: MockMonitoringRepository.getHistoricalMeasurements sorts results oldest to newest
+00:01 +28: C:/testing/souffli/respiracare/test/features/monitoring/mock_monitoring_repository_test.dart: MockMonitoringRepository.getHistoricalMeasurements normalizes an inverted range instead of returning data outside it
+00:02 +29: C:/testing/souffli/respiracare/test/features/monitoring/monitoring_history_screen_test.dart: layout & controls shows an informational banner and range selector
+00:02 +30: C:/testing/souffli/respiracare/test/features/monitoring/monitoring_history_screen_test.dart: layout & controls shows an informational banner and range selector
+00:02 +31: C:/testing/souffli/respiracare/test/features/monitoring/monitoring_history_screen_test.dart: layout & controls shows an informational banner and range selector
+00:03 +32: C:/testing/souffli/respiracare/test/features/monitoring/monitoring_history_screen_test.dart: layout & controls shows an informational banner and range selector
+00:03 +33: C:/testing/souffli/respiracare/test/features/monitoring/monitoring_history_screen_test.dart: layout & controls shows an informational banner and range selector
+00:04 +34: C:/testing/souffli/respiracare/test/features/monitoring/monitoring_provider_test.dart: MonitoringNotifier Tests Submitting monitoring with normal SpO2 returns normal result
+00:04 +35: C:/testing/souffli/respiracare/test/features/monitoring/monitoring_history_screen_test.dart: layout & controls shows a chart card with readings and trend
+00:04 +36: C:/testing/souffli/respiracare/test/features/monitoring/monitoring_provider_test.dart: MonitoringNotifier Tests Submitting with low SpO2 triggers reviewRequired result
+00:04 +37: C:/testing/souffli/respiracare/test/features/monitoring/monitoring_provider_test.dart: MonitoringNotifier Tests Submitting with low SpO2 triggers reviewRequired result
+00:04 +38: C:/testing/souffli/respiracare/test/features/monitoring/monitoring_provider_test.dart: MonitoringNotifier Tests Submitting with low SpO2 triggers reviewRequired result
+00:05 +39: C:/testing/souffli/respiracare/test/features/monitoring/monitoring_provider_test.dart: MonitoringNotifier Tests Submitting with low SpO2 triggers reviewRequired result
+00:05 +40: C:/testing/souffli/respiracare/test/features/monitoring/monitoring_history_screen_test.dart: user interactions retry after an error reloads data
+00:05 +41: C:/testing/souffli/respiracare/test/features/monitoring/monitoring_provider_test.dart: MonitoringNotifier Tests Reset clears all answers and evaluation result
+00:05 +42: C:/testing/souffli/respiracare/test/features/monitoring/monitoring_history_screen_test.dart: user interactions refresh pulls fresh data
+00:06 +43: C:/testing/souffli/respiracare/test/features/monitoring/monitoring_history_screen_test.dart: skeleton -> chart transition renders skeletons while loading then cards once ready
+00:06 +44: All tests passed!

@@ -40,7 +40,7 @@ class _NurseAssessmentWidgetState extends State<NurseAssessmentWidget> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Évaluation infirmière', style: AppTypography.titleLarge),
+          const Text('Évaluation infirmière', style: AppTypography.titleLarge),
           const SizedBox(height: AppSpacing.md),
           Text('Évaluation',
               style: AppTypography.labelMedium

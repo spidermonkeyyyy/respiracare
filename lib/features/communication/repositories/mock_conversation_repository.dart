@@ -1,4 +1,5 @@
 import '../models/care_request.dart';
+import '../../../mock/mock_patients.dart';
 import '../models/communication_task.dart';
 import '../models/conversation.dart';
 import '../models/message.dart';
@@ -34,7 +35,7 @@ class MockConversationRepository implements ConversationRepository {
       Conversation(
         id: 'conv_p1',
         patientId: 'p1',
-        patientName: 'Ahmed B.',
+        patientName: kPatientP1ShortName,
         patientSummary: 'BPCO · GOLD III',
         createdAt: now.subtract(const Duration(days: 20)),
         updatedAt: now.subtract(const Duration(minutes: 12)),

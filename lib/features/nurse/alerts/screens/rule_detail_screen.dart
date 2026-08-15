@@ -56,71 +56,80 @@ class _RuleDetailScreenState extends ConsumerState<RuleDetailScreen> {
       );
     }
 
-    return Scaffold(
-      backgroundColor: AppColors.background,
-      appBar: AppBar(
-        title: const Text('Règle de surveillance'),
-        backgroundColor: AppColors.surface,
-        elevation: 0,
-      ),
-      body: SafeArea(
-        child: ListView(
-          padding: const EdgeInsets.all(AppSpacing.md),
-          children: [
-            AppCard(
-              padding: const EdgeInsets.all(AppSpacing.md),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      Expanded(
-                        child: Text(rule.name, style: AppTypography.titleLarge),
-                      ),
-                      AlertPriorityBadge(priority: rule.priority),
-                    ],
-                  ),
-                  const SizedBox(height: AppSpacing.sm),
-                  Text(
-                    rule.description,
-                    style: AppTypography.bodyMedium
-                        .copyWith(color: AppColors.textSecondary),
-                  ),
-                  const SizedBox(height: AppSpacing.sm),
-                  Row(
-                    children: [
-                      _Tag(label: rule.statusLabel, color: AppColors.success),
-                      const SizedBox(width: AppSpacing.sm),
-                      _Tag(label: rule.action.label, color: AppColors.primary),
-                      const SizedBox(width: AppSpacing.sm),
-                      _Tag(
-                        label: rule.conditionGroup.mode.label,
-                        color: AppColors.textSecondary,
-                      ),
-                    ],
-                  ),
-                ],
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (_, __) => context.pop(),
+      child: Scaffold(
+        backgroundColor: AppColors.background,
+        appBar: AppBar(
+          title: const Text('Règle de surveillance'),
+          backgroundColor: AppColors.surface,
+          elevation: 0,
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back_rounded),
+            onPressed: () => context.pop(),
+          ),
+          automaticallyImplyLeading: true,
+        ),
+        body: SafeArea(
+          child: ListView(
+            padding: const EdgeInsets.all(AppSpacing.md),
+            children: [
+              AppCard(
+                padding: const EdgeInsets.all(AppSpacing.md),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Text(rule.name, style: AppTypography.titleLarge),
+                        ),
+                        AlertPriorityBadge(priority: rule.priority),
+                      ],
+                    ),
+                    const SizedBox(height: AppSpacing.sm),
+                    Text(
+                      rule.description,
+                      style: AppTypography.bodyMedium
+                          .copyWith(color: AppColors.textSecondary),
+                    ),
+                    const SizedBox(height: AppSpacing.sm),
+                    Row(
+                      children: [
+                        _Tag(label: rule.statusLabel, color: AppColors.success),
+                        const SizedBox(width: AppSpacing.sm),
+                        _Tag(label: rule.action.label, color: AppColors.primary),
+                        const SizedBox(width: AppSpacing.sm),
+                        _Tag(
+                          label: rule.conditionGroup.mode.label,
+                          color: AppColors.textSecondary,
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
-            ),
-            const SizedBox(height: AppSpacing.md),
-            RuleSummary(rule: rule),
-            const SizedBox(height: AppSpacing.md),
-            Text(
-              'Conditions',
-              style: AppTypography.labelMedium
-                  .copyWith(fontWeight: FontWeight.w700),
-            ),
-            const SizedBox(height: AppSpacing.sm),
-            for (final condition in rule.conditionGroup.conditions) ...[
-              RuleConditionCard(condition: condition),
+              const SizedBox(height: AppSpacing.md),
+              RuleSummary(rule: rule),
+              const SizedBox(height: AppSpacing.md),
+              Text(
+                'Conditions',
+                style: AppTypography.labelMedium
+                    .copyWith(fontWeight: FontWeight.w700),
+              ),
               const SizedBox(height: AppSpacing.sm),
+              for (final condition in rule.conditionGroup.conditions) ...[
+                RuleConditionCard(condition: condition),
+                const SizedBox(height: AppSpacing.sm),
+              ],
+              const SizedBox(height: AppSpacing.md),
+              AppButton(
+                text: 'Modifier',
+                onPressed: () => context.push('/nurse/rules/${rule.id}/edit'),
+              ),
             ],
-            const SizedBox(height: AppSpacing.md),
-            AppButton(
-              text: 'Modifier',
-              onPressed: () => context.push('/nurse/rules/${rule.id}/edit'),
-            ),
-          ],
+          ),
         ),
       ),
     );

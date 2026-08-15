@@ -6,6 +6,7 @@ import '../../../../app/theme/radius.dart';
 import '../../../../app/theme/spacing.dart';
 import '../../../../app/theme/typography.dart';
 import '../../../../core/utils/animations/app_animations.dart';
+import '../../../../app/widgets/app_header.dart';
 import '../../../../core/widgets/buttons/app_button.dart';
 import '../../../../core/widgets/cards/app_card.dart';
 import '../models/exercise.dart';
@@ -55,10 +56,10 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen> {
 
     return Scaffold(
       backgroundColor: AppColors.background,
-      appBar: AppBar(
-        title: Text(_exercise!.name),
-        backgroundColor: AppColors.surface,
-        elevation: 0,
+      appBar: AppHeader(
+        title: _exercise!.name,
+        showBackButton: true,
+        onBack: () => context.pop(),
       ),
       body: SafeArea(
         child: ListView(
@@ -170,7 +171,7 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen> {
                       ],
                     ),
                     const SizedBox(height: AppSpacing.md),
-                    Text(
+                    const Text(
                       'Suivre l\'exercice présenté dans votre programme de rééducation respiratoire.',
                       style: AppTypography.bodyMedium,
                     ),
@@ -270,9 +271,9 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen> {
           Container(
             height: 200.0,
             width: double.infinity,
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               color: AppColors.surfaceVariant,
-              borderRadius: const BorderRadius.vertical(
+              borderRadius: BorderRadius.vertical(
                 top: Radius.circular(AppRadius.medium),
               ),
             ),

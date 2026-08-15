@@ -1,0 +1,659 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:respiracare/features/communication/models/care_request.dart';
+import 'package:respiracare/features/communication/models/communication_task.dart';
+import 'package:respiracare/features/communication/models/conversation.dart';
+import 'package:respiracare/features/communication/models/message_status.dart';
+import 'package:respiracare/features/communication/models/message_type.dart';
+import 'package:respiracare/features/communication/providers/nurse_messages_provider.dart';
+import 'package:respiracare/features/communication/providers/patient_messages_provider.dart';
+import 'package:respiracare/features/communication/repositories/conversation_repository.dart';
+import 'package:respiracare/features/nurse/alerts/models/alert.dart';
+import 'package:respiracare/features/nurse/alerts/models/alert_priority.dart';
+import 'package:respiracare/features/nurse/alerts/models/alert_status.dart';
+import 'package:respiracare/features/nurse/alerts/providers/alert_provider.dart';
+import 'package:respiracare/features/nurse/alerts/repositories/mock_alert_repository.dart';
+import 'package:respiracare/features/nurse/alerts/repositories/alert_repository.dart';
+import 'package:respiracare/features/nurse/dashboard/models/dashboard_summary.dart';
+import 'package:respiracare/features/nurse/dashboard/models/monitoring_rule.dart';
+import 'package:respiracare/features/nurse/dashboard/providers/nurse_dashboard_provider.dart';
+import 'package:respiracare/features/nurse/dashboard/providers/nurse_worklist_provider.dart';
+import 'package:respiracare/features/nurse/dashboard/models/nurse_worklist_item.dart';
+import 'package:respiracare/features/nurse/dashboard/repositories/mock_nurse_dashboard_repository.dart';
+import 'package:respiracare/features/nurse/monitoring/models/monitoring_submission.dart';
+import 'package:respiracare/features/nurse/patients/models/nurse_patient.dart';
+import 'package:respiracare/features/nurse/patients/providers/nurse_patients_provider.dart';
+import 'package:respiracare/features/nurse/patients/repositories/mock_nurse_patient_repository.dart';
+
+// ── Deterministic fakes (zero latency, fixed data) ────────────────────────
+class _FixedAlertRepo extends MockAlertRepository {
+  _FixedAlertRepo(this._alerts);
+  final List<Alert> _alerts;
+
+  @override
+  Future<List<Alert>> getAlerts() async => List<Alert>.unmodifiable(_alerts);
+
+  void seed(List<Alert> newAlerts) {
+    _alerts
+      ..clear()
+      ..addAll(newAlerts);
+  }
+
+  @override
+  Future<Alert> acknowledgeAlert(String alertId, String nurseId) async {
+    final index = _alerts.indexWhere((a) => a.id == alertId);
+    if (index == -1) throw StateError('Alerte introuvable: $alertId');
+    final current = _alerts[index];
+    if (current.status != AlertStatus.unread) return current;
+    final updated = current.copyWith(
+      status: AlertStatus.acknowledged,
+      acknowledgedAt: DateTime.now(),
+      assignedNurseId: nurseId,
+    );
+    _alerts[index] = updated;
+    return updated;
+  }
+}
+
+class _ThrowingAlertRepo extends MockAlertRepository {
+  @override
+  Future<List<Alert>> getAlerts() async => throw Exception('backend down');
+}
+
+class _FixedDashboardRepo extends MockNurseDashboardRepository {
+  _FixedDashboardRepo(this.submissions, {this.onLoad, this.throwOnLoad = false});
+  final List<MonitoringSubmission> submissions;
+  final void Function()? onLoad;
+  final bool throwOnLoad;
+
+  @override
+  Future<List<MonitoringSubmission>> getRecentSubmissions(
+      {int limit = 5}) async {
+    onLoad?.call();
+    if (throwOnLoad) throw Exception('backend down');
+    return submissions;
+  }
+
+  @override
+  Future<DashboardSummary> getDashboardSummary() async =>
+      const DashboardSummary(
+        totalPatients: 0,
+        highPriorityCount: 0,
+        reviewRequiredCount: 0,
+        newSubmissionsCount: 0,
+      );
+
+  @override
+  Future<List<NursePatient>> getPriorityQueue() async => const [];
+
+  @override
+  Future<List<MonitoringRule>> getMonitoringRules() async => const [];
+}
+
+class _FixedConversationRepo extends MockConversationRepository {
+  _FixedConversationRepo(this.conversations);
+  final List<Conversation> conversations;
+
+  @override
+  List<Conversation> get initialConversations => const [];
+
+  @override
+  Future<List<Conversation>> getConversations() async => conversations;
+
+  @override
+  Future<CommunicationTask> completeTask(String taskId) async {
+    for (var i = 0; i < conversations.length; i++) {
+      final conversation = conversations[i];
+      final taskIndex = conversation.tasks.indexWhere((task) => task.id == taskId);
+      if (taskIndex != -1) {
+        final task = conversation.tasks[taskIndex];
+        final updatedTask = task.copyWith(status: TaskStatus.done);
+        final updatedTasks = [...conversation.tasks]..[taskIndex] = updatedTask;
+        Conversation updatedConversation = conversation.copyWith(tasks: updatedTasks);
+
+        if (updatedTask.linkedCareRequestId != null) {
+          final requestIndex = updatedConversation.careRequests
+              .indexWhere((r) => r.id == updatedTask.linkedCareRequestId);
+          if (requestIndex != -1) {
+            final updatedRequest = updatedConversation
+                .careRequests[requestIndex]
+                .copyWith(status: CareRequestStatus.completed);
+            final updatedRequests = [...updatedConversation.careRequests]
+              ..[requestIndex] = updatedRequest;
+            updatedConversation = updatedConversation.copyWith(
+              careRequests: updatedRequests,
+            );
+          }
+        }
+
+        conversations[i] = updatedConversation;
+        return updatedTask;
+      }
+    }
+    throw StateError('Tâche introuvable: $taskId');
+  }
+}
+
+class _FixedPatientRepo extends MockNursePatientRepository {
+  _FixedPatientRepo(this.patients);
+  final List<NursePatient> patients;
+
+  @override
+  Future<List<NursePatient>> getPatients() async => patients;
+}
+
+void main() {
+  // Fixed, clock-independent timestamps.
+  final t1 = DateTime(2026, 8, 12, 9, 42);
+  final t2 = DateTime(2026, 8, 12, 10, 5);
+  final t3 = DateTime(2026, 8, 11, 8, 0);
+
+  Alert openAlert() => Alert(
+        id: 'alert_001',
+        patientId: 'p1',
+        patientName: 'Ahmed B.',
+        patientSummary: 'BPCO · GOLD III',
+        reason: 'Données respiratoires à revoir',
+        priority: AlertPriority.high,
+        status: AlertStatus.unread,
+        createdAt: t1,
+      );
+
+  CommunicationTask openTask() => CommunicationTask(
+        id: 'task_1',
+        patientId: 'p1',
+        type: TaskType.monitoring,
+        title: 'Nouveau suivi respiratoire',
+        description: '',
+        actionRoute: '/patient/monitoring',
+        status: TaskStatus.open,
+        createdAt: t2,
+      );
+
+  Conversation conversation() => Conversation(
+        id: 'conv_p1',
+        patientId: 'p1',
+        patientName: 'Ahmed B.',
+        patientSummary: 'BPCO · GOLD III',
+        createdAt: t3,
+        updatedAt: t2,
+        tasks: [openTask()],
+      );
+
+  MonitoringSubmission reviewSubmission() => MonitoringSubmission(
+        id: 'ms-7',
+        patientId: 'p1',
+        submittedAt: t3,
+        spo2: 91,
+        dyspneaScore: 2,
+        coughStatus: 'Stable',
+        sputumStatus: 'Stable',
+        overallStatus: 'À surveiller',
+        ruleResults: const [
+          RuleEvaluationResult(
+            ruleId: 'r1',
+            title: 'Saturation basse',
+            matched: true,
+            evidence: ['SpO₂ 91 %'],
+            summary: 'Saturation à surveiller',
+            priority: PriorityLevel.high,
+          ),
+        ],
+      );
+
+  NursePatient patient() => const NursePatient(
+        id: 'p1',
+        fullName: 'Ahmed B.',
+        condition: 'BPCO',
+        classification: 'GOLD III',
+        priority: PriorityLevel.high,
+        hasNewSubmission: true,
+      );
+
+  group('NurseWorklistNotifier', () {
+    late ProviderContainer container;
+
+    ProviderContainer build({
+      MockAlertRepository? alerts,
+      MockNurseDashboardRepository? dashboard,
+      MockConversationRepository? conversations,
+      MockNursePatientRepository? patients,
+    }) {
+      return ProviderContainer(
+        overrides: [
+          alertRepositoryProvider
+              .overrideWithValue(alerts ?? _FixedAlertRepo(const [])),
+          nurseDashboardRepositoryProvider
+              .overrideWithValue(dashboard ?? _FixedDashboardRepo(const [])),
+          conversationRepositoryProvider.overrideWithValue(
+              conversations ?? _FixedConversationRepo(const [])),
+          nursePatientRepositoryProvider
+              .overrideWithValue(patients ?? _FixedPatientRepo(const [])),
+        ],
+      );
+    }
+
+    /// Lets the source providers finish their synchronous async loads, then
+    /// performs an explicit refresh so the outcome is deterministic.
+    Future<void> load(NurseWorklistNotifier notifier) async {
+      await Future<void>.delayed(const Duration(milliseconds: 10));
+      await notifier.refresh();
+    }
+
+    tearDown(() => container.dispose());
+
+    test('keeps an empty state distinguishable from loading/error', () async {
+      container = build();
+      final notifier = container.read(nurseWorklistProvider.notifier);
+      await load(notifier);
+
+      final state = container.read(nurseWorklistProvider);
+      expect(state.isLoading, isFalse);
+      expect(state.errorMessage, isNull);
+      expect(state.items, isEmpty);
+      expect(state.attentionCount, 0);
+    });
+    test('composes alerts, tasks and monitoring review into the worklist',
+        () async {
+      container = build(
+        alerts: _FixedAlertRepo([openAlert()]),
+        dashboard: _FixedDashboardRepo([reviewSubmission()]),
+        conversations: _FixedConversationRepo([conversation()]),
+        patients: _FixedPatientRepo([patient()]),
+      );
+      final notifier = container.read(nurseWorklistProvider.notifier);
+      await load(notifier);
+
+      final state = container.read(nurseWorklistProvider);
+      expect(state.isLoading, isFalse);
+      expect(state.errorMessage, isNull);
+      expect(state.items, isNotEmpty);
+      expect(
+        state.items.map((e) => e.type).toSet(),
+        containsAll({
+          NurseWorklistItemType.alert,
+          NurseWorklistItemType.task,
+          NurseWorklistItemType.monitoring,
+        }),
+      );
+      // All three fixtures are actionable.
+      expect(state.attentionCount, 3);
+      // Patient association is preserved on every item.
+      for (final item in state.items) {
+        expect(item.patientId, 'p1');
+      }
+    });
+
+    test('refresh reloads the underlying source repositories', () async {
+      var loads = 0;
+      container = build(
+        alerts: _FixedAlertRepo([openAlert()]),
+        dashboard: _FixedDashboardRepo(
+          [reviewSubmission()],
+          onLoad: () => loads++,
+        ),
+        conversations: _FixedConversationRepo([conversation()]),
+        patients: _FixedPatientRepo([patient()]),
+      );
+      final notifier = container.read(nurseWorklistProvider.notifier);
+      await Future<void>.delayed(const Duration(milliseconds: 10));
+      final before = loads;
+      await notifier.refresh();
+      expect(loads, greaterThan(before));
+    });
+
+    test('surfaces a safe error while retaining partial data', () async {
+      container = build(
+        alerts: _ThrowingAlertRepo(),
+        dashboard: _FixedDashboardRepo([reviewSubmission()]),
+        conversations: _FixedConversationRepo([conversation()]),
+        patients: _FixedPatientRepo([patient()]),
+      );
+      final notifier = container.read(nurseWorklistProvider.notifier);
+      await load(notifier);
+
+      final state = container.read(nurseWorklistProvider);
+      expect(state.errorMessage, isNotNull);
+      // Task + monitoring items remain visible despite the alert failure.
+      expect(
+        state.items.map((e) => e.type),
+        isNot(contains(NurseWorklistItemType.alert)),
+      );
+      expect(
+        state.items.map((e) => e.type).toSet(),
+        containsAll({
+          NurseWorklistItemType.task,
+          NurseWorklistItemType.monitoring,
+        }),
+      );
+      expect(state.attentionCount, 2);
+    });
+    test('applies a local type filter without mutating the source list',
+        () async {
+      container = build(
+        alerts: _FixedAlertRepo([openAlert()]),
+        dashboard: _FixedDashboardRepo([reviewSubmission()]),
+        conversations: _FixedConversationRepo([conversation()]),
+        patients: _FixedPatientRepo([patient()]),
+      );
+      final notifier = container.read(nurseWorklistProvider.notifier);
+      await load(notifier);
+
+      final full = container.read(nurseWorklistProvider);
+      expect(full.items, hasLength(3));
+
+      notifier.setFilter(NurseWorklistFilter.alerts);
+      final filtered = container.read(nurseWorklistProvider);
+      // Source list untouched — only the derived view changes, no reload.
+      expect(filtered.items, hasLength(3));
+      expect(filtered.filteredItems.map((e) => e.type).toSet(), {
+        NurseWorklistItemType.alert,
+      });
+    });
+
+    test('derives attention counts from the same source data', () async {
+      container = build(
+        alerts: _FixedAlertRepo([openAlert()]),
+        dashboard: _FixedDashboardRepo([reviewSubmission()]),
+        conversations: _FixedConversationRepo([conversation()]),
+        patients: _FixedPatientRepo([patient()]),
+      );
+      final notifier = container.read(nurseWorklistProvider.notifier);
+      await load(notifier);
+
+      final state = container.read(nurseWorklistProvider);
+      expect(state.openAlertsCount, 1);
+      expect(state.openTasksCount, 1);
+      expect(state.monitoringReviewCount, 1);
+      expect(state.attentionCount, 3);
+      expect(
+        state.openAlertsCount +
+            state.openTasksCount +
+            state.monitoringReviewCount,
+        3,
+      );
+      // needsAttention keeps the actionable subset.
+      notifier.setFilter(NurseWorklistFilter.needsAttention);
+      expect(container.read(nurseWorklistProvider).filteredItems, hasLength(3));
+    });
+
+    test('exposes per-patient outstanding work counts', () async {
+      container = build(
+        alerts: _FixedAlertRepo([openAlert()]),
+        dashboard: _FixedDashboardRepo([reviewSubmission()]),
+        conversations: _FixedConversationRepo([conversation()]),
+        patients: _FixedPatientRepo([patient()]),
+      );
+      final notifier = container.read(nurseWorklistProvider.notifier);
+      await load(notifier);
+
+      expect(
+        container.read(nursePatientWorkCountProvider('p1')),
+        3,
+      );
+      expect(
+        container.read(nursePatientWorkCountProvider('p2')),
+        0,
+      );
+    });
+
+    // ── Step 12.10: Refresh, State Invalidation & Post-Mutation Consistency ──
+
+    group('Step 12.10 — Refresh & State Consistency', () {
+      late ProviderContainer container;
+
+      ProviderContainer buildStep1210({
+        MockAlertRepository? alerts,
+        MockNurseDashboardRepository? dashboard,
+        MockConversationRepository? conversations,
+        MockNursePatientRepository? patients,
+      }) {
+        return ProviderContainer(
+          overrides: [
+            alertRepositoryProvider
+                .overrideWithValue(alerts ?? _FixedAlertRepo(const [])),
+            nurseDashboardRepositoryProvider
+                .overrideWithValue(dashboard ?? _FixedDashboardRepo(const [])),
+            conversationRepositoryProvider.overrideWithValue(
+                conversations ?? _FixedConversationRepo(const [])),
+            nursePatientRepositoryProvider
+                .overrideWithValue(patients ?? _FixedPatientRepo(const [])),
+          ],
+        );
+      }
+
+      tearDown(() => container.dispose());
+
+      test('refresh preserves active filter', () async {
+        container = buildStep1210(
+          alerts: _FixedAlertRepo([openAlert()]),
+          dashboard: _FixedDashboardRepo([reviewSubmission()]),
+          conversations: _FixedConversationRepo([conversation()]),
+          patients: _FixedPatientRepo([patient()]),
+        );
+        final notifier = container.read(nurseWorklistProvider.notifier);
+        await load(notifier);
+
+        // Apply a filter
+        notifier.setFilter(NurseWorklistFilter.alerts);
+        final filteredBefore = container.read(nurseWorklistProvider);
+        expect(filteredBefore.filter, NurseWorklistFilter.alerts);
+        expect(filteredBefore.filteredItems, hasLength(1));
+
+        // Refresh
+        await notifier.refresh();
+
+        // Filter should be preserved
+        final filteredAfter = container.read(nurseWorklistProvider);
+        expect(filteredAfter.filter, NurseWorklistFilter.alerts);
+        expect(filteredAfter.filteredItems, hasLength(1));
+      });
+
+      test('refresh preserves filter when filter is needsAttention', () async {
+        container = buildStep1210(
+          alerts: _FixedAlertRepo([openAlert()]),
+          dashboard: _FixedDashboardRepo([reviewSubmission()]),
+          conversations: _FixedConversationRepo([conversation()]),
+          patients: _FixedPatientRepo([patient()]),
+        );
+        final notifier = container.read(nurseWorklistProvider.notifier);
+        await load(notifier);
+
+        notifier.setFilter(NurseWorklistFilter.needsAttention);
+        final before = container.read(nurseWorklistProvider);
+        expect(before.filter, NurseWorklistFilter.needsAttention);
+
+        await notifier.refresh();
+
+        final after = container.read(nurseWorklistProvider);
+        expect(after.filter, NurseWorklistFilter.needsAttention);
+        // All 3 items are actionable so all should be visible
+        expect(after.filteredItems, hasLength(3));
+      });
+
+      test('alert acknowledge mutation updates worklist attention count', () async {
+        container = buildStep1210(
+          alerts: _FixedAlertRepo([openAlert()]),
+          dashboard: _FixedDashboardRepo([reviewSubmission()]),
+          conversations: _FixedConversationRepo([conversation()]),
+          patients: _FixedPatientRepo([patient()]),
+        );
+        final notifier = container.read(nurseWorklistProvider.notifier);
+        await load(notifier);
+
+        final before = container.read(nurseWorklistProvider);
+        expect(before.attentionCount, 3);
+        expect(before.openAlertsCount, 1);
+
+        // Acknowledge the alert via alert provider
+        final alertNotifier = container.read(alertListProvider.notifier);
+        final alertRepo = container.read(alertRepositoryProvider) as _FixedAlertRepo;
+        alertRepo.seed([
+          openAlert().copyWith(status: AlertStatus.acknowledged, acknowledgedAt: t1),
+        ]);
+        await alertNotifier.acknowledge('alert_001');
+
+        // Worklist should update (alert is no longer actionable)
+        final after = container.read(nurseWorklistProvider);
+        expect(after.attentionCount, 2); // alert is no longer actionable
+        expect(after.openAlertsCount, 0);
+      });
+
+      test('failed alert mutation preserves worklist state', () async {
+        container = buildStep1210(
+          alerts: _ThrowingAlertRepo(),
+          dashboard: _FixedDashboardRepo([reviewSubmission()]),
+          conversations: _FixedConversationRepo([conversation()]),
+          patients: _FixedPatientRepo([patient()]),
+        );
+        final notifier = container.read(nurseWorklistProvider.notifier);
+        await load(notifier);
+
+        final before = container.read(nurseWorklistProvider);
+        expect(before.attentionCount, 2); // task + monitoring (alerts failed to load)
+        expect(before.openAlertsCount, 0);
+
+        // Try to acknowledge an alert that doesn't exist
+        final alertNotifier = container.read(alertListProvider.notifier);
+        final result = await alertNotifier.acknowledge('nonexistent');
+
+        expect(result, isFalse);
+
+        // Worklist should be unchanged
+        final after = container.read(nurseWorklistProvider);
+        expect(after.attentionCount, 2);
+        expect(after.openAlertsCount, 0);
+      });
+
+      test('task completion mutation updates worklist', () async {
+        container = buildStep1210(
+          alerts: _FixedAlertRepo([]),
+          dashboard: _FixedDashboardRepo([]),
+          conversations: _FixedConversationRepo([conversation()]),
+          patients: _FixedPatientRepo([patient()]),
+        );
+        final notifier = container.read(nurseWorklistProvider.notifier);
+        await load(notifier);
+
+        final before = container.read(nurseWorklistProvider);
+        expect(before.attentionCount, 1); // 1 open task
+        expect(before.openTasksCount, 1);
+
+        // Complete the task via messages provider
+        final messagesNotifier = container.read(nurseMessagesProvider.notifier);
+        final convRepo = container.read(conversationRepositoryProvider) as _FixedConversationRepo;
+        convRepo.conversations[0] = conversation().copyWith(
+          tasks: [
+            CommunicationTask(
+              id: 'task_1',
+              patientId: 'p1',
+              type: TaskType.monitoring,
+              title: 'Nouveau suivi respiratoire',
+              description: '',
+              actionRoute: '/patient/monitoring',
+              status: TaskStatus.done,
+              createdAt: t2,
+            ),
+          ],
+        );
+        await messagesNotifier.completeTask('task_1');
+
+        // Worklist should update (task is no longer actionable)
+        final after = container.read(nurseWorklistProvider);
+        expect(after.attentionCount, 0);
+        expect(after.openTasksCount, 0);
+      });
+
+      test('error state is distinct from empty state', () async {
+        // All providers fail
+        container = buildStep1210(
+          alerts: _ThrowingAlertRepo(),
+          dashboard: _FixedDashboardRepo([], throwOnLoad: true),
+          conversations: _FixedConversationRepo([]),
+          patients: _FixedPatientRepo([]),
+        );
+        final notifier = container.read(nurseWorklistProvider.notifier);
+        await load(notifier);
+
+        final state = container.read(nurseWorklistProvider);
+        expect(state.isLoading, isFalse);
+        expect(state.errorMessage, isNotNull);
+        expect(state.items, isEmpty);
+        // Error is present - this is NOT empty state
+        expect(state.isEmpty, isFalse);
+      });
+
+      test('empty state is distinct from error state', () async {
+        // All providers succeed but return empty
+        container = buildStep1210(
+          alerts: _FixedAlertRepo([]),
+          dashboard: _FixedDashboardRepo([]),
+          conversations: _FixedConversationRepo([]),
+          patients: _FixedPatientRepo([]),
+        );
+        final notifier = container.read(nurseWorklistProvider.notifier);
+        await load(notifier);
+
+        final state = container.read(nurseWorklistProvider);
+        expect(state.isLoading, isFalse);
+        expect(state.errorMessage, isNull);
+        expect(state.items, isEmpty);
+        // No error, no data - this IS empty state
+        expect(state.isEmpty, isTrue);
+      });
+
+      test('partial failure retains successful sections', () async {
+        // Alerts fail, but other sources succeed
+        container = buildStep1210(
+          alerts: _ThrowingAlertRepo(),
+          dashboard: _FixedDashboardRepo([reviewSubmission()]),
+          conversations: _FixedConversationRepo([conversation()]),
+          patients: _FixedPatientRepo([patient()]),
+        );
+        final notifier = container.read(nurseWorklistProvider.notifier);
+        await load(notifier);
+
+        final state = container.read(nurseWorklistProvider);
+        expect(state.errorMessage, isNotNull);
+        // Task and monitoring items remain visible
+        expect(state.items.map((e) => e.type).toSet(), containsAll([
+          NurseWorklistItemType.task,
+          NurseWorklistItemType.monitoring,
+        ]));
+        expect(state.attentionCount, 2);
+      });
+
+      test('counts derive from same source as worklist items', () async {
+        container = buildStep1210(
+          alerts: _FixedAlertRepo([openAlert()]),
+          dashboard: _FixedDashboardRepo([reviewSubmission()]),
+          conversations: _FixedConversationRepo([conversation()]),
+          patients: _FixedPatientRepo([patient()]),
+        );
+        final notifier = container.read(nurseWorklistProvider.notifier);
+        await load(notifier);
+
+        final state = container.read(nurseWorklistProvider);
+
+        // Filter to alerts only - counts should match filtered items
+        notifier.setFilter(NurseWorklistFilter.alerts);
+        final filteredState = container.read(nurseWorklistProvider);
+        expect(filteredState.openAlertsCount, filteredState.filteredItems.length);
+
+        // Filter to tasks only
+        notifier.setFilter(NurseWorklistFilter.tasks);
+        final filteredState2 = container.read(nurseWorklistProvider);
+        expect(filteredState2.openTasksCount, filteredState2.filteredItems.length);
+
+        // Filter to monitoring only
+        notifier.setFilter(NurseWorklistFilter.monitoring);
+        final filteredState3 = container.read(nurseWorklistProvider);
+        expect(filteredState3.monitoringReviewCount, filteredState3.filteredItems.length);
+      });
+    });
+  });
+}
+
+
+
+

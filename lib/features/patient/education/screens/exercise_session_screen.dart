@@ -175,91 +175,95 @@ class _ExerciseSessionScreenState extends ConsumerState<ExerciseSessionScreen>
         ? (_elapsed.inSeconds / targetDuration.inSeconds).clamp(0.0, 1.0)
         : 0.0;
 
-    return Scaffold(
-      backgroundColor: AppColors.background,
-      appBar: AppBar(
-        title: Text(_exercise!.name),
-        backgroundColor: AppColors.surface,
-        elevation: 0,
-        leading: _isRunning
-            ? null
-            : IconButton(
-                icon: const Icon(Icons.close_rounded),
-                onPressed: () => context.pop(),
-              ),
-        automaticallyImplyLeading: !_isRunning,
-      ),
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(AppSpacing.md),
-          child: Column(
-            children: [
-              // Progress indicator
-              AppFadeAnimation(
-                child: Column(
-                  children: [
-                    Text(
-                      _isPaused ? 'En pause' : 'Séance en cours',
-                      style: AppTypography.bodyMedium.copyWith(
-                        color: AppColors.textSecondary,
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (_, __) => context.pop(),
+      child: Scaffold(
+        backgroundColor: AppColors.background,
+        appBar: AppBar(
+          title: Text(_exercise!.name),
+          backgroundColor: AppColors.surface,
+          elevation: 0,
+          leading: _isRunning
+              ? null
+              : IconButton(
+                  icon: const Icon(Icons.close_rounded),
+                  onPressed: () => context.pop(),
+                ),
+          automaticallyImplyLeading: !_isRunning,
+        ),
+        body: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.all(AppSpacing.md),
+            child: Column(
+              children: [
+                // Progress indicator
+                AppFadeAnimation(
+                  child: Column(
+                    children: [
+                      Text(
+                        _isPaused ? 'En pause' : 'Séance en cours',
+                        style: AppTypography.bodyMedium.copyWith(
+                          color: AppColors.textSecondary,
+                        ),
                       ),
-                    ),
-                    const SizedBox(height: AppSpacing.md),
-                    // Circular progress
-                    SizedBox(
-                      width: 200.0,
-                      height: 200.0,
-                      child: Stack(
-                        alignment: Alignment.center,
-                        children: [
-                          // Background circle
-                          SizedBox(
-                            width: 200.0,
-                            height: 200.0,
-                            child: CircularProgressIndicator(
-                              value: progress,
-                              strokeWidth: 8.0,
-                              backgroundColor: AppColors.surfaceVariant,
-                              valueColor: AlwaysStoppedAnimation<Color>(
-                                _isPaused
-                                    ? AppColors.warning
-                                    : AppColors.primary,
+                      const SizedBox(height: AppSpacing.md),
+                      // Circular progress
+                      SizedBox(
+                        width: 200.0,
+                        height: 200.0,
+                        child: Stack(
+                          alignment: Alignment.center,
+                          children: [
+                            // Background circle
+                            SizedBox(
+                              width: 200.0,
+                              height: 200.0,
+                              child: CircularProgressIndicator(
+                                value: progress,
+                                strokeWidth: 8.0,
+                                backgroundColor: AppColors.surfaceVariant,
+                                valueColor: AlwaysStoppedAnimation<Color>(
+                                  _isPaused
+                                      ? AppColors.warning
+                                      : AppColors.primary,
+                                ),
                               ),
                             ),
-                          ),
-                          // Timer text
-                          Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Text(
-                                _formatDuration(_elapsed),
-                                style: AppTypography.displayLarge.copyWith(
-                                  fontSize: 48.0,
-                                  fontWeight: FontWeight.w300,
-                                  color: AppColors.textPrimary,
+                            // Timer text
+                            Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Text(
+                                  _formatDuration(_elapsed),
+                                  style: AppTypography.displayLarge.copyWith(
+                                    fontSize: 48.0,
+                                    fontWeight: FontWeight.w300,
+                                    color: AppColors.textPrimary,
+                                  ),
                                 ),
-                              ),
-                              Text(
-                                'sur ${_exercise!.formattedDuration}',
-                                style: AppTypography.bodyMedium.copyWith(
-                                  color: AppColors.textSecondary,
+                                Text(
+                                  'sur ${_exercise!.formattedDuration}',
+                                  style: AppTypography.bodyMedium.copyWith(
+                                    color: AppColors.textSecondary,
+                                  ),
                                 ),
-                              ),
-                            ],
-                          ),
-                        ],
+                              ],
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-              const Spacer(),
-              // Control buttons
-              AppSlideAnimation(
-                direction: SlideDirection.up,
-                child: _buildControls(),
-              ),
-            ],
+                const Spacer(),
+                // Control buttons
+                AppSlideAnimation(
+                  direction: SlideDirection.up,
+                  child: _buildControls(),
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -325,124 +329,132 @@ class _ExerciseSessionScreenState extends ConsumerState<ExerciseSessionScreen>
   }
 
   Widget _buildCompletionScreen() {
-    return Scaffold(
-      backgroundColor: AppColors.background,
-      appBar: AppBar(
-        title: const Text('Séance terminée'),
-        backgroundColor: AppColors.surface,
-        elevation: 0,
-        automaticallyImplyLeading: false,
-      ),
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(AppSpacing.md),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              // Completion animation
-              ScaleTransition(
-                scale: Tween<double>(begin: 0.0, end: 1.0).animate(
-                  CurvedAnimation(
-                    parent: _completionController,
-                    curve: Curves.elasticOut,
-                  ),
-                ),
-                child: Container(
-                  width: 120.0,
-                  height: 120.0,
-                  decoration: BoxDecoration(
-                    color: AppColors.success.withValues(alpha: 0.1),
-                    shape: BoxShape.circle,
-                  ),
-                  child: const Icon(
-                    Icons.check_rounded,
-                    size: 64.0,
-                    color: AppColors.success,
-                  ),
-                ),
-              ),
-              const SizedBox(height: AppSpacing.xl),
-
-              // Completion text
-              FadeTransition(
-                opacity: _completionController,
-                child: Column(
-                  children: [
-                    Text(
-                      'Séance terminée',
-                      style: AppTypography.displayLarge.copyWith(
-                        color: AppColors.success,
-                      ),
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (_, __) => context.pop(),
+      child: Scaffold(
+        backgroundColor: AppColors.background,
+        appBar: AppBar(
+          title: const Text('Séance terminée'),
+          backgroundColor: AppColors.surface,
+          elevation: 0,
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back_rounded),
+            onPressed: () => context.pop(),
+          ),
+          automaticallyImplyLeading: true,
+        ),
+        body: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.all(AppSpacing.md),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                // Completion animation
+                ScaleTransition(
+                  scale: Tween<double>(begin: 0.0, end: 1.0).animate(
+                    CurvedAnimation(
+                      parent: _completionController,
+                      curve: Curves.elasticOut,
                     ),
-                    const SizedBox(height: AppSpacing.sm),
-                    Text(
-                      'Bravo ! Vous avez complété votre exercice.',
-                      textAlign: TextAlign.center,
-                      style: AppTypography.bodyLarge.copyWith(
-                        color: AppColors.textSecondary,
-                      ),
+                  ),
+                  child: Container(
+                    width: 120.0,
+                    height: 120.0,
+                    decoration: BoxDecoration(
+                      color: AppColors.success.withValues(alpha: 0.1),
+                      shape: BoxShape.circle,
                     ),
-                  ],
+                    child: const Icon(
+                      Icons.check_rounded,
+                      size: 64.0,
+                      color: AppColors.success,
+                    ),
+                  ),
                 ),
-              ),
-              const SizedBox(height: AppSpacing.xl),
+                const SizedBox(height: AppSpacing.xl),
 
-              // Duration summary
-              FadeTransition(
-                opacity: _completionController,
-                child: AppCard(
-                  padding: const EdgeInsets.all(AppSpacing.lg),
+                // Completion text
+                FadeTransition(
+                  opacity: _completionController,
                   child: Column(
                     children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          _buildStatItem(
-                            icon: Icons.access_time_rounded,
-                            label: 'Durée réelle',
-                            value: _formatDuration(_elapsed),
-                            color: AppColors.primary,
-                          ),
-                          _buildStatItem(
-                            icon: Icons.flag_rounded,
-                            label: 'Objectif',
-                            value: _exercise!.formattedDuration,
-                            color: AppColors.secondary,
-                          ),
-                        ],
+                      Text(
+                        'Séance terminée',
+                        style: AppTypography.displayLarge.copyWith(
+                          color: AppColors.success,
+                        ),
+                      ),
+                      const SizedBox(height: AppSpacing.sm),
+                      Text(
+                        'Bravo ! Vous avez complété votre exercice.',
+                        textAlign: TextAlign.center,
+                        style: AppTypography.bodyLarge.copyWith(
+                          color: AppColors.textSecondary,
+                        ),
                       ),
                     ],
                   ),
                 ),
-              ),
-              const SizedBox(height: AppSpacing.xl),
+                const SizedBox(height: AppSpacing.xl),
 
-              // Action buttons
-              FadeTransition(
-                opacity: _completionController,
-                child: Column(
-                  children: [
-                    AppButton(
-                      text: 'Retour au programme',
-                      icon: Icons.arrow_back_rounded,
-                      fullWidth: true,
-                      onPressed: () => context.pop(),
+                // Duration summary
+                FadeTransition(
+                  opacity: _completionController,
+                  child: AppCard(
+                    padding: const EdgeInsets.all(AppSpacing.lg),
+                    child: Column(
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            _buildStatItem(
+                              icon: Icons.access_time_rounded,
+                              label: 'Durée réelle',
+                              value: _formatDuration(_elapsed),
+                              color: AppColors.primary,
+                            ),
+                            _buildStatItem(
+                              icon: Icons.flag_rounded,
+                              label: 'Objectif',
+                              value: _exercise!.formattedDuration,
+                              color: AppColors.secondary,
+                            ),
+                          ],
+                        ),
+                      ],
                     ),
-                    const SizedBox(height: AppSpacing.md),
-                    AppButton(
-                      text: 'Voir ma progression',
-                      icon: Icons.trending_up_rounded,
-                      variant: AppButtonVariant.outlined,
-                      fullWidth: true,
-                      onPressed: () {
-                        context.pop();
-                        context.push('/patient/education/rehabilitation');
-                      },
-                    ),
-                  ],
+                  ),
                 ),
-              ),
-            ],
+                const SizedBox(height: AppSpacing.xl),
+
+                // Action buttons
+                FadeTransition(
+                  opacity: _completionController,
+                  child: Column(
+                    children: [
+                      AppButton(
+                        text: 'Retour au programme',
+                        icon: Icons.arrow_back_rounded,
+                        fullWidth: true,
+                        onPressed: () => context.pop(),
+                      ),
+                      const SizedBox(height: AppSpacing.md),
+                      AppButton(
+                        text: 'Voir ma progression',
+                        icon: Icons.trending_up_rounded,
+                        variant: AppButtonVariant.outlined,
+                        fullWidth: true,
+                        onPressed: () {
+                          context.pop();
+                          context.push('/patient/education/rehabilitation');
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -485,31 +497,40 @@ class _ExerciseSessionScreenState extends ConsumerState<ExerciseSessionScreen>
   }
 
   Widget _buildNotFound() {
-    return Scaffold(
-      backgroundColor: AppColors.background,
-      appBar: AppBar(
-        title: const Text('Séance'),
-        backgroundColor: AppColors.surface,
-        elevation: 0,
-      ),
-      body: const SafeArea(
-        child: Center(
-          child: Padding(
-            padding: EdgeInsets.all(AppSpacing.xl),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Icon(Icons.fitness_center_outlined,
-                    size: 64, color: AppColors.textMuted),
-                SizedBox(height: AppSpacing.md),
-                Text('Exercice non trouvé', style: AppTypography.headlineLarge),
-                SizedBox(height: AppSpacing.sm),
-                Text(
-                  'Cet exercice n\'existe pas dans votre programme.',
-                  textAlign: TextAlign.center,
-                  style: AppTypography.bodyMedium,
-                ),
-              ],
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (_, __) => context.pop(),
+      child: Scaffold(
+        backgroundColor: AppColors.background,
+        appBar: AppBar(
+          title: const Text('Séance'),
+          backgroundColor: AppColors.surface,
+          elevation: 0,
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back_rounded),
+            onPressed: () => context.pop(),
+          ),
+          automaticallyImplyLeading: true,
+        ),
+        body: const SafeArea(
+          child: Center(
+            child: Padding(
+              padding: EdgeInsets.all(AppSpacing.xl),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(Icons.fitness_center_outlined,
+                      size: 64, color: AppColors.textMuted),
+                  SizedBox(height: AppSpacing.md),
+                  Text('Exercice non trouvé', style: AppTypography.headlineLarge),
+                  SizedBox(height: AppSpacing.sm),
+                  Text(
+                    'Cet exercice n\'existe pas dans votre programme.',
+                    textAlign: TextAlign.center,
+                    style: AppTypography.bodyMedium,
+                  ),
+                ],
+              ),
             ),
           ),
         ),

@@ -69,36 +69,45 @@ class _AlertDetailScreenState extends ConsumerState<AlertDetailScreen> {
 
     final siblings = notifier.alertsForPatient(alert.patientId);
 
-    return Scaffold(
-      backgroundColor: AppColors.background,
-      appBar: AppBar(
-        title: const Text('Détail de l\'alerte'),
-        backgroundColor: AppColors.surface,
-        elevation: 0,
-      ),
-      body: SafeArea(
-        child: ListView(
-          padding: const EdgeInsets.all(AppSpacing.md),
-          children: [
-            _Header(alert: alert),
-            const SizedBox(height: AppSpacing.md),
-            if (siblings.length > 1)
-              _Siblings(alerts: siblings, currentId: alert.id),
-            const SizedBox(height: AppSpacing.md),
-            _WhySection(alert: alert),
-            const SizedBox(height: AppSpacing.md),
-            _WhatChangedSection(alert: alert),
-            const SizedBox(height: AppSpacing.md),
-            AlertActionPanel(
-              alert: alert,
-              isPending: state.pendingAlertId == alert.id,
-              onError: (message) => _showError(message),
-              onChanged: () => setState(() {}),
-              onAcknowledge: notifier.acknowledge,
-              onRecordAction: notifier.recordAction,
-              onResolve: notifier.resolve,
-            ),
-          ],
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (_, __) => context.pop(),
+      child: Scaffold(
+        backgroundColor: AppColors.background,
+        appBar: AppBar(
+          title: const Text('Détail de l\'alerte'),
+          backgroundColor: AppColors.surface,
+          elevation: 0,
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back_rounded),
+            onPressed: () => context.pop(),
+          ),
+          automaticallyImplyLeading: true,
+        ),
+        body: SafeArea(
+          child: ListView(
+            padding: const EdgeInsets.all(AppSpacing.md),
+            children: [
+              _Header(alert: alert),
+              const SizedBox(height: AppSpacing.md),
+              if (siblings.length > 1)
+                _Siblings(alerts: siblings, currentId: alert.id),
+              const SizedBox(height: AppSpacing.md),
+              _WhySection(alert: alert),
+              const SizedBox(height: AppSpacing.md),
+              _WhatChangedSection(alert: alert),
+              const SizedBox(height: AppSpacing.md),
+              AlertActionPanel(
+                alert: alert,
+                isPending: state.pendingAlertId == alert.id,
+                onError: (message) => _showError(message),
+                onChanged: () => setState(() {}),
+                onAcknowledge: notifier.acknowledge,
+                onRecordAction: notifier.recordAction,
+                onResolve: notifier.resolve,
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -149,7 +158,7 @@ class _Header extends StatelessWidget {
             children: [
               AlertStatusBadge(status: alert.status),
               const SizedBox(width: AppSpacing.sm),
-              Icon(Icons.schedule_rounded,
+              const Icon(Icons.schedule_rounded,
                   size: 14.0, color: AppColors.textMuted),
               const SizedBox(width: AppSpacing.xs),
               Text(

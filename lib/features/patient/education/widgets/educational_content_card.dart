@@ -104,7 +104,7 @@ class EducationalContentCard extends StatelessWidget {
               ),
             ),
             // Chevron
-            Icon(
+            const Icon(
               Icons.chevron_right_rounded,
               color: AppColors.textMuted,
               size: 24.0,

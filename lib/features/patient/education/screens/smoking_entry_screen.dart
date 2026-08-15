@@ -60,13 +60,21 @@ class _SmokingEntryScreenState extends ConsumerState<SmokingEntryScreen> {
   Widget build(BuildContext context) {
     final isEditing = widget.existingEntry != null;
 
-    return Scaffold(
-      backgroundColor: AppColors.background,
-      appBar: AppBar(
-        title: Text(isEditing ? 'Modifier l\'entrée' : 'Nouvelle entrée'),
-        backgroundColor: AppColors.surface,
-        elevation: 0,
-      ),
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (_, __) => context.pop(),
+      child: Scaffold(
+        backgroundColor: AppColors.background,
+        appBar: AppBar(
+          title: Text(isEditing ? 'Modifier l''entrée' : 'Nouvelle entrée'),
+          backgroundColor: AppColors.surface,
+          elevation: 0,
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back_rounded),
+            onPressed: () => context.pop(),
+          ),
+          automaticallyImplyLeading: true,
+        ),
       body: SafeArea(
         child: Form(
           key: _formKey,
@@ -143,6 +151,7 @@ class _SmokingEntryScreenState extends ConsumerState<SmokingEntryScreen> {
           ),
         ),
       ),
+    )
     );
   }
 
@@ -488,3 +497,6 @@ class _SmokingEntryScreenState extends ConsumerState<SmokingEntryScreen> {
     }
   }
 }
+
+
+

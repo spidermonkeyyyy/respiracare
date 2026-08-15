@@ -132,7 +132,7 @@ class DailyMonitoringCard extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
+                const Text(
                   'Progression du questionnaire',
                   style: AppTypography.labelMedium,
                 ),

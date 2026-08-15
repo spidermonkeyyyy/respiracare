@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import '../../../app/theme/colors.dart';
-import '../../../app/theme/spacing.dart';
-import '../../../app/theme/typography.dart';
-import '../../../core/utils/animations/app_animations.dart';
+
+import '../../../core/navigation/route_names.dart';
+import '../../../core/theme/tokens/respi_colors.dart';
+import '../../../core/theme/tokens/respi_spacing.dart';
+import '../../../core/theme/tokens/respi_typography.dart';
 import '../models/app_user.dart';
 import '../providers/auth_provider.dart';
+import '../widgets/breathing_animation.dart';
 
 class SplashScreen extends ConsumerStatefulWidget {
   const SplashScreen({super.key});
@@ -30,74 +32,69 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
 
     final authState = ref.read(authProvider);
 
-    if (authState.status == AuthStatus.authenticated && authState.currentUser != null) {
+    if (authState.status == AuthStatus.authenticated &&
+        authState.currentUser != null) {
       if (authState.currentUser!.role == UserRole.nurse) {
-        context.go('/nurse/home');
+        context.go(RouteNames.nurseDashboard);
       } else {
-        context.go('/patient/home');
+        context.go(RouteNames.patientHome);
       }
     } else if (authState.isOnboardingCompleted) {
-      context.go('/login');
+      context.go(RouteNames.signIn);
     } else {
-      context.go('/onboarding');
+      context.go(RouteNames.onboarding);
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.surface,
+      backgroundColor: Theme.of(context).colorScheme.surface,
       body: SafeArea(
         child: Center(
-          child: AppFadeAnimation(
-            duration: const Duration(milliseconds: 600),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                const AppScaleAnimation(
-                  duration: Duration(milliseconds: 500),
-                  initialScale: 0.85,
-                  child: CircleAvatar(
-                    radius: 48.0,
-                    backgroundColor: Color(0xFFE0F2FE), // Soft blue tint
-                    child: Icon(
-                      Icons.medical_services_rounded,
-                      size: 52.0,
-                      color: AppColors.primary,
-                    ),
-                  ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Spacer(),
+              // Breathing lung animation
+              const BreathingAnimation(size: 140),
+              const SizedBox(height: RespiSpacing.xl),
+              // Wordmark
+              Text(
+                'RespiraCare',
+                style: RespiTypography.headlineLarge.copyWith(
+                  color: RespiColors.primary,
+                  letterSpacing: -0.5,
                 ),
-                const SizedBox(height: AppSpacing.lg),
-                Text(
-                  'RespiraCare',
-                  style: AppTypography.displayLarge.copyWith(
-                    color: AppColors.primary,
-                    fontSize: 32.0,
-                    fontWeight: FontWeight.w700,
-                    letterSpacing: -0.5,
-                  ),
+              ),
+              const SizedBox(height: RespiSpacing.sm),
+              // Tagline
+              Text(
+                'Breathe easier with remote care',
+                style: RespiTypography.bodyLarge.copyWith(
+                  color: Theme.of(context).colorScheme.onSurfaceVariant,
                 ),
-                const SizedBox(height: AppSpacing.xs),
-                Text(
-                  'Votre suivi respiratoire, où que vous soyez',
-                  style: AppTypography.bodyMedium.copyWith(
-                    color: AppColors.textSecondary,
-                    fontSize: 15.0,
-                  ),
-                  textAlign: TextAlign.center,
+              ),
+              const Spacer(),
+              // Loading indicator
+              const SizedBox(
+                width: 24,
+                height: 24,
+                child: CircularProgressIndicator(strokeWidth: 2.5),
+              ),
+              const SizedBox(height: RespiSpacing.xl),
+              // Version
+              Text(
+                'v1.0.0',
+                style: RespiTypography.labelSmall.copyWith(
+                  color: Theme.of(context)
+                      .colorScheme
+                      .onSurfaceVariant
+                      .withValues(alpha: 0.5),
                 ),
-                const SizedBox(height: AppSpacing.xxl),
-                const SizedBox(
-                  width: 24.0,
-                  height: 24.0,
-                  child: CircularProgressIndicator(
-                    strokeWidth: 2.5,
-                    valueColor: AlwaysStoppedAnimation<Color>(AppColors.primary),
-                  ),
-                ),
-              ],
-            ),
+              ),
+              const SizedBox(height: RespiSpacing.lg),
+            ],
           ),
         ),
       ),

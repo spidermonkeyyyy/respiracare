@@ -1,4 +1,5 @@
 import 'dart:convert';
+import '../../../mock/mock_patients.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../models/app_user.dart';
 import 'auth_repository.dart';
@@ -12,7 +13,7 @@ class MockAuthRepository implements AuthRepository {
     'patient@respiracare.org': const _MockUserEntry(
       user: AppUser(
         id: 'patient-001',
-        name: 'Ahmed Mansour',
+        name: kPatientP1FullName,
         email: 'patient@respiracare.org',
         role: UserRole.patient,
         phone: '+212 6 12 34 56 78',
@@ -59,7 +60,8 @@ class MockAuthRepository implements AuthRepository {
     final entry = _users[normalizedEmail];
 
     if (entry == null || entry.password != password) {
-      throw Exception('We couldn\'t sign you in. Please verify your email and password.');
+      throw Exception(
+          'We couldn\'t sign you in. Please verify your email and password.');
     }
 
     await _saveUserSession(entry.user);
@@ -104,6 +106,12 @@ class MockAuthRepository implements AuthRepository {
       final prefs = await SharedPreferences.getInstance();
       await prefs.remove(_sessionKey);
     } catch (_) {}
+  }
+
+  @override
+  Future<void> resetPassword({required String email}) async {
+    await Future.delayed(const Duration(milliseconds: 600));
+    // Mock simply simulates sending a reset link — no email is actually sent.
   }
 
   @override

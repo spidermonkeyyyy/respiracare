@@ -110,7 +110,7 @@ class CravingEntryCard extends StatelessWidget {
                 ),
                 child: Row(
                   children: [
-                    Icon(
+                    const Icon(
                       Icons.note_alt_outlined,
                       size: 16.0,
                       color: AppColors.textMuted,

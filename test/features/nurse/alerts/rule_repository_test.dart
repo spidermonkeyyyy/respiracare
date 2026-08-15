@@ -13,7 +13,8 @@ void main() {
 
     setUp(() => repository = MockRuleRepository());
 
-    test('seeds four rules with three enabled and a metric catalogue', () async {
+    test('seeds four rules with three enabled and a metric catalogue',
+        () async {
       final rules = await repository.getRules();
       expect(rules.length, equals(4));
       expect(await repository.getEnabledRules(), hasLength(3));
@@ -87,13 +88,18 @@ void main() {
 
     test('setEnabled toggles and updates the persisted rule', () async {
       await container.read(ruleListProvider.notifier).loadRules();
-      final target = container.read(ruleListProvider).rules
+      final target = container
+          .read(ruleListProvider)
+          .rules
           .firstWhere((rule) => rule.id == 'rule_004');
       expect(target.enabled, isFalse);
 
-      final ok = await container.read(ruleListProvider.notifier).setEnabled('rule_004', true);
+      final ok = await container
+          .read(ruleListProvider.notifier)
+          .setEnabled('rule_004', true);
       expect(ok, isTrue);
-      final toggled = container.read(ruleListProvider.notifier).ruleById('rule_004');
+      final toggled =
+          container.read(ruleListProvider.notifier).ruleById('rule_004');
       expect(toggled?.enabled, isTrue);
     });
   });
@@ -111,13 +117,13 @@ void main() {
 
     tearDown(() => container.dispose());
 
-    Future<void> _waitForMetrics() async {
+    Future<void> waitForMetrics() async {
       container.read(ruleDraftProvider.notifier);
       await Future.delayed(const Duration(milliseconds: 250));
     }
 
     test('starts an empty draft that cannot be saved', () async {
-      await _waitForMetrics();
+      await waitForMetrics();
       final notifier = container.read(ruleDraftProvider.notifier);
       notifier.startDraft();
       final state = container.read(ruleDraftProvider);
@@ -127,7 +133,7 @@ void main() {
     });
 
     test('adding a condition uses the first available metric', () async {
-      await _waitForMetrics();
+      await waitForMetrics();
       final notifier = container.read(ruleDraftProvider.notifier);
       notifier.startDraft();
       notifier.addCondition();
@@ -137,11 +143,12 @@ void main() {
     });
 
     test('switching metric re-points to a supported operator', () async {
-      await _waitForMetrics();
+      await waitForMetrics();
       final notifier = container.read(ruleDraftProvider.notifier);
       notifier.startDraft();
       notifier.addCondition();
-      final id = container.read(ruleDraftProvider).conditionGroup.conditions.first.id;
+      final id =
+          container.read(ruleDraftProvider).conditionGroup.conditions.first.id;
 
       // 'cough' does not support the SpO2 default operator, so it must switch.
       notifier.changeConditionMetric(id, 'cough');
@@ -165,17 +172,13 @@ void main() {
     });
 
     test('a named rule with a complete condition can be saved', () async {
-      await _waitForMetrics();
+      await waitForMetrics();
       final notifier = container.read(ruleDraftProvider.notifier);
       notifier.startDraft();
       notifier.setName('Variation SpO₂');
       notifier.addCondition();
-      final id = container
-          .read(ruleDraftProvider)
-          .conditionGroup
-          .conditions
-          .first
-          .id;
+      final id =
+          container.read(ruleDraftProvider).conditionGroup.conditions.first.id;
       notifier.changeConditionValue(id, '90');
       final state = container.read(ruleDraftProvider);
       expect(state.canSave, isTrue);

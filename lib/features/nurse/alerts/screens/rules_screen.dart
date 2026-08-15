@@ -67,7 +67,7 @@ class _RulesScreenState extends ConsumerState<RulesScreen> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(
+                            const Text(
                               'Surveillance configurée',
                               style: AppTypography.titleLarge,
                             ),

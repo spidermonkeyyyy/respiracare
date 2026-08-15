@@ -5,7 +5,7 @@ import '../../../authentication/providers/auth_provider.dart';
 import '../../alerts/screens/alerts_screen.dart';
 import '../../../communication/screens/nurse_messages_screen.dart';
 import '../../patients/screens/nurse_patient_list_screen.dart';
-import 'nurse_dashboard_screen.dart';
+import 'nurse_dashboard_view.dart';
 import '../../patients/screens/nurse_profile_screen.dart';
 
 class NurseShellScreen extends ConsumerStatefulWidget {
@@ -24,7 +24,7 @@ class _NurseShellScreenState extends ConsumerState<NurseShellScreen> {
     final user = authState.currentUser;
 
     final screens = <Widget>[
-      const NurseDashboardScreen(),
+      const NurseDashboardView(),
       const NursePatientListScreen(),
       const AlertsScreen(),
       const NurseMessagesScreen(),

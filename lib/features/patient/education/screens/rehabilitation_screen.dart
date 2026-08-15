@@ -6,6 +6,7 @@ import '../../../../app/theme/radius.dart';
 import '../../../../app/theme/spacing.dart';
 import '../../../../app/theme/typography.dart';
 import '../../../../core/utils/animations/app_animations.dart';
+import '../../../../app/widgets/app_header.dart';
 import '../../../../core/widgets/buttons/app_button.dart';
 import '../../../../core/widgets/cards/app_card.dart';
 import '../../../../core/widgets/feedback/app_empty_state.dart';
@@ -31,10 +32,10 @@ class _RehabilitationScreenState extends ConsumerState<RehabilitationScreen> {
 
     return Scaffold(
       backgroundColor: AppColors.background,
-      appBar: AppBar(
-        title: const Text('Rééducation respiratoire'),
-        backgroundColor: AppColors.surface,
-        elevation: 0,
+      appBar: AppHeader(
+        title: 'Rééducation respiratoire',
+        showBackButton: true,
+        onBack: () => context.pop(),
       ),
       body: SafeArea(
         child: _buildBody(state),
@@ -94,7 +95,7 @@ class _RehabilitationScreenState extends ConsumerState<RehabilitationScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
+                const Text(
                   'Votre programme',
                   style: AppTypography.headlineLarge,
                 ),
@@ -222,7 +223,7 @@ class _RehabilitationScreenState extends ConsumerState<RehabilitationScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
+        const Text(
           'Mon programme',
           style: AppTypography.titleLarge,
         ),

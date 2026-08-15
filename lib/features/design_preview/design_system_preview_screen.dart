@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../mock/mock_patients.dart';
 import '../../app/theme/colors.dart';
 import '../../app/theme/radius.dart';
 import '../../app/theme/shadows.dart';
@@ -244,7 +245,7 @@ class _DesignSystemPreviewScreenState extends State<DesignSystemPreviewScreen>
             style: AppTypography.titleLarge.copyWith(fontSize: 16)),
         const SizedBox(height: AppSpacing.sm),
         AlertCard(
-          patientName: 'Ahmed Mansour',
+          patientName: kPatientP1FullName,
           alertReason:
               'SpO₂ dropped below threshold (91%) during morning check.',
           timestamp: 'Today, 08:30 AM',
@@ -288,31 +289,31 @@ class _DesignSystemPreviewScreenState extends State<DesignSystemPreviewScreen>
       children: [
         _buildSectionHeader('Input Components (AppInput)',
             'Accessible text input fields with labels, icons, error states, and toggleable password fields.'),
-        AppCard(
+        const AppCard(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const AppInput(
+              AppInput(
                 label: 'Email / National ID',
                 hint: 'e.g. patient@respiracare.org',
                 prefixIcon: Icons.email_outlined,
               ),
-              const SizedBox(height: AppSpacing.md),
-              const AppInput(
+              SizedBox(height: AppSpacing.md),
+              AppInput(
                 label: 'Password',
                 hint: 'Enter your account password',
                 prefixIcon: Icons.lock_outline,
                 isPassword: true,
               ),
-              const SizedBox(height: AppSpacing.md),
-              const AppInput(
+              SizedBox(height: AppSpacing.md),
+              AppInput(
                 label: 'SpO₂ Measurement Value (%)',
                 hint: 'e.g. 96',
                 prefixIcon: Icons.speed_rounded,
                 errorText: 'Value must be between 70% and 100%',
               ),
-              const SizedBox(height: AppSpacing.md),
-              const AppInput(
+              SizedBox(height: AppSpacing.md),
+              AppInput(
                 label: 'Observation Notes',
                 hint: 'Describe any breathless episodes or cough severity...',
                 maxLines: 3,
@@ -398,29 +399,28 @@ class _DesignSystemPreviewScreenState extends State<DesignSystemPreviewScreen>
         Text('Typography System',
             style: AppTypography.titleLarge.copyWith(fontSize: 16)),
         const SizedBox(height: AppSpacing.sm),
-        AppCard(
+        const AppCard(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text('Display Large (32px Bold)',
+              Text('Display Large (32px Bold)',
                   style: AppTypography.displayLarge),
-              const Divider(height: AppSpacing.lg),
-              const Text('Headline Large (24px Semibold)',
+              Divider(height: AppSpacing.lg),
+              Text('Headline Large (24px Semibold)',
                   style: AppTypography.headlineLarge),
-              const Divider(height: AppSpacing.lg),
-              const Text('Title Large (20px Semibold)',
+              Divider(height: AppSpacing.lg),
+              Text('Title Large (20px Semibold)',
                   style: AppTypography.titleLarge),
-              const Divider(height: AppSpacing.lg),
-              const Text('Body Large (18px Regular)',
-                  style: AppTypography.bodyLarge),
-              const Divider(height: AppSpacing.lg),
-              const Text('Body Medium (16px Regular)',
+              Divider(height: AppSpacing.lg),
+              Text('Body Large (18px Regular)', style: AppTypography.bodyLarge),
+              Divider(height: AppSpacing.lg),
+              Text('Body Medium (16px Regular)',
                   style: AppTypography.bodyMedium),
-              const Divider(height: AppSpacing.lg),
-              const Text('Secondary Text (14px Medium)',
+              Divider(height: AppSpacing.lg),
+              Text('Secondary Text (14px Medium)',
                   style: AppTypography.secondaryText),
-              const Divider(height: AppSpacing.lg),
-              const Text('Label Medium (12px Medium)',
+              Divider(height: AppSpacing.lg),
+              Text('Label Medium (12px Medium)',
                   style: AppTypography.labelMedium),
             ],
           ),
@@ -434,12 +434,12 @@ class _DesignSystemPreviewScreenState extends State<DesignSystemPreviewScreen>
             Expanded(
               child: Container(
                 padding: const EdgeInsets.all(AppSpacing.md),
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                   color: AppColors.surface,
                   borderRadius: AppRadius.smallBorderRadius,
                   boxShadow: AppShadows.small,
                 ),
-                child: Text('Small Shadow\nRadius: 8px',
+                child: const Text('Small Shadow\nRadius: 8px',
                     style: AppTypography.labelMedium,
                     textAlign: TextAlign.center),
               ),
@@ -448,12 +448,12 @@ class _DesignSystemPreviewScreenState extends State<DesignSystemPreviewScreen>
             Expanded(
               child: Container(
                 padding: const EdgeInsets.all(AppSpacing.md),
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                   color: AppColors.surface,
                   borderRadius: AppRadius.mediumBorderRadius,
                   boxShadow: AppShadows.medium,
                 ),
-                child: Text('Medium Shadow\nRadius: 16px',
+                child: const Text('Medium Shadow\nRadius: 16px',
                     style: AppTypography.labelMedium,
                     textAlign: TextAlign.center),
               ),
@@ -462,12 +462,12 @@ class _DesignSystemPreviewScreenState extends State<DesignSystemPreviewScreen>
             Expanded(
               child: Container(
                 padding: const EdgeInsets.all(AppSpacing.md),
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                   color: AppColors.surface,
                   borderRadius: AppRadius.largeBorderRadius,
                   boxShadow: AppShadows.large,
                 ),
-                child: Text('Large Shadow\nRadius: 24px',
+                child: const Text('Large Shadow\nRadius: 24px',
                     style: AppTypography.labelMedium,
                     textAlign: TextAlign.center),
               ),

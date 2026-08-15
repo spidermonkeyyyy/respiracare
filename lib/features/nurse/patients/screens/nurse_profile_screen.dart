@@ -33,11 +33,15 @@ class NurseProfileScreen extends ConsumerWidget {
                 children: [
                   Text(name, style: AppTypography.headlineLarge),
                   const SizedBox(height: AppSpacing.sm),
-                  Text('Vue clinique de supervision', style: AppTypography.bodyMedium.copyWith(color: AppColors.textSecondary)),
+                  Text('Vue clinique de supervision',
+                      style: AppTypography.bodyMedium
+                          .copyWith(color: AppColors.textSecondary)),
                   const SizedBox(height: AppSpacing.md),
-                  Text('Rôle', style: AppTypography.titleLarge),
+                  const Text('Rôle', style: AppTypography.titleLarge),
                   const SizedBox(height: AppSpacing.xs),
-                  Text(user?.role.nameString ?? 'Infirmier(e)', style: AppTypography.bodyMedium.copyWith(color: AppColors.textSecondary)),
+                  Text(user?.role.nameString ?? 'Infirmier(e)',
+                      style: AppTypography.bodyMedium
+                          .copyWith(color: AppColors.textSecondary)),
                 ],
               ),
             ),

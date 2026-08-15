@@ -167,6 +167,7 @@ class _CreateCareRequestScreenState
               text: 'Envoyer la demande',
               onPressed: canSubmit
                   ? () async {
+                      final goRouter = GoRouter.of(context);
                       final ok = await notifier.createCareRequest(
                         conversationId: widget.conversationId,
                         patientId: conversation.patientId,
@@ -176,7 +177,7 @@ class _CreateCareRequestScreenState
                         dueDate:
                             DateTime.now().add(Duration(days: _dueOffsetDays)),
                       );
-                      if (ok && mounted) context.pop();
+                      if (ok && mounted) goRouter.pop();
                     }
                   : null,
             ),

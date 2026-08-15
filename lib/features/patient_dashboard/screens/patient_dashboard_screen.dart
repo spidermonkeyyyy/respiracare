@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../../app/theme/colors.dart';
 import '../../../app/theme/spacing.dart';
+import '../../../app/theme/typography.dart';
 
 import '../../../core/utils/animations/app_animations.dart';
 import '../../../core/widgets/feedback/app_empty_state.dart';
@@ -13,7 +14,7 @@ import '../widgets/daily_monitoring_card.dart';
 import '../widgets/dashboard_header.dart';
 import '../widgets/dashboard_skeleton.dart';
 import '../widgets/medication_card.dart';
-import '../widgets/patient_bottom_nav.dart';
+import '../widgets/patient_app_shell.dart';
 import '../widgets/patient_health_status_card.dart';
 import '../widgets/rehabilitation_card.dart';
 
@@ -21,37 +22,63 @@ class PatientDashboardScreen extends ConsumerStatefulWidget {
   const PatientDashboardScreen({super.key});
 
   @override
-  ConsumerState<PatientDashboardScreen> createState() => _PatientDashboardScreenState();
+  ConsumerState<PatientDashboardScreen> createState() =>
+      _PatientDashboardScreenState();
 }
 
-class _PatientDashboardScreenState extends ConsumerState<PatientDashboardScreen> {
-  int _selectedTab = 0;
-
-  void _onTabSelected(int index) {
-    setState(() {
-      _selectedTab = index;
-    });
-
-    switch (index) {
-      case 0:
-        // Already on Accueil
-        break;
-      case 1:
-        context.push('/patient/monitoring');
-        break;
-      case 2:
-        context.push('/patient/treatment');
-        break;
-      case 3:
-        context.push('/patient/education');
-        break;
-      case 4:
-        context.push('/patient/profile');
-        break;
-      case 5:
-        context.push('/patient/messages');
-        break;
-    }
+class _PatientDashboardScreenState
+    extends ConsumerState<PatientDashboardScreen> {
+  PreferredSizeWidget _buildAppBar(PatientDashboardState dashboardState) {
+    final notifier = ref.read(patientDashboardProvider.notifier);
+    return AppBar(
+      backgroundColor: AppColors.surface,
+      elevation: 0,
+      toolbarHeight: 44.0,
+      title: Row(
+        children: [
+          const Icon(Icons.health_and_safety_rounded,
+              color: AppColors.primary, size: 22.0),
+          const SizedBox(width: AppSpacing.sm),
+          Text(
+            'RespiraCare',
+            style:
+                AppTypography.titleLarge.copyWith(fontWeight: FontWeight.w700),
+          ),
+        ],
+      ),
+      actions: [
+        // Developer preview mode toggle buttons
+        PopupMenuButton<String>(
+          icon: const Icon(Icons.tune_rounded,
+              color: AppColors.textSecondary, size: 20),
+          tooltip: 'Modes de test',
+          onSelected: (value) {
+            if (value == 'normal') {
+              notifier.loadDashboard();
+            } else if (value == 'empty') {
+              notifier.loadDashboard(forceEmpty: true);
+            } else if (value == 'error') {
+              notifier.loadDashboard(forceError: true);
+            } else if (value == 'offline') {
+              notifier.toggleOfflineMode();
+            }
+          },
+          itemBuilder: (context) => [
+            const PopupMenuItem(value: 'normal', child: Text('Mode Normal')),
+            const PopupMenuItem(
+                value: 'empty', child: Text('Mode Premier Suivi (Vide)')),
+            const PopupMenuItem(
+                value: 'error', child: Text('Mode Erreur de Connexion')),
+            PopupMenuItem(
+              value: 'offline',
+              child: Text(dashboardState.isOffline
+                  ? 'Désactiver Mode Hors Connexion'
+                  : 'Activer Mode Hors Connexion'),
+            ),
+          ],
+        ),
+      ],
+    );
   }
 
   @override
@@ -59,51 +86,15 @@ class _PatientDashboardScreenState extends ConsumerState<PatientDashboardScreen>
     final dashboardState = ref.watch(patientDashboardProvider);
     final notifier = ref.read(patientDashboardProvider.notifier);
 
-    return Scaffold(
-      backgroundColor: AppColors.background,
-      appBar: AppBar(
-        backgroundColor: AppColors.surface,
-        elevation: 0,
-        toolbarHeight: 44.0,
-        actions: [
-          // Developer preview mode toggle buttons
-          PopupMenuButton<String>(
-            icon: const Icon(Icons.tune_rounded, color: AppColors.textSecondary, size: 20),
-            tooltip: 'Modes de test',
-            onSelected: (value) {
-              if (value == 'normal') {
-                notifier.loadDashboard();
-              } else if (value == 'empty') {
-                notifier.loadDashboard(forceEmpty: true);
-              } else if (value == 'error') {
-                notifier.loadDashboard(forceError: true);
-              } else if (value == 'offline') {
-                notifier.toggleOfflineMode();
-              }
-            },
-            itemBuilder: (context) => [
-              const PopupMenuItem(value: 'normal', child: Text('Mode Normal')),
-              const PopupMenuItem(value: 'empty', child: Text('Mode Premier Suivi (Vide)')),
-              const PopupMenuItem(value: 'error', child: Text('Mode Erreur de Connexion')),
-              PopupMenuItem(
-                value: 'offline',
-                child: Text(dashboardState.isOffline ? 'Désactiver Mode Hors Connexion' : 'Activer Mode Hors Connexion'),
-              ),
-            ],
-          ),
-        ],
-      ),
-      bottomNavigationBar: PatientBottomNav(
-        currentIndex: _selectedTab,
-        onTap: _onTabSelected,
-      ),
-      body: SafeArea(
-        child: _buildBody(dashboardState, notifier),
-      ),
+    return PatientAppShell(
+      currentIndex: 0,
+      appBar: _buildAppBar(dashboardState),
+      child: SafeArea(child: _buildBody(dashboardState, notifier)),
     );
   }
 
-  Widget _buildBody(PatientDashboardState state, PatientDashboardNotifier notifier) {
+  Widget _buildBody(
+      PatientDashboardState state, PatientDashboardNotifier notifier) {
     // 1. Loading State
     if (state.isLoading) {
       return const DashboardSkeleton();
@@ -123,7 +114,8 @@ class _PatientDashboardScreenState extends ConsumerState<PatientDashboardScreen>
     if (state.isEmpty || state.data == null) {
       return AppEmptyState(
         title: 'Votre suivi commence ici',
-        message: 'Complétez votre premier suivi respiratoire pour commencer le suivi télé-médical.',
+        message:
+            'Complétez votre premier suivi respiratoire pour commencer le suivi télé-médical.',
         icon: Icons.medical_services_outlined,
         actionLabel: 'Commencer mon premier suivi',
         onActionPressed: () => context.push('/patient/monitoring'),

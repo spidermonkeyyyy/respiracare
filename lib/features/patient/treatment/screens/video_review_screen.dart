@@ -26,29 +26,35 @@ class VideoReviewScreen extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('Technique d’inhalation', style: AppTypography.titleLarge),
+                const Text('Technique d’inhalation',
+                    style: AppTypography.titleLarge),
                 const SizedBox(height: AppSpacing.md),
                 Row(
                   children: [
                     Icon(
                       video.reviewStatus == VideoReviewStatus.reviewed
                           ? Icons.verified
-                          : video.reviewStatus == VideoReviewStatus.pendingReview
+                          : video.reviewStatus ==
+                                  VideoReviewStatus.pendingReview
                               ? Icons.hourglass_empty
                               : Icons.refresh,
                       size: 28.0,
-                      color: video.reviewStatus == VideoReviewStatus.reviewed ? AppColors.success : AppColors.secondary,
+                      color: video.reviewStatus == VideoReviewStatus.reviewed
+                          ? AppColors.success
+                          : AppColors.secondary,
                     ),
                     const SizedBox(width: AppSpacing.md),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(video.reviewStatus.patientLabel, style: AppTypography.titleMedium),
+                          Text(video.reviewStatus.patientLabel,
+                              style: AppTypography.titleMedium),
                           const SizedBox(height: AppSpacing.xs),
                           Text(
                             _statusSubtitle(video),
-                            style: AppTypography.bodyMedium.copyWith(color: AppColors.textSecondary),
+                            style: AppTypography.bodyMedium
+                                .copyWith(color: AppColors.textSecondary),
                           ),
                         ],
                       ),
@@ -56,7 +62,8 @@ class VideoReviewScreen extends StatelessWidget {
                   ],
                 ),
                 const SizedBox(height: AppSpacing.lg),
-                Text('Détails de la vidéo', style: AppTypography.titleMedium),
+                const Text('Détails de la vidéo',
+                    style: AppTypography.titleMedium),
                 const SizedBox(height: AppSpacing.sm),
                 _infoRow('Envoyée le', _formattedDate(video.uploadedAt)),
                 if (video.reviewedAt != null) ...[
@@ -65,7 +72,8 @@ class VideoReviewScreen extends StatelessWidget {
                 ],
                 if (video.reviewerNote != null) ...[
                   const SizedBox(height: AppSpacing.md),
-                  Text('Note de l’infirmier', style: AppTypography.titleMedium),
+                  const Text('Note de l’infirmier',
+                      style: AppTypography.titleMedium),
                   const SizedBox(height: AppSpacing.xs),
                   Text(video.reviewerNote!, style: AppTypography.bodyMedium),
                 ],
@@ -75,7 +83,8 @@ class VideoReviewScreen extends StatelessWidget {
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppColors.primary,
                     foregroundColor: AppColors.surface,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12.0)),
                   ),
                   child: const Text('Retour'),
                 ),
@@ -120,7 +129,9 @@ class VideoReviewScreen extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text(label, style: AppTypography.bodyMedium.copyWith(color: AppColors.textSecondary)),
+        Text(label,
+            style: AppTypography.bodyMedium
+                .copyWith(color: AppColors.textSecondary)),
         Text(value, style: AppTypography.bodyMedium),
       ],
     );

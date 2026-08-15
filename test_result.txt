@@ -1,0 +1,10 @@
+00:00 +0: loading C:/testing/souffli/respiracare/test/features/monitoring/monitoring_history_screen_test.dart
+00:00 +0: layout & controls shows an informational banner and range selector
+00:02 +1: layout & controls shows a chart card with readings and trend
+00:02 +2: layout & controls shows empty state when there is no data
+00:02 +3: layout & controls shows an error state with retry when loading fails
+00:02 +4: user interactions toggling the heart-rate filter shows a second card
+00:03 +5: user interactions retry after an error reloads data
+00:03 +6: user interactions refresh pulls fresh data
+00:04 +7: skeleton -> chart transition renders skeletons while loading then cards once ready
+00:04 +8: All tests passed!

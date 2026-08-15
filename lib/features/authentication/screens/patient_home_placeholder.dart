@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../mock/mock_patients.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../../app/theme/colors.dart';
@@ -21,7 +22,7 @@ class PatientHomePlaceholder extends ConsumerWidget {
       backgroundColor: AppColors.background,
       appBar: AppBar(
         title: Text(
-          'Espace Patient — RespiraCare',
+          'Espace Patient — Sanad',
           style:
               AppTypography.titleLarge.copyWith(color: AppColors.textPrimary),
         ),
@@ -61,7 +62,7 @@ class PatientHomePlaceholder extends ConsumerWidget {
                     ),
                     const SizedBox(height: AppSpacing.md),
                     Text(
-                      user?.name ?? 'Ahmed Mansour',
+                      user?.name ?? kPatientP1FullName,
                       style: AppTypography.headlineLarge,
                     ),
                     Text(

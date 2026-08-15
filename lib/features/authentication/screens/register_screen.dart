@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import '../../../app/theme/colors.dart';
-import '../../../app/theme/spacing.dart';
-import '../../../app/theme/typography.dart';
-import '../../../core/widgets/buttons/app_button.dart';
-import '../../../core/widgets/inputs/app_input.dart';
+
+import '../../../core/accessibility/focus_manager.dart';
+import '../../../core/components/buttons/respi_button.dart';
+import '../../../core/components/cards/respi_card.dart';
+import '../../../core/components/inputs/respi_text_field.dart';
+import '../../../core/navigation/route_names.dart';
+import '../../../core/theme/tokens/respi_spacing.dart';
+import '../../../core/theme/tokens/respi_typography.dart';
 import '../models/app_user.dart';
 import '../providers/auth_provider.dart';
-import '../widgets/auth_header.dart';
 
 class RegisterScreen extends ConsumerStatefulWidget {
   const RegisterScreen({super.key});
@@ -18,17 +20,18 @@ class RegisterScreen extends ConsumerStatefulWidget {
 }
 
 class _RegisterScreenState extends ConsumerState<RegisterScreen> {
-  int _currentStep = 1;
-  final _formKeyStep1 = GlobalKey<FormState>();
-  final _formKeyStep2 = GlobalKey<FormState>();
-
+  final _formKey = GlobalKey<FormState>();
   final _nameController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
-
-  final _phoneController = TextEditingController();
-  final _dobController = TextEditingController();
+  final _nameFocus = FocusNode();
+  final _emailFocus = FocusNode();
+  final _passwordFocus = FocusNode();
+  final _confirmFocus = FocusNode();
+  bool _obscurePassword = true;
+  bool _obscureConfirm = true;
+  bool _agreedToTerms = false;
   UserRole _selectedRole = UserRole.patient;
 
   @override
@@ -37,42 +40,35 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
     _emailController.dispose();
     _passwordController.dispose();
     _confirmPasswordController.dispose();
-    _phoneController.dispose();
-    _dobController.dispose();
+    _nameFocus.dispose();
+    _emailFocus.dispose();
+    _passwordFocus.dispose();
+    _confirmFocus.dispose();
     super.dispose();
   }
 
-  void _proceedToStep2() {
-    if (_formKeyStep1.currentState!.validate()) {
-      setState(() {
-        _currentStep = 2;
-      });
-    }
-  }
-
-  Future<void> _handleRegister() async {
-    if (!_formKeyStep2.currentState!.validate()) {
+  Future<void> _submit() async {
+    if (!_formKey.currentState!.validate()) return;
+    if (!_agreedToTerms) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please agree to the terms to continue')),
+      );
       return;
     }
+    RespiFocusManager.unfocus(context);
 
     final success = await ref.read(authProvider.notifier).register(
           name: _nameController.text.trim(),
           email: _emailController.text.trim(),
-          password: _passwordController.text.trim(),
+          password: _passwordController.text,
           role: _selectedRole,
-          phone: _phoneController.text.trim().isEmpty
-              ? null
-              : _phoneController.text.trim(),
-          dateOfBirth: _dobController.text.trim().isEmpty
-              ? null
-              : _dobController.text.trim(),
         );
 
     if (success && mounted) {
       if (_selectedRole == UserRole.nurse) {
-        context.go('/nurse/home');
+        context.go(RouteNames.nurseDashboard);
       } else {
-        context.go('/patient/home');
+        context.go(RouteNames.patientHome);
       }
     }
   }
@@ -82,263 +78,251 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
     final authState = ref.watch(authProvider);
     final isLoading = authState.status == AuthStatus.authenticating;
     final errorMessage = authState.errorMessage;
+    final cs = Theme.of(context).colorScheme;
 
     return Scaffold(
-      backgroundColor: AppColors.background,
       appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
+        title: const Text('Create Account'),
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_rounded,
-              color: AppColors.textPrimary),
-          onPressed: () {
-            if (_currentStep == 2) {
-              setState(() {
-                _currentStep = 1;
-              });
-            } else {
-              context.pop();
-            }
-          },
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () => context.pop(),
         ),
       ),
       body: SafeArea(
         child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xl),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              AuthHeader(
-                title: 'Créer votre compte',
-                subtitle: _currentStep == 1
-                    ? 'Étape 1 sur 2 : Identifiants de connexion'
-                    : 'Étape 2 sur 2 : Informations de profil',
-              ),
-              const SizedBox(height: AppSpacing.lg),
-
-              // Step Indicator Bar
-              Row(
-                children: [
-                  Expanded(
-                    child: Container(
-                      height: 4.0,
-                      decoration: BoxDecoration(
-                        color: AppColors.primary,
-                        borderRadius: BorderRadius.circular(2.0),
+          padding: const EdgeInsets.all(RespiSpacing.screenPadding),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                // Header
+                const Text(
+                  'Join RespiraCare',
+                  style: RespiTypography.headlineLarge,
+                ),
+                const SizedBox(height: RespiSpacing.sm),
+                Text(
+                  'Create your account to start monitoring your health.',
+                  style: RespiTypography.bodyLarge.copyWith(
+                    color: cs.onSurfaceVariant,
+                  ),
+                ),
+                const SizedBox(height: RespiSpacing.xl),
+                // Role selection
+                Row(
+                  children: [
+                    Expanded(
+                      child: ChoiceChip(
+                        label: const Center(child: Text('Patient')),
+                        selected: _selectedRole == UserRole.patient,
+                        onSelected: (selected) {
+                          if (selected) {
+                            setState(() => _selectedRole = UserRole.patient);
+                          }
+                        },
+                        selectedColor: cs.primaryContainer,
                       ),
                     ),
-                  ),
-                  const SizedBox(width: AppSpacing.xs),
-                  Expanded(
-                    child: Container(
-                      height: 4.0,
-                      decoration: BoxDecoration(
-                        color: _currentStep == 2
-                            ? AppColors.primary
-                            : AppColors.border,
-                        borderRadius: BorderRadius.circular(2.0),
+                    const SizedBox(width: RespiSpacing.sm),
+                    Expanded(
+                      child: ChoiceChip(
+                        label: const Center(child: Text('Nurse')),
+                        selected: _selectedRole == UserRole.nurse,
+                        onSelected: (selected) {
+                          if (selected) {
+                            setState(() => _selectedRole = UserRole.nurse);
+                          }
+                        },
+                        selectedColor: cs.secondaryContainer,
                       ),
                     ),
+                  ],
+                ),
+                const SizedBox(height: RespiSpacing.xl),
+                // Form card
+                RespiCard(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      RespiTextField(
+                        controller: _nameController,
+                        label: 'Full Name',
+                        hint: 'Jane Doe',
+                        prefixIcon: Icons.person_outline,
+                        textInputAction: TextInputAction.next,
+                        onSubmitted: (_) =>
+                            RespiFocusManager.request(_emailFocus),
+                        focusNode: _nameFocus,
+                        validator: (value) {
+                          if (value == null || value.trim().isEmpty) {
+                            return 'Full name is required';
+                          }
+                          return null;
+                        },
+                      ),
+                      const SizedBox(height: RespiSpacing.lg),
+                      RespiTextField(
+                        controller: _emailController,
+                        label: 'Email',
+                        hint: 'your@email.com',
+                        prefixIcon: Icons.email_outlined,
+                        keyboardType: TextInputType.emailAddress,
+                        textInputAction: TextInputAction.next,
+                        onSubmitted: (_) =>
+                            RespiFocusManager.request(_passwordFocus),
+                        focusNode: _emailFocus,
+                        validator: (value) {
+                          if (value == null || value.trim().isEmpty) {
+                            return 'Email is required';
+                          }
+                          if (!value.contains('@') || !value.contains('.')) {
+                            return 'Enter a valid email address';
+                          }
+                          return null;
+                        },
+                      ),
+                      const SizedBox(height: RespiSpacing.lg),
+                      RespiTextField(
+                        controller: _passwordController,
+                        label: 'Password',
+                        prefixIcon: Icons.lock_outline,
+                        suffixIcon: IconButton(
+                          icon: Icon(
+                            _obscurePassword
+                                ? Icons.visibility_off
+                                : Icons.visibility,
+                          ),
+                          onPressed: () => setState(
+                              () => _obscurePassword = !_obscurePassword),
+                        ),
+                        isPassword: _obscurePassword,
+                        textInputAction: TextInputAction.next,
+                        onSubmitted: (_) =>
+                            RespiFocusManager.request(_confirmFocus),
+                        focusNode: _passwordFocus,
+                        helper:
+                            'At least 8 characters with letters and numbers',
+                        validator: (value) {
+                          if (value == null || value.length < 8) {
+                            return 'Password must be at least 8 characters';
+                          }
+                          if (!value.contains(RegExp(r'[A-Za-z]')) ||
+                              !value.contains(RegExp(r'[0-9]'))) {
+                            return 'Include both letters and numbers';
+                          }
+                          return null;
+                        },
+                      ),
+                      const SizedBox(height: RespiSpacing.lg),
+                      RespiTextField(
+                        controller: _confirmPasswordController,
+                        label: 'Confirm Password',
+                        prefixIcon: Icons.lock_outline,
+                        suffixIcon: IconButton(
+                          icon: Icon(
+                            _obscureConfirm
+                                ? Icons.visibility_off
+                                : Icons.visibility,
+                          ),
+                          onPressed: () => setState(
+                              () => _obscureConfirm = !_obscureConfirm),
+                        ),
+                        isPassword: _obscureConfirm,
+                        textInputAction: TextInputAction.done,
+                        onSubmitted: (_) => _submit(),
+                        focusNode: _confirmFocus,
+                        validator: (value) {
+                          if (value != _passwordController.text) {
+                            return 'Passwords do not match';
+                          }
+                          return null;
+                        },
+                      ),
+                    ],
                   ),
-                ],
-              ),
-              const SizedBox(height: AppSpacing.xl),
-
-              if (errorMessage != null) ...[
-                Container(
-                  padding: const EdgeInsets.all(AppSpacing.md),
-                  decoration: BoxDecoration(
-                    color: AppColors.danger.withValues(alpha: 0.08),
-                    borderRadius: BorderRadius.circular(8.0),
-                    border: Border.all(
-                        color: AppColors.danger.withValues(alpha: 0.3)),
-                  ),
-                  child: Text(
-                    errorMessage,
-                    style: AppTypography.secondaryText.copyWith(
-                      color: AppColors.danger,
-                      fontWeight: FontWeight.w500,
+                ),
+                const SizedBox(height: RespiSpacing.md),
+                // Terms checkbox
+                InkWell(
+                  onTap: () => setState(() => _agreedToTerms = !_agreedToTerms),
+                  borderRadius: BorderRadius.circular(8),
+                  child: Padding(
+                    padding: const EdgeInsets.all(RespiSpacing.sm),
+                    child: Row(
+                      children: [
+                        Checkbox(
+                          value: _agreedToTerms,
+                          onChanged: (v) =>
+                              setState(() => _agreedToTerms = v ?? false),
+                        ),
+                        const Expanded(
+                          child: Text(
+                            'I agree to the Terms of Service and Privacy Policy',
+                            style: RespiTypography.bodySmall,
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ),
-                const SizedBox(height: AppSpacing.lg),
+                const SizedBox(height: RespiSpacing.md),
+                // Error
+                if (errorMessage != null)
+                  RespiCard(
+                    backgroundColor: cs.errorContainer,
+                    borderColor: cs.error,
+                    child: Row(
+                      children: [
+                        Icon(Icons.error_outline, color: cs.error),
+                        const SizedBox(width: RespiSpacing.md),
+                        Expanded(
+                          child: Text(
+                            errorMessage,
+                            style: RespiTypography.bodyMedium.copyWith(
+                              color: cs.onErrorContainer,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                const SizedBox(height: RespiSpacing.lg),
+                // Sign up button
+                RespiButton(
+                  label: 'Create Account',
+                  onPressed: isLoading ? null : _submit,
+                  isLoading: isLoading,
+                  variant: RespiButtonVariant.primary,
+                  fullWidth: true,
+                ),
+                const SizedBox(height: RespiSpacing.xl),
+                // Sign in link
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      'Already have an account? ',
+                      style: RespiTypography.bodyMedium.copyWith(
+                        color: cs.onSurfaceVariant,
+                      ),
+                    ),
+                    TextButton(
+                      onPressed: () => context.push(RouteNames.signIn),
+                      child: Text(
+                        'Sign In',
+                        style: RespiTypography.labelLarge.copyWith(
+                          color: cs.primary,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ],
-
-              if (_currentStep == 1)
-                _buildStep1Form()
-              else
-                _buildStep2Form(isLoading),
-
-              const SizedBox(height: AppSpacing.xl),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildStep1Form() {
-    return Form(
-      key: _formKeyStep1,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          // Role Selection Selector
-          Text(
-            'Type de compte',
-            style: AppTypography.bodyMedium.copyWith(
-              fontWeight: FontWeight.w600,
-              color: AppColors.textPrimary,
             ),
           ),
-          const SizedBox(height: AppSpacing.xs),
-          Row(
-            children: [
-              Expanded(
-                child: ChoiceChip(
-                  label: const Center(child: Text('Patient')),
-                  selected: _selectedRole == UserRole.patient,
-                  onSelected: (selected) {
-                    if (selected)
-                      setState(() => _selectedRole = UserRole.patient);
-                  },
-                  selectedColor: AppColors.primary.withValues(alpha: 0.15),
-                  labelStyle: TextStyle(
-                    color: _selectedRole == UserRole.patient
-                        ? AppColors.primary
-                        : AppColors.textSecondary,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ),
-              const SizedBox(width: AppSpacing.sm),
-              Expanded(
-                child: ChoiceChip(
-                  label: const Center(child: Text('Infirmier(e)')),
-                  selected: _selectedRole == UserRole.nurse,
-                  onSelected: (selected) {
-                    if (selected)
-                      setState(() => _selectedRole = UserRole.nurse);
-                  },
-                  selectedColor: AppColors.secondary.withValues(alpha: 0.15),
-                  labelStyle: TextStyle(
-                    color: _selectedRole == UserRole.nurse
-                        ? AppColors.secondary
-                        : AppColors.textSecondary,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: AppSpacing.md),
-
-          AppInput(
-            label: 'Nom complet',
-            hint: 'e.g. Ahmed Mansour',
-            controller: _nameController,
-            prefixIcon: Icons.person_outline,
-            validator: (value) {
-              if (value == null || value.trim().isEmpty) {
-                return 'Veuillez saisir votre nom complet';
-              }
-              return null;
-            },
-          ),
-          const SizedBox(height: AppSpacing.md),
-
-          AppInput(
-            label: 'Adresse e-mail',
-            hint: 'nom@exemple.com',
-            controller: _emailController,
-            prefixIcon: Icons.email_outlined,
-            keyboardType: TextInputType.emailAddress,
-            validator: (value) {
-              if (value == null || value.trim().isEmpty) {
-                return 'Veuillez saisir votre adresse e-mail';
-              }
-              if (!value.contains('@') || !value.contains('.')) {
-                return 'Veuillez saisir une adresse e-mail valide';
-              }
-              return null;
-            },
-          ),
-          const SizedBox(height: AppSpacing.md),
-
-          AppInput(
-            label: 'Mot de passe',
-            hint: '••••••••',
-            controller: _passwordController,
-            prefixIcon: Icons.lock_outline,
-            isPassword: true,
-            validator: (value) {
-              if (value == null || value.trim().isEmpty) {
-                return 'Veuillez saisir un mot de passe';
-              }
-              if (value.length < 6) {
-                return 'Le mot de passe doit contenir au moins 6 caractères';
-              }
-              return null;
-            },
-          ),
-          const SizedBox(height: AppSpacing.md),
-
-          AppInput(
-            label: 'Confirmer le mot de passe',
-            hint: '••••••••',
-            controller: _confirmPasswordController,
-            prefixIcon: Icons.lock_outline,
-            isPassword: true,
-            validator: (value) {
-              if (value != _passwordController.text) {
-                return 'Les mots de passe ne correspondent pas';
-              }
-              return null;
-            },
-          ),
-          const SizedBox(height: AppSpacing.xl),
-
-          AppButton(
-            text: 'Continuer',
-            icon: Icons.arrow_forward_rounded,
-            onPressed: _proceedToStep2,
-            fullWidth: true,
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildStep2Form(bool isLoading) {
-    return Form(
-      key: _formKeyStep2,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          AppInput(
-            label: 'Numéro de téléphone',
-            hint: '+212 6 XX XX XX XX',
-            controller: _phoneController,
-            prefixIcon: Icons.phone_outlined,
-            keyboardType: TextInputType.phone,
-          ),
-          const SizedBox(height: AppSpacing.md),
-          AppInput(
-            label: 'Date de naissance',
-            hint: 'AAAA-MM-JJ (e.g. 1965-04-12)',
-            controller: _dobController,
-            prefixIcon: Icons.calendar_today_outlined,
-            keyboardType: TextInputType.datetime,
-          ),
-          const SizedBox(height: AppSpacing.xl),
-          AppButton(
-            text: 'Finaliser l\'inscription',
-            icon: Icons.check_circle_outline_rounded,
-            loading: isLoading,
-            onPressed: isLoading ? null : _handleRegister,
-            fullWidth: true,
-          ),
-        ],
+        ),
       ),
     );
   }

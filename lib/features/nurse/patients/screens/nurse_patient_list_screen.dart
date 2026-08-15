@@ -54,15 +54,15 @@ class NursePatientListScreen extends ConsumerWidget {
                               .searchPatients(value),
                         ),
                       ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: AppSpacing.md),
+                      const Padding(
+                        padding:
+                            EdgeInsets.symmetric(horizontal: AppSpacing.md),
                         child: Row(
                           children: [
                             _FilterChip(label: 'Tous', isSelected: true),
-                            const SizedBox(width: AppSpacing.sm),
+                            SizedBox(width: AppSpacing.sm),
                             _FilterChip(label: 'À revoir'),
-                            const SizedBox(width: AppSpacing.sm),
+                            SizedBox(width: AppSpacing.sm),
                             _FilterChip(label: 'Suivis'),
                           ],
                         ),

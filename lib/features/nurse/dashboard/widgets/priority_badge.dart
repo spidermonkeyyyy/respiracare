@@ -39,19 +39,19 @@ class PriorityBadge extends StatelessWidget {
   _PriorityDetails _detailsFor(PriorityLevel priority) {
     switch (priority) {
       case PriorityLevel.high:
-        return _PriorityDetails(
+        return const _PriorityDetails(
           label: 'Priorité élevée',
           icon: Icons.warning_amber_rounded,
           color: AppColors.danger,
         );
       case PriorityLevel.reviewRequired:
-        return _PriorityDetails(
+        return const _PriorityDetails(
           label: 'À revoir',
           icon: Icons.remove_red_eye_outlined,
           color: AppColors.warning,
         );
       case PriorityLevel.informational:
-        return _PriorityDetails(
+        return const _PriorityDetails(
           label: 'Information',
           icon: Icons.info_outline_rounded,
           color: AppColors.info,

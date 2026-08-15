@@ -1,6 +1,6 @@
 /// Global Application Constants for RespiraCare
 abstract class AppConstants {
-  static const String appName = 'RespiraCare';
+  static const String appName = 'Sanad';
   static const String appVersion = '1.0.0';
 
   // Spacing Grid Tokens
@@ -22,7 +22,7 @@ abstract class AppConstants {
 
   // Non-Diagnostic Legal Disclaimer Text
   static const String nonDiagnosticDisclaimer =
-      'RespiraCare is a digital telemonitoring support application. '
+      'Sanad is a digital telemonitoring support application. '
       'It does not provide autonomous diagnosis or medical decisions. '
       'In case of acute distress, immediately dial 15 / 112 or contact emergency services.';
 }

@@ -6,6 +6,7 @@ import '../../../../app/theme/radius.dart';
 import '../../../../app/theme/spacing.dart';
 import '../../../../app/theme/typography.dart';
 import '../../../../core/utils/animations/app_animations.dart';
+import '../../../../app/widgets/app_header.dart';
 import '../../../../core/widgets/buttons/app_button.dart'
     show AppButton, AppButtonVariant;
 import '../../../../core/widgets/cards/app_card.dart';
@@ -32,10 +33,10 @@ class _SmokingCessationScreenState
 
     return Scaffold(
       backgroundColor: AppColors.background,
-      appBar: AppBar(
-        title: const Text('Sevrage tabagique'),
-        backgroundColor: AppColors.surface,
-        elevation: 0,
+      appBar: AppHeader(
+        title: 'Sevrage tabagique',
+        showBackButton: true,
+        onBack: () => context.pop(),
       ),
       body: SafeArea(
         child: _buildBody(state),
@@ -271,7 +272,7 @@ class _SmokingCessationScreenState
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
+        const Text(
           'Votre progression',
           style: AppTypography.titleLarge,
         ),
@@ -340,7 +341,7 @@ class _SmokingCessationScreenState
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
+        const Text(
           'Actions',
           style: AppTypography.titleLarge,
         ),
@@ -384,7 +385,7 @@ class _SmokingCessationScreenState
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(
+            const Text(
               'Dernières entrées',
               style: AppTypography.titleLarge,
             ),

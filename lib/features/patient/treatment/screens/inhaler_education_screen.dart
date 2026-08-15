@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../app/theme/colors.dart';
 import '../../../../app/theme/spacing.dart';
 import '../../../../app/theme/typography.dart';
+import '../../../../app/widgets/app_header.dart';
 import '../../../../core/widgets/cards/app_card.dart';
 import '../models/educational_video.dart';
 import '../../../../features/authentication/providers/auth_provider.dart';
@@ -88,10 +89,10 @@ class _InhalerEducationScreenState
 
     return Scaffold(
       backgroundColor: AppColors.background,
-      appBar: AppBar(
-        title: const Text('Technique d’inhalation'),
-        backgroundColor: AppColors.surface,
-        elevation: 0,
+      appBar: AppHeader(
+        title: 'Technique d’inhalation',
+        showBackButton: true,
+        onBack: () => Navigator.of(context).pop(),
       ),
       body: SafeArea(
         child: Padding(
@@ -102,7 +103,7 @@ class _InhalerEducationScreenState
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('Technique d’inhalation',
+                    const Text('Technique d’inhalation',
                         style: AppTypography.titleLarge),
                     const SizedBox(height: AppSpacing.sm),
                     Text(
@@ -155,7 +156,7 @@ class _InhalerEducationScreenState
                 },
               ),
               const SizedBox(height: AppSpacing.md),
-              Text('Tutoriels', style: AppTypography.titleLarge),
+              const Text('Tutoriels', style: AppTypography.titleLarge),
               const SizedBox(height: AppSpacing.sm),
               ..._videos.map(
                 (video) => EducationalVideoCard(

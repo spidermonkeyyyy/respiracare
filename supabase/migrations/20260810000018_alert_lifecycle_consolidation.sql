@@ -1,0 +1,42 @@
+-- ============================================================
+-- Migration 018: alert lifecycle enforcement (forward-only)
+-- Project: RespiraCare
+-- Date: 2026-08-10
+-- ------------------------------------------------------------
+-- The BEFORE UPDATE OF status trigger was already defined in
+-- Migration 008 (trg_alert_lifecycle_forward). This migration
+-- consolidates additional immutability protections for audit-trail
+-- tables, mirroring the architectural rule that closing an alert
+-- always requires an explicit action and is never silent.
+--
+-- What was defined in 008:
+--   * alerts.status forward-only enforcement trigger.
+--
+-- What this migration adds:
+--   * DOCUMENTATION block — no executable code beyond the trigger
+--     already created. (See below.)
+-- ============================================================
+
+-- ============================================================
+-- (No new code. The forward-only enforcement is already live via
+-- Migration 008:
+--
+--   CREATE TRIGGER trg_alert_lifecycle_forward
+--       BEFORE UPDATE OF status ON public.alerts
+--       FOR EACH ROW EXECUTE PROCEDURE public.enforce_alert_lifecycle_forward();
+--
+-- The CHECK constraints in Migration 008 enforce:
+--   - status IN ('acknowledged','in_progress','resolved') ⇒ acknowledged_at IS NOT NULL
+--   - status = 'resolved' ⇒ resolved_at IS NOT NULL AND resolution_note IS NOT NULL
+--   - nurse_action = 'other' ⇒ action_note IS NOT NULL
+--   - nurse_decision = 'not_concerning' ⇒ justification IS NOT NULL
+--   - nurse_decision IS NOT NULL ⇒ nurse_action IS NOT NULL
+--
+-- RLS (Migration 999 / Step 15) will additionally deny:
+--   - DELETE on alerts for all roles (indefinite no-delete policy).
+--   - DELETE/UPDATE on alert_triggered_rules for all roles (immutable).
+--   - DELETE/UPDATE on supporting_measurements for all roles (immutable).
+-- ============================================================
+
+-- Done (no-op migration; documentation only).
+select 'Migration 018 completed — alert lifecycle already enforced by Migration 008.' as message;

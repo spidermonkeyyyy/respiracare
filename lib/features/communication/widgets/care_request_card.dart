@@ -37,7 +37,7 @@ class CareRequestCard extends StatelessWidget {
         children: [
           Row(
             children: [
-              Icon(Icons.assignment_outlined,
+              const Icon(Icons.assignment_outlined,
                   color: AppColors.primary, size: 18.0),
               const SizedBox(width: AppSpacing.sm),
               Expanded(

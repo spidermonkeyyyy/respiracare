@@ -52,7 +52,7 @@ class _MessageComposerState extends State<MessageComposer> {
     return SafeArea(
       child: Container(
         padding: const EdgeInsets.all(AppSpacing.md),
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           color: AppColors.surface,
           border: Border(top: BorderSide(color: AppColors.border)),
         ),

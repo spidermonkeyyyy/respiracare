@@ -1,4 +1,5 @@
 import 'package:respiracare/features/nurse/dashboard/models/monitoring_rule.dart';
+import '../../../../mock/mock_patients.dart';
 import 'package:respiracare/features/nurse/monitoring/models/monitoring_submission.dart';
 import 'package:respiracare/features/nurse/treatment/models/treatment_adherence.dart';
 import '../models/nurse_patient.dart';
@@ -8,7 +9,7 @@ class MockNursePatientRepository implements NursePatientRepository {
   final List<NursePatient> _patients = [
     NursePatient(
       id: 'p1',
-      fullName: 'Ahmed Ben Ali',
+      fullName: kPatientP1FullName,
       condition: 'BPCO',
       classification: 'GOLD III',
       lastSubmissionAt: DateTime.now().subtract(const Duration(minutes: 12)),
@@ -180,7 +181,7 @@ class MockNursePatientRepository implements NursePatientRepository {
     return List.from(_patients);
   }
 
-  @override
+    @override
   Future<List<NursePatient>> searchPatients(String query) async {
     await Future.delayed(const Duration(milliseconds: 200));
     final normalizedQuery = query.toLowerCase();
@@ -196,11 +197,19 @@ class MockNursePatientRepository implements NursePatientRepository {
     return _patients.firstWhere((patient) => patient.id == patientId, orElse: () => const NursePatient(
       id: '',
       fullName: 'Patient introuvable',
-      condition: 'Non disponible',
+      condition: 'N/A',
       classification: 'N/A',
       priority: PriorityLevel.informational,
       hasNewSubmission: false,
       adherence: null,
     ));
+  }
+
+  @override
+  Future<List<NursePatient>> getAssignedPatients(String nurseId) async {
+    await Future.delayed(const Duration(milliseconds: 250));
+    // In the mock, every patient is assigned to the demo nurse. A real
+    // backend would filter by the nurse's assignment roster.
+    return List.from(_patients);
   }
 }

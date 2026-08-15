@@ -87,7 +87,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
               children: [
                 const AuthHeader(
                   title: 'Bienvenue',
-                  subtitle: 'Connectez-vous à votre espace RespiraCare',
+                  subtitle: 'Connectez-vous à votre espace Sanad',
                 ),
                 const SizedBox(height: AppSpacing.xl),
 
@@ -199,7 +199,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text(
+                    const Text(
                       'Pas encore de compte ? ',
                       style: AppTypography.secondaryText,
                     ),

@@ -72,7 +72,7 @@ class MonitoringReviewScreen extends ConsumerWidget {
                                   style: AppTypography.titleLarge
                                       .copyWith(fontSize: 15.0),
                                 ),
-                                Text(
+                                const Text(
                                   'Vérifiez vos réponses avant d\'envoyer.',
                                   style: AppTypography.labelMedium,
                                 ),

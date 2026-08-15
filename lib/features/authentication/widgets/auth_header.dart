@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../../app/theme/colors.dart';
 import '../../../app/theme/spacing.dart';
 import '../../../app/theme/typography.dart';
+import '../../../core/components/logo/sanad_logo.dart';
 
 class AuthHeader extends StatelessWidget {
   final String title;
@@ -20,21 +21,10 @@ class AuthHeader extends StatelessWidget {
       children: [
         Row(
           children: [
-            Container(
-              padding: const EdgeInsets.all(AppSpacing.sm),
-              decoration: BoxDecoration(
-                color: AppColors.primary.withValues(alpha: 0.1),
-                shape: BoxShape.circle,
-              ),
-              child: const Icon(
-                Icons.medical_services_rounded,
-                size: 28.0,
-                color: AppColors.primary,
-              ),
-            ),
+            const SanadLogo(size: 40),
             const SizedBox(width: AppSpacing.sm),
             Text(
-              'RespiraCare',
+              'Sanad',
               style: AppTypography.titleLarge.copyWith(
                 color: AppColors.primary,
                 fontWeight: FontWeight.w700,

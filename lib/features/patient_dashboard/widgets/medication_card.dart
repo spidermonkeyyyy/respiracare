@@ -85,7 +85,7 @@ class MedicationCard extends StatelessWidget {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
+                  const Text(
                     'Prochain rappel',
                     style: AppTypography.labelMedium,
                   ),

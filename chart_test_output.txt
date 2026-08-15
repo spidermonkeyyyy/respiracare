@@ -1,0 +1,41 @@
+00:00 +0: loading C:/testing/souffli/respiracare/test/core/components/respi_line_chart_test.dart
+test/core/components/respi_line_chart_test.dart:103:13: Error: Cannot invoke a non-'const' constructor where a const expression is expected.
+Try using a constructor or factory that is 'const'.
+const _d1 = DateTime(2025, 1, 1, 9);
+            ^^^^^^^^
+test/core/components/respi_line_chart_test.dart:104:13: Error: Cannot invoke a non-'const' constructor where a const expression is expected.
+Try using a constructor or factory that is 'const'.
+const _d2 = DateTime(2025, 1, 2, 9);
+            ^^^^^^^^
+test/core/components/respi_line_chart_test.dart:105:13: Error: Cannot invoke a non-'const' constructor where a const expression is expected.
+Try using a constructor or factory that is 'const'.
+const _d3 = DateTime(2025, 1, 3, 9);
+            ^^^^^^^^
+test/core/components/respi_line_chart_test.dart:106:13: Error: Cannot invoke a non-'const' constructor where a const expression is expected.
+Try using a constructor or factory that is 'const'.
+const _d4 = DateTime(2025, 1, 4, 9);
+            ^^^^^^^^
+00:00 +0 -1: loading C:/testing/souffli/respiracare/test/core/components/respi_line_chart_test.dart [E]
+  Failed to load "C:/testing/souffli/respiracare/test/core/components/respi_line_chart_test.dart":
+  Compilation failed for testPath=C:/testing/souffli/respiracare/test/core/components/respi_line_chart_test.dart: test/core/components/respi_line_chart_test.dart:103:13: Error: Cannot invoke a non-'const' constructor where a const expression is expected.
+  Try using a constructor or factory that is 'const'.
+  const _d1 = DateTime(2025, 1, 1, 9);
+              ^^^^^^^^
+  test/core/components/respi_line_chart_test.dart:104:13: Error: Cannot invoke a non-'const' constructor where a const expression is expected.
+  Try using a constructor or factory that is 'const'.
+  const _d2 = DateTime(2025, 1, 2, 9);
+              ^^^^^^^^
+  test/core/components/respi_line_chart_test.dart:105:13: Error: Cannot invoke a non-'const' constructor where a const expression is expected.
+  Try using a constructor or factory that is 'const'.
+  const _d3 = DateTime(2025, 1, 3, 9);
+              ^^^^^^^^
+  test/core/components/respi_line_chart_test.dart:106:13: Error: Cannot invoke a non-'const' constructor where a const expression is expected.
+  Try using a constructor or factory that is 'const'.
+  const _d4 = DateTime(2025, 1, 4, 9);
+              ^^^^^^^^
+  .
+00:00 +0 -1: Some tests failed.
+
+Failing tests:
+  C:/testing/souffli/respiracare/test/core/components/respi_line_chart_test.dart: loading C:/testing/souffli/respiracare/test/core/components/respi_line_chart_test.dart
+

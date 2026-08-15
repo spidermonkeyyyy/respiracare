@@ -29,33 +29,33 @@ abstract class AppTheme {
         bodySmall: AppTypography.secondaryText,
         labelMedium: AppTypography.labelMedium,
       ),
-      cardTheme: CardThemeData(
+      cardTheme: const CardThemeData(
         color: AppColors.surface,
         elevation: 0,
         shape: RoundedRectangleBorder(
           borderRadius: AppRadius.mediumBorderRadius,
-          side: const BorderSide(color: AppColors.border, width: 1.0),
+          side: BorderSide(color: AppColors.border, width: 1.0),
         ),
       ),
-      inputDecorationTheme: InputDecorationTheme(
+      inputDecorationTheme: const InputDecorationTheme(
         filled: true,
         fillColor: AppColors.surfaceVariant,
-        contentPadding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 14.0),
+        contentPadding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 14.0),
         border: OutlineInputBorder(
           borderRadius: AppRadius.smallBorderRadius,
-          borderSide: const BorderSide(color: AppColors.border),
+          borderSide: BorderSide(color: AppColors.border),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: AppRadius.smallBorderRadius,
-          borderSide: const BorderSide(color: AppColors.border),
+          borderSide: BorderSide(color: AppColors.border),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: AppRadius.smallBorderRadius,
-          borderSide: const BorderSide(color: AppColors.primary, width: 1.5),
+          borderSide: BorderSide(color: AppColors.primary, width: 1.5),
         ),
         errorBorder: OutlineInputBorder(
           borderRadius: AppRadius.smallBorderRadius,
-          borderSide: const BorderSide(color: AppColors.danger),
+          borderSide: BorderSide(color: AppColors.danger),
         ),
       ),
     );

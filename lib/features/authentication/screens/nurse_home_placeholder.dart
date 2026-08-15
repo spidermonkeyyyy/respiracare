@@ -21,7 +21,7 @@ class NurseHomePlaceholder extends ConsumerWidget {
       backgroundColor: AppColors.background,
       appBar: AppBar(
         title: Text(
-          'Espace Infirmier — RespiraCare',
+          'Espace Infirmier — Sanad',
           style:
               AppTypography.titleLarge.copyWith(color: AppColors.textPrimary),
         ),

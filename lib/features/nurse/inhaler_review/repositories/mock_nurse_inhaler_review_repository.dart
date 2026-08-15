@@ -1,4 +1,5 @@
 import '../models/inhaler_video_review.dart';
+import '../../../../mock/mock_patients.dart';
 import 'nurse_inhaler_review_repository.dart';
 
 class MockNurseInhalerReviewRepository implements NurseInhalerReviewRepository {
@@ -9,7 +10,7 @@ class MockNurseInhalerReviewRepository implements NurseInhalerReviewRepository {
       return const InhalerVideoReview(
         id: 'video-1',
         patientId: 'p1',
-        patientName: 'Ahmed Ben Ali',
+        patientName: kPatientP1FullName,
         submittedAt: null,
         videoUrl: 'https://example.com/inhaler-demo.mp4',
         status: InhalerTechniqueStatus.needsImprovement,

@@ -1,0 +1,176 @@
+00:00 +0: loading C:/testing/souffli/respiracare/test/alerts/alert_group_test.dart
+00:00 +0: C:/testing/souffli/respiracare/test/alerts/alert_group_test.dart: groupByPatient groups alerts by patient and orders by priority
+00:00 +1: C:/testing/souffli/respiracare/test/alerts/mock_alert_repository_test.dart: mock repository lifecycle: acknowledge -> recordAction -> resolve
+00:01 +2: C:/testing/souffli/respiracare/test/core/accessibility/accessibility_test.dart: Accessibility & Responsive Foundation Tests Touch target size and tap area enforcer
+00:02 +3: C:/testing/souffli/respiracare/test/core/accessibility/accessibility_test.dart: Accessibility & Responsive Foundation Tests Touch target size and tap area enforcer
+00:02 +4: C:/testing/souffli/respiracare/test/core/components/respi_line_chart_test.dart: renders a chart without exceptions
+00:02 +5: C:/testing/souffli/respiracare/test/core/components/respi_line_chart_test.dart: renders a chart without exceptions
+00:02 +6: C:/testing/souffli/respiracare/test/core/components/respi_line_chart_test.dart: renders a chart without exceptions
+00:03 +7: C:/testing/souffli/respiracare/test/core/components/respi_line_chart_test.dart: renders a chart without exceptions
+00:03 +8: C:/testing/souffli/respiracare/test/core/components/respi_line_chart_test.dart: renders a chart without exceptions
+00:03 +9: C:/testing/souffli/respiracare/test/core/components/respi_line_chart_test.dart: renders a chart without exceptions
+00:03 +10: C:/testing/souffli/respiracare/test/core/components/respi_line_chart_test.dart: renders a chart without exceptions
+00:03 +11: C:/testing/souffli/respiracare/test/core/components/respi_line_chart_test.dart: renders a chart without exceptions
+00:03 +12: C:/testing/souffli/respiracare/test/core/components/respi_line_chart_test.dart: renders a chart without exceptions
+00:03 +13: C:/testing/souffli/respiracare/test/core/components/respi_line_chart_test.dart: renders a chart without exceptions
+00:03 +14: C:/testing/souffli/respiracare/test/core/components/respi_line_chart_test.dart: renders a chart without exceptions
+00:03 +15: C:/testing/souffli/respiracare/test/core/components/respi_line_chart_test.dart: renders a chart without exceptions
+00:03 +16: C:/testing/souffli/respiracare/test/core/components/respi_line_chart_test.dart: renders a chart without exceptions
+00:03 +17: C:/testing/souffli/respiracare/test/core/components/respi_line_chart_test.dart: renders a chart without exceptions
+00:03 +18: C:/testing/souffli/respiracare/test/features/communication/conversation_repository_test.dart: MockConversationRepository completeTask marks the task done and the linked request completed
+00:03 +19: C:/testing/souffli/respiracare/test/features/communication/nurse_messages_provider_test.dart: NurseMessagesNotifier load populates conversations and computes unread
+00:03 +20: C:/testing/souffli/respiracare/test/features/authentication/auth_provider_test.dart: AuthNotifier & MockAuthRepository Tests Login fails with invalid password and sets non-alarming error
+00:03 +21: C:/testing/souffli/respiracare/test/features/authentication/auth_provider_test.dart: AuthNotifier & MockAuthRepository Tests Login fails with invalid password and sets non-alarming error
+00:03 +22: C:/testing/souffli/respiracare/test/features/authentication/auth_provider_test.dart: AuthNotifier & MockAuthRepository Tests Login fails with invalid password and sets non-alarming error
+00:03 +23: C:/testing/souffli/respiracare/test/features/authentication/auth_provider_test.dart: AuthNotifier & MockAuthRepository Tests Login fails with invalid password and sets non-alarming error
+00:03 +24: C:/testing/souffli/respiracare/test/features/authentication/auth_provider_test.dart: AuthNotifier & MockAuthRepository Tests Login fails with invalid password and sets non-alarming error
+00:03 +25: C:/testing/souffli/respiracare/test/features/authentication/auth_provider_test.dart: AuthNotifier & MockAuthRepository Tests Login fails with invalid password and sets non-alarming error
+00:04 +26: C:/testing/souffli/respiracare/test/features/authentication/auth_provider_test.dart: AuthNotifier & MockAuthRepository Tests Login fails with invalid password and sets non-alarming error
+00:04 +27: C:/testing/souffli/respiracare/test/features/authentication/auth_provider_test.dart: AuthNotifier & MockAuthRepository Tests Login fails with invalid password and sets non-alarming error
+00:04 +28: C:/testing/souffli/respiracare/test/features/authentication/auth_provider_test.dart: AuthNotifier & MockAuthRepository Tests Login fails with invalid password and sets non-alarming error
+00:04 +29: C:/testing/souffli/respiracare/test/features/communication/nurse_messages_provider_test.dart: NurseMessagesNotifier createCareRequest updates the conversation state
+00:04 +30: C:/testing/souffli/respiracare/test/core/components/respi_line_chart_test.dart: safe when animation is disabled
+00:04 +31: C:/testing/souffli/respiracare/test/core/components/respi_line_chart_test.dart: safe when animation is disabled
+00:04 +32: C:/testing/souffli/respiracare/test/features/authentication/auth_provider_test.dart: AuthNotifier & MockAuthRepository Tests Logout clears session and updates state to unauthenticated
+00:05 +33: C:/testing/souffli/respiracare/test/features/monitoring/clinical_time_range_test.dart: ClinicalTimeRange exposes human-friendly labels
+00:05 +34: C:/testing/souffli/respiracare/test/features/monitoring/clinical_time_range_test.dart: ClinicalTimeRange exposes the correct day count
+00:05 +35: C:/testing/souffli/respiracare/test/features/monitoring/clinical_time_range_test.dart: ClinicalTimeRange toDateTimeRange builds an inclusive window for 7 days
+00:05 +36: C:/testing/souffli/respiracare/test/features/monitoring/clinical_time_range_test.dart: ClinicalTimeRange toDateTimeRange includes the whole end day
+00:05 +37: C:/testing/souffli/respiracare/test/features/monitoring/clinical_time_range_test.dart: ClinicalTimeRange TimeRangeOption.all is consistent with the enum
+00:05 +38: C:/testing/souffli/respiracare/test/features/monitoring/clinical_trend_calculator_test.dart: ClinicalTrendCalculator returns insufficientData when there are fewer than 2 readings
+00:06 +39: C:/testing/souffli/respiracare/test/features/monitoring/clinical_trend_calculator_test.dart: ClinicalTrendCalculator returns insufficientData for an empty list
+00:06 +40: C:/testing/souffli/respiracare/test/features/monitoring/clinical_trend_calculator_test.dart: ClinicalTrendCalculator ignores invalid measurements (NaN / empty unit)
+00:06 +41: C:/testing/souffli/respiracare/test/features/monitoring/clinical_trend_calculator_test.dart: ClinicalTrendCalculator classifies a rise beyond the threshold as upward
+00:06 +42: C:/testing/souffli/respiracare/test/features/monitoring/clinical_trend_calculator_test.dart: ClinicalTrendCalculator classifies a fall beyond the threshold as downward
+00:06 +43: C:/testing/souffli/respiracare/test/features/monitoring/clinical_trend_calculator_test.dart: ClinicalTrendCalculator classifies small changes within threshold as stable
+00:06 +44: C:/testing/souffli/respiracare/test/features/monitoring/clinical_trend_calculator_test.dart: ClinicalTrendCalculator uses a larger threshold for heart rate (5 bpm)
+00:06 +45: C:/testing/souffli/respiracare/test/features/monitoring/clinical_trend_calculator_test.dart: ClinicalTrendCalculator sorts unsorted readings by time before classifying
+00:06 +46: C:/testing/souffli/respiracare/test/features/monitoring/clinical_trend_calculator_test.dart: ClinicalTrendCalculator description is descriptive and never diagnostic
+00:06 +47: C:/testing/souffli/respiracare/test/features/monitoring/mock_monitoring_repository_test.dart: MockMonitoringRepository.getHistoricalMeasurements filters by type set
+00:06 +48: C:/testing/souffli/respiracare/test/features/monitoring/mock_monitoring_repository_test.dart: MockMonitoringRepository.getHistoricalMeasurements returns only measurements inside the inclusive range
+00:06 +49: C:/testing/souffli/respiracare/test/features/monitoring/mock_monitoring_repository_test.dart: MockMonitoringRepository.getHistoricalMeasurements returns only measurements inside the inclusive range
+00:06 +50: C:/testing/souffli/respiracare/test/features/monitoring/mock_monitoring_repository_test.dart: MockMonitoringRepository.getHistoricalMeasurements returns only measurements inside the inclusive range
+00:06 +51: C:/testing/souffli/respiracare/test/features/monitoring/mock_monitoring_repository_test.dart: MockMonitoringRepository.getHistoricalMeasurements returns only measurements inside the inclusive range
+00:06 +52: C:/testing/souffli/respiracare/test/features/monitoring/mock_monitoring_repository_test.dart: MockMonitoringRepository.getHistoricalMeasurements returns only measurements inside the inclusive range
+00:06 +53: C:/testing/souffli/respiracare/test/features/monitoring/mock_monitoring_repository_test.dart: MockMonitoringRepository.getHistoricalMeasurements returns only measurements inside the inclusive range
+00:06 +54: C:/testing/souffli/respiracare/test/features/monitoring/mock_monitoring_repository_test.dart: MockMonitoringRepository.getHistoricalMeasurements returns only measurements inside the inclusive range
+00:06 +55: C:/testing/souffli/respiracare/test/features/monitoring/mock_monitoring_repository_test.dart: MockMonitoringRepository.getHistoricalMeasurements returns only measurements inside the inclusive range
+00:06 +56: C:/testing/souffli/respiracare/test/features/monitoring/mock_monitoring_repository_test.dart: MockMonitoringRepository.getHistoricalMeasurements returns only measurements inside the inclusive range
+00:06 +57: C:/testing/souffli/respiracare/test/features/monitoring/mock_monitoring_repository_test.dart: MockMonitoringRepository.getHistoricalMeasurements returns only measurements inside the inclusive range
+00:06 +58: C:/testing/souffli/respiracare/test/features/monitoring/mock_monitoring_repository_test.dart: MockMonitoringRepository.getHistoricalMeasurements returns only measurements inside the inclusive range
+00:06 +59: C:/testing/souffli/respiracare/test/features/monitoring/mock_monitoring_repository_test.dart: MockMonitoringRepository.getHistoricalMeasurements returns only measurements inside the inclusive range
+00:06 +60: C:/testing/souffli/respiracare/test/features/monitoring/mock_monitoring_repository_test.dart: MockMonitoringRepository.getHistoricalMeasurements sorts results oldest to newest
+00:07 +61: C:/testing/souffli/respiracare/test/features/monitoring/monitoring_history_screen_test.dart: layout & controls shows an informational banner and range selector
+00:07 +62: C:/testing/souffli/respiracare/test/features/monitoring/monitoring_history_screen_test.dart: layout & controls shows an informational banner and range selector
+00:07 +63: C:/testing/souffli/respiracare/test/features/monitoring/monitoring_history_screen_test.dart: layout & controls shows an informational banner and range selector
+00:08 +64: C:/testing/souffli/respiracare/test/features/monitoring/monitoring_history_screen_test.dart: layout & controls shows an informational banner and range selector
+00:08 +65: C:/testing/souffli/respiracare/test/features/monitoring/monitoring_history_screen_test.dart: layout & controls shows an informational banner and range selector
+00:08 +66: C:/testing/souffli/respiracare/test/features/monitoring/monitoring_history_screen_test.dart: layout & controls shows an informational banner and range selector
+00:08 +67: C:/testing/souffli/respiracare/test/features/monitoring/monitoring_history_screen_test.dart: layout & controls shows an informational banner and range selector
+00:08 +68: C:/testing/souffli/respiracare/test/features/monitoring/monitoring_history_screen_test.dart: layout & controls shows an informational banner and range selector
+00:09 +69: C:/testing/souffli/respiracare/test/features/monitoring/monitoring_history_screen_test.dart: layout & controls shows an informational banner and range selector
+00:09 +70: C:/testing/souffli/respiracare/test/features/monitoring/monitoring_history_screen_test.dart: layout & controls shows an informational banner and range selector
+00:09 +71: C:/testing/souffli/respiracare/test/features/monitoring/monitoring_history_screen_test.dart: layout & controls shows an informational banner and range selector
+00:09 +72: C:/testing/souffli/respiracare/test/features/monitoring/monitoring_provider_test.dart: MonitoringNotifier Tests Submitting monitoring with normal SpO2 returns normal result
+00:09 +73: C:/testing/souffli/respiracare/test/features/monitoring/monitoring_provider_test.dart: MonitoringNotifier Tests Submitting monitoring with normal SpO2 returns normal result
+00:09 +74: C:/testing/souffli/respiracare/test/features/monitoring/monitoring_provider_test.dart: MonitoringNotifier Tests Submitting monitoring with normal SpO2 returns normal result
+00:09 +75: C:/testing/souffli/respiracare/test/features/monitoring/monitoring_history_screen_test.dart: layout & controls shows a chart card with readings and trend
+00:09 +76: C:/testing/souffli/respiracare/test/features/nurse/alerts/alert_repository_test.dart: MockAlertRepository resolve requires acknowledgement and rejects a second resolve
+00:10 +77: C:/testing/souffli/respiracare/test/features/nurse/alerts/alert_repository_test.dart: MockAlertRepository resolve requires acknowledgement and rejects a second resolve
+00:10 +78: C:/testing/souffli/respiracare/test/features/nurse/alerts/alert_repository_test.dart: MockAlertRepository resolve requires acknowledgement and rejects a second resolve
+00:10 +79: C:/testing/souffli/respiracare/test/features/monitoring/monitoring_provider_test.dart: MonitoringNotifier Tests Submitting with low SpO2 triggers reviewRequired result
+00:10 +80: C:/testing/souffli/respiracare/test/features/monitoring/monitoring_provider_test.dart: MonitoringNotifier Tests Submitting with low SpO2 triggers reviewRequired result
+00:10 +81: C:/testing/souffli/respiracare/test/features/monitoring/monitoring_provider_test.dart: MonitoringNotifier Tests Submitting with low SpO2 triggers reviewRequired result
+00:10 +82: C:/testing/souffli/respiracare/test/features/monitoring/monitoring_provider_test.dart: MonitoringNotifier Tests Submitting with low SpO2 triggers reviewRequired result
+00:10 +83: C:/testing/souffli/respiracare/test/features/monitoring/monitoring_provider_test.dart: MonitoringNotifier Tests Submitting with low SpO2 triggers reviewRequired result
+00:10 +84: C:/testing/souffli/respiracare/test/features/monitoring/monitoring_provider_test.dart: MonitoringNotifier Tests Submitting with low SpO2 triggers reviewRequired result
+00:10 +85: C:/testing/souffli/respiracare/test/features/monitoring/monitoring_provider_test.dart: MonitoringNotifier Tests Submitting with low SpO2 triggers reviewRequired result
+00:10 +86: C:/testing/souffli/respiracare/test/features/monitoring/monitoring_provider_test.dart: MonitoringNotifier Tests Submitting with low SpO2 triggers reviewRequired result
+00:10 +87: C:/testing/souffli/respiracare/test/features/monitoring/monitoring_provider_test.dart: MonitoringNotifier Tests Submitting with low SpO2 triggers reviewRequired result
+00:10 +88: C:/testing/souffli/respiracare/test/features/monitoring/monitoring_history_screen_test.dart: user interactions retry after an error reloads data
+00:11 +89: C:/testing/souffli/respiracare/test/features/monitoring/monitoring_history_screen_test.dart: user interactions retry after an error reloads data
+00:11 +90: C:/testing/souffli/respiracare/test/features/nurse/alerts/alert_repository_test.dart: AlertListNotifier alerts are grouped per patient by highest priority
+00:11 +91: C:/testing/souffli/respiracare/test/features/monitoring/monitoring_provider_test.dart: MonitoringNotifier Tests Reset clears all answers and evaluation result
+00:11 +92: C:/testing/souffli/respiracare/test/features/nurse/alerts/rule_repository_test.dart: RuleDraftNotifier switching metric re-points to a supported operator
+00:11 +93: C:/testing/souffli/respiracare/test/features/monitoring/monitoring_history_screen_test.dart: user interactions refresh pulls fresh data
+00:11 +94: C:/testing/souffli/respiracare/test/features/nurse/alerts/alert_repository_test.dart: AlertListNotifier acknowledging through the provider updates state
+00:11 +95: C:/testing/souffli/respiracare/test/features/nurse/alerts/rule_repository_test.dart: RuleDraftNotifier a named rule with a complete condition can be saved
+00:11 +96: C:/testing/souffli/respiracare/test/features/nurse/alerts/rule_repository_test.dart: RuleDraftNotifier a named rule with a complete condition can be saved
+00:11 +97: C:/testing/souffli/respiracare/test/features/nurse/alerts/alert_repository_test.dart: AlertListNotifier an invalid recordAction surfaces a French error message
+00:12 +98: C:/testing/souffli/respiracare/test/features/nurse/dashboard/nurse_assigned_patient_search_test.dart: nurseAssignedPatientSearchProvider returns the full authorized roster when the query is empty
+00:12 +99: C:/testing/souffli/respiracare/test/features/nurse/dashboard/nurse_assigned_patient_search_test.dart: nurseAssignedPatientSearchProvider matches case-insensitively on the display name
+00:12 +100: C:/testing/souffli/respiracare/test/features/nurse/dashboard/nurse_assigned_patient_search_test.dart: nurseAssignedPatientSearchProvider returns no matches when nothing matches the query
+00:12 +101: C:/testing/souffli/respiracare/test/features/nurse/dashboard/nurse_assignments_provider_test.dart: NurseAssignmentsNotifier (auth-bridged) loads assigned patients using the auth-derived nurse id (no hardcode)
+00:13 +102: C:/testing/souffli/respiracare/test/features/nurse/dashboard/nurse_assignments_provider_test.dart: NurseAssignmentsNotifier (auth-bridged) is an explicit empty state when no patients are assigned
+00:13 +103: C:/testing/souffli/respiracare/test/features/nurse/dashboard/nurse_assignments_provider_test.dart: NurseAssignmentsNotifier (auth-bridged) surfaces an error distinctly from an empty roster
+00:13 +104: C:/testing/souffli/respiracare/test/features/nurse/dashboard/nurse_assignments_provider_test.dart: NurseAssignmentsNotifier (auth-bridged) refresh re-invokes the assigned-patient repository
+00:13 +105: C:/testing/souffli/respiracare/test/features/nurse/dashboard/nurse_assignments_provider_test.dart: NurseAssignmentsNotifier (auth-bridged) does not load when no authenticated nurse session exists
+00:13 +106: C:/testing/souffli/respiracare/test/features/nurse/dashboard/nurse_assignments_provider_test.dart: NurseAssignmentsNotifier (auth-bridged) does not load for an authenticated non-nurse user
+00:13 +107: C:/testing/souffli/respiracare/test/features/nurse/dashboard/nurse_dashboard_provider_test.dart: NurseDashboardNotifier exposes an explicit loading state before the first load completes
+00:13 +108: C:/testing/souffli/respiracare/test/features/nurse/dashboard/nurse_dashboard_provider_test.dart: NurseDashboardNotifier exposes loaded dashboard data and summary
+00:13 +109: C:/testing/souffli/respiracare/test/features/nurse/dashboard/nurse_dashboard_provider_test.dart: NurseDashboardNotifier surfaces a safe error without presenting it as empty data
+00:13 +110: C:/testing/souffli/respiracare/test/features/nurse/dashboard/nurse_dashboard_provider_test.dart: NurseDashboardNotifier refresh re-invokes the underlying repository
+00:13 +111: C:/testing/souffli/respiracare/test/features/nurse/dashboard/nurse_dashboard_view_test.dart: NurseDashboardView renders sections from state
+00:14 +112: C:/testing/souffli/respiracare/test/features/nurse/dashboard/nurse_dashboard_view_test.dart: NurseDashboardView renders sections from state
+00:14 +113: C:/testing/souffli/respiracare/test/features/nurse/dashboard/nurse_dashboard_view_test.dart: NurseDashboardView renders sections from state
+00:14 +114: C:/testing/souffli/respiracare/test/features/nurse/dashboard/nurse_dashboard_view_test.dart: NurseDashboardView renders sections from state
+00:14 +115: C:/testing/souffli/respiracare/test/features/nurse/dashboard/nurse_dashboard_view_test.dart: NurseDashboardView renders sections from state
+00:14 +116: C:/testing/souffli/respiracare/test/features/nurse/dashboard/nurse_dashboard_view_test.dart: NurseDashboardView renders sections from state
+00:14 +117: C:/testing/souffli/respiracare/test/features/nurse/dashboard/nurse_dashboard_view_test.dart: NurseDashboardView renders sections from state
+00:14 +118: C:/testing/souffli/respiracare/test/features/nurse/dashboard/nurse_dashboard_view_test.dart: NurseDashboardView renders sections from state
+00:14 +119: C:/testing/souffli/respiracare/test/features/nurse/dashboard/nurse_dashboard_view_test.dart: NurseDashboardView renders sections from state
+00:14 +120: C:/testing/souffli/respiracare/test/features/nurse/dashboard/nurse_dashboard_view_test.dart: NurseDashboardView renders sections from state
+00:14 +121: C:/testing/souffli/respiracare/test/features/nurse/dashboard/nurse_dashboard_view_test.dart: NurseDashboardView renders sections from state
+00:14 +122: C:/testing/souffli/respiracare/test/features/nurse/dashboard/nurse_dashboard_view_test.dart: NurseDashboardView renders sections from state
+00:14 +123: C:/testing/souffli/respiracare/test/features/nurse/dashboard/nurse_dashboard_view_test.dart: NurseDashboardView renders sections from state
+00:14 +124: C:/testing/souffli/respiracare/test/features/nurse/dashboard/nurse_dashboard_view_test.dart: NurseDashboardView renders sections from state
+00:14 +125: C:/testing/souffli/respiracare/test/features/nurse/dashboard/nurse_dashboard_view_test.dart: NurseDashboardView renders sections from state
+00:14 +126: C:/testing/souffli/respiracare/test/features/nurse/dashboard/nurse_dashboard_view_test.dart: NurseDashboardView renders sections from state
+00:15 +127: C:/testing/souffli/respiracare/test/features/nurse/dashboard/nurse_dashboard_view_test.dart: NurseDashboardView renders sections from state
+00:15 +128: C:/testing/souffli/respiracare/test/features/nurse/dashboard/nurse_dashboard_view_test.dart: NurseDashboardView renders sections from state
+00:15 +129: C:/testing/souffli/respiracare/test/features/nurse/dashboard/nurse_dashboard_view_test.dart: NurseDashboardView renders sections from state
+00:15 +130: C:/testing/souffli/respiracare/test/features/nurse/dashboard/nurse_dashboard_view_test.dart: NurseDashboardView renders sections from state
+00:15 +131: C:/testing/souffli/respiracare/test/features/nurse/dashboard/nurse_dashboard_view_test.dart: NurseDashboardView renders sections from state
+00:15 +132: C:/testing/souffli/respiracare/test/features/nurse/dashboard/nurse_dashboard_view_test.dart: NurseDashboardView renders sections from state
+00:16 +133: C:/testing/souffli/respiracare/test/features/nurse/dashboard/nurse_dashboard_view_test.dart: NurseDashboardView renders sections from state
+00:16 +134: C:/testing/souffli/respiracare/test/features/nurse/dashboard/nurse_dashboard_view_test.dart: NurseDashboardView renders sections from state
+00:16 +135: C:/testing/souffli/respiracare/test/features/nurse/dashboard/nurse_dashboard_view_test.dart: NurseDashboardView renders sections from state
+00:16 +136: C:/testing/souffli/respiracare/test/features/nurse/dashboard/nurse_dashboard_view_test.dart: NurseDashboardView renders sections from state
+00:16 +137: C:/testing/souffli/respiracare/test/features/nurse/dashboard/nurse_dashboard_view_test.dart: NurseDashboardView renders sections from state
+00:16 +138: C:/testing/souffli/respiracare/test/features/nurse/dashboard/nurse_dashboard_view_test.dart: NurseDashboardView renders sections from state
+00:16 +139: C:/testing/souffli/respiracare/test/features/nurse/dashboard/nurse_dashboard_view_test.dart: NurseDashboardView renders sections from state
+00:16 +140: C:/testing/souffli/respiracare/test/features/nurse/dashboard/nurse_dashboard_view_test.dart: NurseDashboardView renders sections from state
+00:16 +141: C:/testing/souffli/respiracare/test/features/nurse/monitoring/respiratory_evolution_screen_test.dart: renders the charts with data for a patient
+00:16 +142: C:/testing/souffli/respiracare/test/features/nurse/monitoring/respiratory_evolution_screen_test.dart: renders the charts with data for a patient
+00:16 +143: C:/testing/souffli/respiracare/test/features/nurse/monitoring/respiratory_evolution_screen_test.dart: renders the charts with data for a patient
+00:16 +144: C:/testing/souffli/respiracare/test/features/nurse/monitoring/respiratory_evolution_screen_test.dart: renders the charts with data for a patient
+00:17 +145: C:/testing/souffli/respiracare/test/features/nurse/monitoring/respiratory_evolution_screen_test.dart: renders the charts with data for a patient
+00:17 +146: C:/testing/souffli/respiracare/test/features/nurse/monitoring/respiratory_evolution_screen_test.dart: renders the charts with data for a patient
+00:17 +147: C:/testing/souffli/respiracare/test/features/nurse/monitoring/respiratory_evolution_screen_test.dart: renders the charts with data for a patient
+00:18 +148: C:/testing/souffli/respiracare/test/features/nurse/monitoring/respiratory_evolution_screen_test.dart: renders the charts with data for a patient
+00:18 +149: C:/testing/souffli/respiracare/test/features/patient_dashboard/patient_dashboard_provider_test.dart: PatientDashboardNotifier Tests Initial loading state fetches mock dashboard data
+00:18 +150: C:/testing/souffli/respiracare/test/features/patient_dashboard/patient_dashboard_provider_test.dart: PatientDashboardNotifier Tests Initial loading state fetches mock dashboard data
+00:18 +151: C:/testing/souffli/respiracare/test/features/patient_dashboard/patient_dashboard_provider_test.dart: PatientDashboardNotifier Tests Initial loading state fetches mock dashboard data
+00:18 +152: C:/testing/souffli/respiracare/test/features/patient_dashboard/patient_dashboard_provider_test.dart: PatientDashboardNotifier Tests Initial loading state fetches mock dashboard data
+00:18 +153: C:/testing/souffli/respiracare/test/features/patient_dashboard/patient_dashboard_provider_test.dart: PatientDashboardNotifier Tests Initial loading state fetches mock dashboard data
+00:18 +154: C:/testing/souffli/respiracare/test/features/patient_dashboard/patient_dashboard_provider_test.dart: PatientDashboardNotifier Tests Initial loading state fetches mock dashboard data
+00:18 +155: C:/testing/souffli/respiracare/test/features/patient_dashboard/patient_dashboard_provider_test.dart: PatientDashboardNotifier Tests Initial loading state fetches mock dashboard data
+00:18 +156: C:/testing/souffli/respiracare/test/features/patient_dashboard/patient_dashboard_provider_test.dart: PatientDashboardNotifier Tests Initial loading state fetches mock dashboard data
+00:18 +157: C:/testing/souffli/respiracare/test/features/patient_dashboard/patient_dashboard_provider_test.dart: PatientDashboardNotifier Tests Initial loading state fetches mock dashboard data
+00:18 +158: C:/testing/souffli/respiracare/test/features/patient_dashboard/patient_dashboard_provider_test.dart: PatientDashboardNotifier Tests Initial loading state fetches mock dashboard data
+00:18 +159: C:/testing/souffli/respiracare/test/features/patient_dashboard/patient_dashboard_provider_test.dart: PatientDashboardNotifier Tests Initial loading state fetches mock dashboard data
+00:18 +160: C:/testing/souffli/respiracare/test/features/patient_dashboard/patient_dashboard_provider_test.dart: PatientDashboardNotifier Tests Initial loading state fetches mock dashboard data
+00:18 +161: C:/testing/souffli/respiracare/test/features/patient_dashboard/patient_dashboard_provider_test.dart: PatientDashboardNotifier Tests Initial loading state fetches mock dashboard data
+00:18 +162: C:/testing/souffli/respiracare/test/features/patient_dashboard/patient_dashboard_provider_test.dart: PatientDashboardNotifier Tests Initial loading state fetches mock dashboard data
+00:18 +163: C:/testing/souffli/respiracare/test/features/nurse/monitoring/respiratory_evolution_screen_test.dart: tapping a chart point reveals the multi-metric detail panel
+00:18 +164: C:/testing/souffli/respiracare/test/features/nurse/monitoring/respiratory_evolution_screen_test.dart: tapping a chart point reveals the multi-metric detail panel
+00:18 +165: C:/testing/souffli/respiracare/test/features/patient_dashboard/patient_dashboard_provider_test.dart: PatientDashboardNotifier Tests Completing daily questionnaire updates state to completed
+00:18 +166: C:/testing/souffli/respiracare/test/features/patient_dashboard/patient_dashboard_provider_test.dart: PatientDashboardNotifier Tests Completing daily questionnaire updates state to completed
+00:18 +167: C:/testing/souffli/respiracare/test/features/patient_dashboard/patient_dashboard_provider_test.dart: PatientDashboardNotifier Tests Completing daily questionnaire updates state to completed
+00:18 +168: C:/testing/souffli/respiracare/test/features/patient_dashboard/patient_dashboard_provider_test.dart: PatientDashboardNotifier Tests Completing daily questionnaire updates state to completed
+00:18 +169: C:/testing/souffli/respiracare/test/features/patient_dashboard/patient_dashboard_provider_test.dart: PatientDashboardNotifier Tests Completing daily questionnaire updates state to completed
+00:19 +170: C:/testing/souffli/respiracare/test/features/patient_dashboard/patient_dashboard_provider_test.dart: PatientDashboardNotifier Tests Completing daily questionnaire updates state to completed
+00:19 +171: C:/testing/souffli/respiracare/test/widget_test.dart: RespiraCare app loads
+00:20 +172: C:/testing/souffli/respiracare/test/widget_test.dart: RespiraCare app loads
+00:20 +173: C:/testing/souffli/respiracare/test/widget_test.dart: RespiraCare app loads
+00:21 +174: All tests passed!

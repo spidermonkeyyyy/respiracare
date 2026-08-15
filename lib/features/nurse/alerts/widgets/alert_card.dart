@@ -122,7 +122,7 @@ class AlertCard extends StatelessWidget {
                   const SizedBox(height: AppSpacing.md),
                   Row(
                     children: [
-                      Icon(
+                      const Icon(
                         Icons.schedule_rounded,
                         size: 14.0,
                         color: AppColors.textMuted,

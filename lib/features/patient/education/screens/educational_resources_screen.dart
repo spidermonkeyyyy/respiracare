@@ -6,6 +6,7 @@ import '../../../../app/theme/radius.dart';
 import '../../../../app/theme/spacing.dart';
 import '../../../../app/theme/typography.dart';
 import '../../../../core/utils/animations/app_animations.dart';
+import '../../../../app/widgets/app_header.dart';
 import '../../../../core/widgets/buttons/app_button.dart';
 import '../../../../core/widgets/cards/app_card.dart';
 import '../../../../core/widgets/feedback/app_empty_state.dart';
@@ -17,20 +18,22 @@ class EducationalResourcesScreen extends ConsumerStatefulWidget {
   const EducationalResourcesScreen({super.key});
 
   @override
-  ConsumerState<EducationalResourcesScreen> createState() => _EducationalResourcesScreenState();
+  ConsumerState<EducationalResourcesScreen> createState() =>
+      _EducationalResourcesScreenState();
 }
 
-class _EducationalResourcesScreenState extends ConsumerState<EducationalResourcesScreen> {
+class _EducationalResourcesScreenState
+    extends ConsumerState<EducationalResourcesScreen> {
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(smokingCessationProvider);
 
     return Scaffold(
       backgroundColor: AppColors.background,
-      appBar: AppBar(
-        title: const Text('Ressources éducatives'),
-        backgroundColor: AppColors.surface,
-        elevation: 0,
+      appBar: AppHeader(
+        title: 'Ressources éducatives',
+        showBackButton: true,
+        onBack: () => context.pop(),
       ),
       body: SafeArea(
         child: _buildBody(state),
@@ -55,10 +58,12 @@ class _EducationalResourcesScreenState extends ConsumerState<EducationalResource
     if (state.educationalContent.isEmpty) {
       return AppEmptyState(
         title: 'Aucune ressource disponible',
-        message: 'Les ressources éducatives seront ajoutées prochainement par votre équipe soignante.',
+        message:
+            'Les ressources éducatives seront ajoutées prochainement par votre équipe soignante.',
         icon: Icons.menu_book_rounded,
         actionLabel: 'Actualiser',
-        onActionPressed: () => ref.read(smokingCessationProvider.notifier).loadData(),
+        onActionPressed: () =>
+            ref.read(smokingCessationProvider.notifier).loadData(),
       );
     }
 
@@ -76,14 +81,15 @@ class _EducationalResourcesScreenState extends ConsumerState<EducationalResource
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
+                const Text(
                   'Ressources éducatives',
                   style: AppTypography.headlineLarge,
                 ),
                 const SizedBox(height: AppSpacing.xs),
                 Text(
                   'Contenu de support à lire avec votre équipe soignante avant toute validation clinique.',
-                  style: AppTypography.bodyMedium.copyWith(color: AppColors.textSecondary),
+                  style: AppTypography.bodyMedium
+                      .copyWith(color: AppColors.textSecondary),
                 ),
               ],
             ),
@@ -96,14 +102,15 @@ class _EducationalResourcesScreenState extends ConsumerState<EducationalResource
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
+                  const Text(
                     'Technique d’inhalation',
                     style: AppTypography.titleLarge,
                   ),
                   const SizedBox(height: AppSpacing.xs),
                   Text(
                     'Accédez à l’espace dédié à la technique d’inhalation et aux vidéos éducatives.',
-                    style: AppTypography.bodyMedium.copyWith(color: AppColors.textSecondary),
+                    style: AppTypography.bodyMedium
+                        .copyWith(color: AppColors.textSecondary),
                   ),
                   const SizedBox(height: AppSpacing.md),
                   AppButton(
@@ -117,7 +124,7 @@ class _EducationalResourcesScreenState extends ConsumerState<EducationalResource
             ),
           ),
           const SizedBox(height: AppSpacing.lg),
-          Text(
+          const Text(
             'Contenus disponibles',
             style: AppTypography.titleLarge,
           ),
@@ -130,7 +137,8 @@ class _EducationalResourcesScreenState extends ConsumerState<EducationalResource
               child: EducationalContentCard(
                 content: content,
                 index: index,
-                onTap: () => context.push('/patient/education/resources/${content.id}'),
+                onTap: () =>
+                    context.push('/patient/education/resources/${content.id}'),
               ),
             );
           }),

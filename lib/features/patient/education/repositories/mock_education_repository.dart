@@ -12,7 +12,7 @@ class MockEducationRepository implements EducationRepository {
   final List<ExerciseSession> _exerciseSessions = [];
   final List<SmokingEntry> _smokingEntries = [];
   final List<EducationalContent> _educationalContent = [];
-  String _currentGoal = 'Arrêt progressif';
+  final String _currentGoal = 'Arrêt progressif';
 
   MockEducationRepository() {
     _initializeMockData();
@@ -213,7 +213,7 @@ class MockEducationRepository implements EducationRepository {
 
     // Initialize educational content
     _educationalContent.addAll([
-      EducationalContent(
+      const EducationalContent(
         id: 'edu-1',
         title: 'Comprendre le sevrage tabagique',
         summary:
@@ -223,7 +223,7 @@ class MockEducationRepository implements EducationRepository {
         category: EducationalCategory.sevrage,
         isPlaceholder: true,
       ),
-      EducationalContent(
+      const EducationalContent(
         id: 'edu-2',
         title: 'Gérer une envie de fumer',
         summary:
@@ -233,7 +233,7 @@ class MockEducationRepository implements EducationRepository {
         category: EducationalCategory.sevrage,
         isPlaceholder: true,
       ),
-      EducationalContent(
+      const EducationalContent(
         id: 'edu-3',
         title: 'Identifier vos déclencheurs',
         summary:
@@ -243,7 +243,7 @@ class MockEducationRepository implements EducationRepository {
         category: EducationalCategory.sevrage,
         isPlaceholder: true,
       ),
-      EducationalContent(
+      const EducationalContent(
         id: 'edu-4',
         title: 'Préparer votre environnement',
         summary:
@@ -253,7 +253,7 @@ class MockEducationRepository implements EducationRepository {
         category: EducationalCategory.sevrage,
         isPlaceholder: true,
       ),
-      EducationalContent(
+      const EducationalContent(
         id: 'edu-5',
         title: 'Pourquoi la rééducation respiratoire ?',
         summary:
@@ -317,7 +317,9 @@ class MockEducationRepository implements EducationRepository {
   @override
   Future<int> getTrackedDaysCount() async {
     await Future.delayed(const Duration(milliseconds: 100));
-    final uniqueDates = _smokingEntries.map((e) => DateTime(e.date.year, e.date.month, e.date.day)).toSet();
+    final uniqueDates = _smokingEntries
+        .map((e) => DateTime(e.date.year, e.date.month, e.date.day))
+        .toSet();
     return uniqueDates.length;
   }
 
@@ -328,7 +330,8 @@ class MockEducationRepository implements EducationRepository {
   }
 
   @override
-  Future<List<EducationalContent>> getEducationalContent({String? category}) async {
+  Future<List<EducationalContent>> getEducationalContent(
+      {String? category}) async {
     await Future.delayed(const Duration(milliseconds: 300));
     if (category != null) {
       return _educationalContent.where((c) => c.category == category).toList();

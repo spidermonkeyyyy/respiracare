@@ -1,13 +1,14 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
-import '../../../app/theme/colors.dart';
-import '../../../app/theme/radius.dart';
-import '../../../app/theme/spacing.dart';
-import '../../../app/theme/typography.dart';
-import '../../../core/utils/animations/app_animations.dart';
-import '../../../core/widgets/buttons/app_button.dart';
-import '../providers/monitoring_provider.dart';
+import "package:flutter/material.dart";
+import "package:flutter_riverpod/flutter_riverpod.dart";
+import "package:go_router/go_router.dart";
+import "../../../app/theme/colors.dart";
+import "../../../app/theme/radius.dart";
+import "../../../app/theme/spacing.dart";
+import "../../../app/theme/typography.dart";
+import "../../../core/utils/animations/app_animations.dart";
+import "../../../core/widgets/buttons/app_button.dart";
+import "../providers/monitoring_provider.dart";
+import "../../../app/widgets/app_header.dart";
 
 class MonitoringIntroScreen extends ConsumerWidget {
   const MonitoringIntroScreen({super.key});
@@ -20,20 +21,10 @@ class MonitoringIntroScreen extends ConsumerWidget {
     final total = state.totalSteps;
 
     return Scaffold(
-      backgroundColor: AppColors.background,
-      appBar: AppBar(
-        backgroundColor: AppColors.surface,
-        elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back_rounded,
-              color: AppColors.textPrimary),
-          onPressed: () => context.pop(),
-        ),
-        title: Text(
-          'Suivi quotidien',
-          style:
-              AppTypography.titleLarge.copyWith(color: AppColors.textPrimary),
-        ),
+      appBar: AppHeader(
+        title: "Suivi quotidien",
+        showBackButton: true,
+        onBack: () => context.go("/patient/home"),
       ),
       body: SafeArea(
         child: SingleChildScrollView(
@@ -65,7 +56,7 @@ class MonitoringIntroScreen extends ConsumerWidget {
               AppSlideAnimation(
                 delay: const Duration(milliseconds: 80),
                 child: Text(
-                  'Votre suivi respiratoire',
+                  "Votre suivi respiratoire",
                   style: AppTypography.displayLarge.copyWith(fontSize: 26.0),
                   textAlign: TextAlign.center,
                 ),
@@ -76,7 +67,7 @@ class MonitoringIntroScreen extends ConsumerWidget {
               AppSlideAnimation(
                 delay: const Duration(milliseconds: 120),
                 child: Text(
-                  'Quelques questions pour faire le point sur votre respiration et vos symptômes d\'aujourd\'hui.',
+                  "Quelques questions pour faire le point sur votre respiration et vos symptômes d'aujourd'hui.",
                   style: AppTypography.bodyLarge.copyWith(
                     color: AppColors.textSecondary,
                     height: 1.5,
@@ -92,24 +83,24 @@ class MonitoringIntroScreen extends ConsumerWidget {
                 delay: const Duration(milliseconds: 160),
                 child: Row(
                   children: [
-                    Expanded(
+                    const Expanded(
                       child: _InfoChip(
                         icon: Icons.schedule_rounded,
-                        label: 'Environ\n2 minutes',
+                        label: "Environ\n2 minutes",
                       ),
                     ),
                     const SizedBox(width: AppSpacing.sm),
                     Expanded(
                       child: _InfoChip(
                         icon: Icons.assignment_outlined,
-                        label: '$total questions\nrespirables',
+                        label: "$total questions\nrespirables",
                       ),
                     ),
                     const SizedBox(width: AppSpacing.sm),
-                    Expanded(
+                    const Expanded(
                       child: _InfoChip(
                         icon: Icons.medical_services_outlined,
-                        label: 'Partagé\navec votre équipe',
+                        label: "Partagé\navec votre équipe",
                       ),
                     ),
                   ],
@@ -138,7 +129,7 @@ class MonitoringIntroScreen extends ConsumerWidget {
                       const SizedBox(width: AppSpacing.md),
                       Expanded(
                         child: Text(
-                          'Vos réponses seront transmises à votre équipe soignante pour assurer votre télésurveillance.',
+                          "Vos réponses seront transmises à votre équipe soignante pour assurer votre télésurveillance.",
                           style: AppTypography.secondaryText.copyWith(
                             color: AppColors.info,
                             fontWeight: FontWeight.w500,
@@ -173,7 +164,7 @@ class MonitoringIntroScreen extends ConsumerWidget {
                                 color: AppColors.warning, size: 18),
                             const SizedBox(width: AppSpacing.sm),
                             Text(
-                              'Suivi en cours',
+                              "Suivi en cours",
                               style: AppTypography.titleLarge.copyWith(
                                 fontSize: 15.0,
                                 color: AppColors.warning,
@@ -183,7 +174,7 @@ class MonitoringIntroScreen extends ConsumerWidget {
                         ),
                         const SizedBox(height: AppSpacing.xs),
                         Text(
-                          'Vous avez complété $draftCount étape${draftCount > 1 ? 's' : ''} sur $total.',
+                          "Vous avez complété $draftCount étape${draftCount > 1 ? "s" : ""} sur $total.",
                           style: AppTypography.secondaryText
                               .copyWith(color: AppColors.textSecondary),
                         ),
@@ -192,20 +183,20 @@ class MonitoringIntroScreen extends ConsumerWidget {
                           children: [
                             Expanded(
                               child: AppButton(
-                                text: 'Reprendre',
+                                text: "Reprendre",
                                 onPressed: () =>
-                                    context.go('/patient/monitoring/question'),
+                                    context.go("/patient/monitoring/question"),
                                 fullWidth: true,
                               ),
                             ),
                             const SizedBox(width: AppSpacing.sm),
                             Expanded(
                               child: AppButton(
-                                text: 'Recommencer',
+                                text: "Recommencer",
                                 variant: AppButtonVariant.outlined,
                                 onPressed: () {
                                   ref.read(monitoringProvider.notifier).reset();
-                                  context.go('/patient/monitoring/question');
+                                  context.go("/patient/monitoring/question");
                                 },
                                 fullWidth: true,
                               ),
@@ -220,16 +211,23 @@ class MonitoringIntroScreen extends ConsumerWidget {
                 AppFadeAnimation(
                   delay: const Duration(milliseconds: 240),
                   child: AppButton(
-                    text: 'Commencer',
+                    text: "Commencer",
                     icon: Icons.play_arrow_rounded,
                     onPressed: () {
                       ref.read(monitoringProvider.notifier).reset();
-                      context.go('/patient/monitoring/question');
+                      context.go("/patient/monitoring/question");
                     },
                     fullWidth: true,
                   ),
                 ),
               ],
+              const SizedBox(height: AppSpacing.md),
+              AppButton(
+                text: "Voir l'historique de mes mesures",
+                variant: AppButtonVariant.outlined,
+                icon: Icons.show_chart_rounded,
+                onPressed: () => context.go("/patient/monitor/history"),
+              ),
               const SizedBox(height: AppSpacing.xl),
             ],
           ),

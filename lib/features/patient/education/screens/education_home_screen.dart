@@ -85,7 +85,7 @@ class _EducationHomeScreenState extends ConsumerState<EducationHomeScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
+                const Text(
                   'Éducation',
                   style: AppTypography.displayLarge,
                 ),

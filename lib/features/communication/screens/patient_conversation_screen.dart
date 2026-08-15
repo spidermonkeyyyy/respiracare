@@ -45,43 +45,52 @@ class _PatientConversationScreenState
         .toList();
     final conversation = matches.isEmpty ? null : matches.first;
 
-    return Scaffold(
-      backgroundColor: AppColors.background,
-      appBar: AppBar(
-        title: const Text('Équipe soignante'),
-        backgroundColor: AppColors.surface,
-        elevation: 0,
-      ),
-      body: state.isLoading
-          ? const Center(child: CircularProgressIndicator())
-          : conversation == null
-              ? const Center(child: Text('Conversation introuvable.'))
-              : Column(
-                  children: [
-                    _DisclaimerBanner(),
-                    Expanded(
-                      child: ListView.separated(
-                        padding: const EdgeInsets.all(AppSpacing.md),
-                        itemCount: conversation.messages.length,
-                        separatorBuilder: (_, __) =>
-                            const SizedBox(height: AppSpacing.xs),
-                        itemBuilder: (context, index) {
-                          final message = conversation.messages[index];
-                          return MessageBubble(
-                            message: message,
-                            onAction:
-                                message.hasAction && message.actionRoute != null
-                                    ? () => context.push(message.actionRoute!)
-                                    : null,
-                          );
-                        },
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (_, __) => context.pop(),
+      child: Scaffold(
+        backgroundColor: AppColors.background,
+        appBar: AppBar(
+          title: const Text('Équipe soignante'),
+          backgroundColor: AppColors.surface,
+          elevation: 0,
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back_rounded),
+            onPressed: () => context.pop(),
+          ),
+          automaticallyImplyLeading: true,
+        ),
+        body: state.isLoading
+            ? const Center(child: CircularProgressIndicator())
+            : conversation == null
+                ? const Center(child: Text('Conversation introuvable.'))
+                : Column(
+                    children: [
+                      _DisclaimerBanner(),
+                      Expanded(
+                        child: ListView.separated(
+                          padding: const EdgeInsets.all(AppSpacing.md),
+                          itemCount: conversation.messages.length,
+                          separatorBuilder: (_, __) =>
+                              const SizedBox(height: AppSpacing.xs),
+                          itemBuilder: (context, index) {
+                            final message = conversation.messages[index];
+                            return MessageBubble(
+                              message: message,
+                              onAction:
+                                  message.hasAction && message.actionRoute != null
+                                      ? () => context.push(message.actionRoute!)
+                                      : null,
+                            );
+                          },
+                        ),
                       ),
-                    ),
-                    MessageComposer(
-                      onSend: (text) => notifier.sendMessage(text),
-                    ),
-                  ],
-                ),
+                      MessageComposer(
+                        onSend: (text) => notifier.sendMessage(text),
+                      ),
+                    ],
+                  ),
+      ),
     );
   }
 }

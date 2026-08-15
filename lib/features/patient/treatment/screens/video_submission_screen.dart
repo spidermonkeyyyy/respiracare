@@ -14,7 +14,8 @@ class VideoSubmissionScreen extends ConsumerStatefulWidget {
   const VideoSubmissionScreen({super.key, required this.patientId});
 
   @override
-  ConsumerState<VideoSubmissionScreen> createState() => _VideoSubmissionScreenState();
+  ConsumerState<VideoSubmissionScreen> createState() =>
+      _VideoSubmissionScreenState();
 }
 
 class _VideoSubmissionScreenState extends ConsumerState<VideoSubmissionScreen> {
@@ -28,22 +29,29 @@ class _VideoSubmissionScreenState extends ConsumerState<VideoSubmissionScreen> {
   }
 
   void _startRecording() {
-    ref.read(videoSubmissionProvider(widget.patientId).notifier).requestPermission();
+    ref
+        .read(videoSubmissionProvider(widget.patientId).notifier)
+        .requestPermission();
   }
 
   void _grantPermission() {
-    ref.read(videoSubmissionProvider(widget.patientId).notifier).onPermissionResult(granted: true);
+    ref
+        .read(videoSubmissionProvider(widget.patientId).notifier)
+        .onPermissionResult(granted: true);
     _beginRecordingTimer();
   }
 
   void _denyPermission() {
-    ref.read(videoSubmissionProvider(widget.patientId).notifier).onPermissionResult(granted: false);
+    ref
+        .read(videoSubmissionProvider(widget.patientId).notifier)
+        .onPermissionResult(granted: false);
   }
 
   void _beginRecordingTimer() {
     _recordingTimer?.cancel();
     _recordingTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
-      final notifier = ref.read(videoSubmissionProvider(widget.patientId).notifier);
+      final notifier =
+          ref.read(videoSubmissionProvider(widget.patientId).notifier);
       final state = ref.read(videoSubmissionProvider(widget.patientId));
       final next = state.recordingDuration + const Duration(seconds: 1);
       notifier.updateRecordingDuration(next);
@@ -55,7 +63,9 @@ class _VideoSubmissionScreenState extends ConsumerState<VideoSubmissionScreen> {
 
   void _stopRecording() {
     _recordingTimer?.cancel();
-    ref.read(videoSubmissionProvider(widget.patientId).notifier).stopRecording();
+    ref
+        .read(videoSubmissionProvider(widget.patientId).notifier)
+        .stopRecording();
   }
 
   void _retake() {
@@ -64,13 +74,16 @@ class _VideoSubmissionScreenState extends ConsumerState<VideoSubmissionScreen> {
   }
 
   Future<void> _submit() async {
-    await ref.read(videoSubmissionProvider(widget.patientId).notifier).submitVideo();
+    await ref
+        .read(videoSubmissionProvider(widget.patientId).notifier)
+        .submitVideo();
   }
 
   @override
   Widget build(BuildContext context) {
     final provider = ref.watch(videoSubmissionProvider(widget.patientId));
-    final notifier = ref.read(videoSubmissionProvider(widget.patientId).notifier);
+    final notifier =
+        ref.read(videoSubmissionProvider(widget.patientId).notifier);
 
     return Scaffold(
       backgroundColor: AppColors.background,
@@ -88,7 +101,8 @@ class _VideoSubmissionScreenState extends ConsumerState<VideoSubmissionScreen> {
     );
   }
 
-  Widget _buildContent(VideoSubmissionState state, VideoSubmissionNotifier notifier) {
+  Widget _buildContent(
+      VideoSubmissionState state, VideoSubmissionNotifier notifier) {
     switch (state.status) {
       case SubmissionStatus.idle:
         return _buildIntro();
@@ -113,28 +127,35 @@ class _VideoSubmissionScreenState extends ConsumerState<VideoSubmissionScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('Enregistrez une courte vidéo montrant comment vous utilisez votre dispositif.',
+        const Text(
+            'Enregistrez une courte vidéo montrant comment vous utilisez votre dispositif.',
             style: AppTypography.bodyLarge),
         const SizedBox(height: AppSpacing.md),
-        AppCard(
+        const AppCard(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            children: const [
+            children: [
               Text('Conseils :', style: AppTypography.titleMedium),
               SizedBox(height: AppSpacing.sm),
-              Text('• Placez-vous dans un endroit bien éclairé', style: AppTypography.bodyMedium),
+              Text('• Placez-vous dans un endroit bien éclairé',
+                  style: AppTypography.bodyMedium),
               SizedBox(height: AppSpacing.xs),
-              Text('• Gardez le dispositif visible', style: AppTypography.bodyMedium),
+              Text('• Gardez le dispositif visible',
+                  style: AppTypography.bodyMedium),
               SizedBox(height: AppSpacing.xs),
-              Text('• Suivez les instructions de votre équipe', style: AppTypography.bodyMedium),
+              Text('• Suivez les instructions de votre équipe',
+                  style: AppTypography.bodyMedium),
             ],
           ),
         ),
         const SizedBox(height: AppSpacing.md),
-        Text('Votre vidéo sera transmise à votre équipe soignante pour vérification.',
-            style: AppTypography.bodyMedium.copyWith(color: AppColors.textSecondary)),
+        Text(
+            'Votre vidéo sera transmise à votre équipe soignante pour vérification.',
+            style: AppTypography.bodyMedium
+                .copyWith(color: AppColors.textSecondary)),
         const SizedBox(height: AppSpacing.lg),
-        AppButton(text: 'Commencer l’enregistrement', onPressed: _startRecording),
+        AppButton(
+            text: 'Commencer l’enregistrement', onPressed: _startRecording),
       ],
     );
   }
@@ -143,18 +164,25 @@ class _VideoSubmissionScreenState extends ConsumerState<VideoSubmissionScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('Permission demandée', style: AppTypography.titleLarge),
+        const Text('Permission demandée', style: AppTypography.titleLarge),
         const SizedBox(height: AppSpacing.sm),
         Text(
           'L’accès à la caméra est nécessaire pour enregistrer votre vidéo.',
-          style: AppTypography.bodyMedium.copyWith(color: AppColors.textSecondary),
+          style:
+              AppTypography.bodyMedium.copyWith(color: AppColors.textSecondary),
         ),
         const SizedBox(height: AppSpacing.lg),
         Row(
           children: [
-            Expanded(child: AppButton(text: 'Accorder', onPressed: _grantPermission)),
+            Expanded(
+                child:
+                    AppButton(text: 'Accorder', onPressed: _grantPermission)),
             const SizedBox(width: AppSpacing.md),
-            Expanded(child: AppButton(text: 'Refuser', onPressed: _denyPermission, variant: AppButtonVariant.outlined)),
+            Expanded(
+                child: AppButton(
+                    text: 'Refuser',
+                    onPressed: _denyPermission,
+                    variant: AppButtonVariant.outlined)),
           ],
         ),
       ],
@@ -165,11 +193,12 @@ class _VideoSubmissionScreenState extends ConsumerState<VideoSubmissionScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('Accès à la caméra refusé', style: AppTypography.titleLarge),
+        const Text('Accès à la caméra refusé', style: AppTypography.titleLarge),
         const SizedBox(height: AppSpacing.sm),
         Text(
           'L’accès à la caméra est nécessaire pour enregistrer votre vidéo.',
-          style: AppTypography.bodyMedium.copyWith(color: AppColors.textSecondary),
+          style:
+              AppTypography.bodyMedium.copyWith(color: AppColors.textSecondary),
         ),
         const SizedBox(height: AppSpacing.lg),
         AppButton(text: 'Réessayer', onPressed: _startRecording),
@@ -179,7 +208,8 @@ class _VideoSubmissionScreenState extends ConsumerState<VideoSubmissionScreen> {
 
   Widget _buildRecording(VideoSubmissionState state) {
     final remaining = _maxDuration - state.recordingDuration;
-    final timerLabel = '${remaining.inMinutes.remainder(60).toString().padLeft(2, '0')}:${remaining.inSeconds.remainder(60).toString().padLeft(2, '0')}';
+    final timerLabel =
+        '${remaining.inMinutes.remainder(60).toString().padLeft(2, '0')}:${remaining.inSeconds.remainder(60).toString().padLeft(2, '0')}';
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -195,9 +225,11 @@ class _VideoSubmissionScreenState extends ConsumerState<VideoSubmissionScreen> {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  const Icon(Icons.videocam, size: 64.0, color: AppColors.primary),
+                  const Icon(Icons.videocam,
+                      size: 64.0, color: AppColors.primary),
                   const SizedBox(height: AppSpacing.md),
-                  Text('Enregistrement en cours', style: AppTypography.titleLarge),
+                  const Text('Enregistrement en cours',
+                      style: AppTypography.titleLarge),
                   const SizedBox(height: AppSpacing.sm),
                   Text(timerLabel, style: AppTypography.headlineSmall),
                 ],
@@ -217,7 +249,7 @@ class _VideoSubmissionScreenState extends ConsumerState<VideoSubmissionScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('Votre vidéo', style: AppTypography.titleLarge),
+        const Text('Votre vidéo', style: AppTypography.titleLarge),
         const SizedBox(height: AppSpacing.sm),
         AppCard(
           child: Column(
@@ -229,7 +261,9 @@ class _VideoSubmissionScreenState extends ConsumerState<VideoSubmissionScreen> {
                   color: AppColors.surfaceVariant,
                   borderRadius: BorderRadius.circular(16.0),
                 ),
-                child: const Center(child: Icon(Icons.play_arrow_rounded, size: 48.0, color: AppColors.primary)),
+                child: const Center(
+                    child: Icon(Icons.play_arrow_rounded,
+                        size: 48.0, color: AppColors.primary)),
               ),
               const SizedBox(height: AppSpacing.md),
               Text(durationLabel, style: AppTypography.bodyMedium),
@@ -239,7 +273,11 @@ class _VideoSubmissionScreenState extends ConsumerState<VideoSubmissionScreen> {
         const SizedBox(height: AppSpacing.md),
         Row(
           children: [
-            Expanded(child: AppButton(text: 'Refaire', onPressed: _retake, variant: AppButtonVariant.secondary)),
+            Expanded(
+                child: AppButton(
+                    text: 'Refaire',
+                    onPressed: _retake,
+                    variant: AppButtonVariant.secondary)),
             const SizedBox(width: AppSpacing.md),
             Expanded(child: AppButton(text: 'Envoyer', onPressed: _submit)),
           ],
@@ -249,12 +287,12 @@ class _VideoSubmissionScreenState extends ConsumerState<VideoSubmissionScreen> {
   }
 
   Widget _buildUploading() {
-    return Column(
+    return const Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        const SizedBox(height: AppSpacing.xl),
-        const CircularProgressIndicator(),
-        const SizedBox(height: AppSpacing.md),
+        SizedBox(height: AppSpacing.xl),
+        CircularProgressIndicator(),
+        SizedBox(height: AppSpacing.md),
         Text('Transmission en cours...', style: AppTypography.bodyLarge),
       ],
     );
@@ -264,24 +302,30 @@ class _VideoSubmissionScreenState extends ConsumerState<VideoSubmissionScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('✓ Vidéo envoyée', style: AppTypography.titleLarge.copyWith(color: AppColors.success)),
+        Text('✓ Vidéo envoyée',
+            style: AppTypography.titleLarge.copyWith(color: AppColors.success)),
         const SizedBox(height: AppSpacing.sm),
         Text(
           'Votre vidéo est maintenant en attente de vérification par votre infirmier.',
-          style: AppTypography.bodyMedium.copyWith(color: AppColors.textSecondary),
+          style:
+              AppTypography.bodyMedium.copyWith(color: AppColors.textSecondary),
         ),
       ],
     );
   }
 
-  Widget _buildError(VideoSubmissionState state, VideoSubmissionNotifier notifier) {
+  Widget _buildError(
+      VideoSubmissionState state, VideoSubmissionNotifier notifier) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('La vidéo n’a pas pu être envoyée.', style: AppTypography.titleLarge.copyWith(color: AppColors.danger)),
+        Text('La vidéo n’a pas pu être envoyée.',
+            style: AppTypography.titleLarge.copyWith(color: AppColors.danger)),
         const SizedBox(height: AppSpacing.sm),
         if (state.errorMessage != null)
-          Text(state.errorMessage!, style: AppTypography.bodyMedium.copyWith(color: AppColors.textSecondary)),
+          Text(state.errorMessage!,
+              style: AppTypography.bodyMedium
+                  .copyWith(color: AppColors.textSecondary)),
         const SizedBox(height: AppSpacing.lg),
         AppButton(text: 'Réessayer', onPressed: _submit),
       ],

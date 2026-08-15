@@ -28,7 +28,7 @@ class InhalerStatusCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
+          const Text(
             'Vérification de votre technique',
             style: AppTypography.titleLarge,
           ),
@@ -39,12 +39,14 @@ class InhalerStatusCard extends StatelessWidget {
               Icon(
                 latestSubmission!.reviewStatus == VideoReviewStatus.reviewed
                     ? Icons.verified
-                    : latestSubmission!.reviewStatus == VideoReviewStatus.pendingReview
+                    : latestSubmission!.reviewStatus ==
+                            VideoReviewStatus.pendingReview
                         ? Icons.hourglass_empty
                         : Icons.refresh,
-                color: latestSubmission!.reviewStatus == VideoReviewStatus.reviewed
-                    ? AppColors.success
-                    : AppColors.secondary,
+                color:
+                    latestSubmission!.reviewStatus == VideoReviewStatus.reviewed
+                        ? AppColors.success
+                        : AppColors.secondary,
               ),
               const SizedBox(width: AppSpacing.sm),
               Expanded(
@@ -59,10 +61,12 @@ class InhalerStatusCard extends StatelessWidget {
                     ),
                     const SizedBox(height: AppSpacing.xs),
                     Text(
-                      latestSubmission!.reviewStatus == VideoReviewStatus.reviewed
+                      latestSubmission!.reviewStatus ==
+                              VideoReviewStatus.reviewed
                           ? 'Date : ${_formatDate(latestSubmission!.reviewedAt)}'
                           : 'Votre infirmier examinera votre vidéo.',
-                      style: AppTypography.bodySmall.copyWith(color: AppColors.textSecondary),
+                      style: AppTypography.bodySmall
+                          .copyWith(color: AppColors.textSecondary),
                     ),
                   ],
                 ),
@@ -112,14 +116,15 @@ class InhalerStatusCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
+          const Text(
             'Vérification de votre technique',
             style: AppTypography.titleLarge,
           ),
           const SizedBox(height: AppSpacing.sm),
           Text(
             'Enregistrez une courte vidéo montrant comment vous utilisez votre dispositif.',
-            style: AppTypography.bodyMedium.copyWith(color: AppColors.textSecondary),
+            style: AppTypography.bodyMedium
+                .copyWith(color: AppColors.textSecondary),
           ),
           const SizedBox(height: AppSpacing.md),
           AppButton(

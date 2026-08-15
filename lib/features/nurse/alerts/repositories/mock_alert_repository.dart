@@ -1,4 +1,5 @@
 import '../models/alert.dart';
+import '../../../../mock/mock_patients.dart';
 import '../models/alert_priority.dart';
 import '../models/alert_status.dart';
 import '../models/rule_evaluation.dart';
@@ -31,7 +32,7 @@ class MockAlertRepository implements AlertRepository {
       Alert(
         id: 'alert_001',
         patientId: 'p1',
-        patientName: 'Ahmed B.',
+        patientName: kPatientP1ShortName,
         patientSummary: 'BPCO · GOLD III',
         reason: 'Données respiratoires à revoir',
         priority: AlertPriority.high,
@@ -77,7 +78,7 @@ class MockAlertRepository implements AlertRepository {
       Alert(
         id: 'alert_002',
         patientId: 'p1',
-        patientName: 'Ahmed B.',
+        patientName: kPatientP1ShortName,
         patientSummary: 'BPCO · GOLD III',
         reason: 'Suivi du traitement à vérifier',
         priority: AlertPriority.medium,
@@ -107,7 +108,7 @@ class MockAlertRepository implements AlertRepository {
       Alert(
         id: 'alert_003',
         patientId: 'p2',
-        patientName: 'Mariem K.',
+        patientName: kPatientP2ShortName,
         patientSummary: 'BPCO · GOLD II',
         reason: 'Nouvelle variation signalée',
         priority: AlertPriority.medium,
@@ -145,7 +146,7 @@ class MockAlertRepository implements AlertRepository {
       Alert(
         id: 'alert_004',
         patientId: 'p3',
-        patientName: 'Sami R.',
+        patientName: kPatientP3ShortName,
         patientSummary: 'IRC · Suivi stable',
         reason: 'Suivi quotidien non transmis',
         priority: AlertPriority.low,
@@ -178,7 +179,7 @@ class MockAlertRepository implements AlertRepository {
       Alert(
         id: 'alert_005',
         patientId: 'p2',
-        patientName: 'Mariem K.',
+        patientName: kPatientP2ShortName,
         patientSummary: 'BPCO · GOLD II',
         reason: 'Données respiratoires à revoir',
         priority: AlertPriority.medium,

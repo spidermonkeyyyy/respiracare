@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../../mock/mock_patients.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../app/theme/colors.dart';
@@ -7,6 +8,7 @@ import '../../../../app/theme/typography.dart';
 import '../../../../core/widgets/buttons/app_button.dart';
 import '../../../../core/widgets/cards/app_card.dart';
 import '../../../authentication/providers/auth_provider.dart';
+import '../../widgets/patient_bottom_nav.dart';
 
 class PatientProfileScreen extends ConsumerWidget {
   const PatientProfileScreen({super.key});
@@ -37,7 +39,7 @@ class PatientProfileScreen extends ConsumerWidget {
                       child: Icon(Icons.person_rounded, size: 40, color: AppColors.primary),
                     ),
                     const SizedBox(height: AppSpacing.md),
-                    Text(user?.name ?? 'Ahmed Mansour', style: AppTypography.headlineLarge),
+                    Text(user?.name ?? kPatientP1FullName, style: AppTypography.headlineLarge),
                     Text(user?.email ?? 'patient@respiracare.org', style: AppTypography.secondaryText),
                     if (user?.phone != null) ...[
                       const SizedBox(height: 4),
@@ -61,6 +63,22 @@ class PatientProfileScreen extends ConsumerWidget {
             ],
           ),
         ),
+      ),
+      bottomNavigationBar: PatientBottomNav(
+        currentIndex: 4,
+        onTap: (index) {
+          if (index != 4) {
+            const routes = [
+              '/patient/home',
+              '/patient/monitoring',
+              '/patient/treatment',
+              '/patient/education',
+              '/patient/profile',
+              '/patient/messages',
+            ];
+            context.go(routes[index]);
+          }
+        },
       ),
     );
   }

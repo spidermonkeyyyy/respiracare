@@ -1,8 +1,17 @@
 import '../../patients/models/nurse_patient.dart';
+import '../../../../mock/mock_patients.dart';
 import '../models/dashboard_summary.dart';
 import '../models/monitoring_rule.dart';
 import '../../monitoring/models/monitoring_submission.dart';
 import 'nurse_dashboard_repository.dart';
+
+/// Fixed timestamp anchor for mock submissions.
+///
+/// Deterministic mock rule (Step 12.7): mock data must not call
+/// `DateTime.now()` — a fixed anchor keeps submissions per-load identical and
+/// the resulting worklist ordering stable while preserving the intended
+/// ms-1 (newer) before ms-2 (older) relationship.
+final DateTime kMockDashboardSubmissionsAnchor = DateTime(2026, 8, 14, 11, 0);
 
 class MockNurseDashboardRepository implements NurseDashboardRepository {
   @override
@@ -22,7 +31,7 @@ class MockNurseDashboardRepository implements NurseDashboardRepository {
     return [
       const NursePatient(
         id: 'p1',
-        fullName: 'Ahmed Ben Ali',
+        fullName: kPatientP1FullName,
         condition: 'BPCO',
         classification: 'GOLD III',
         lastSubmissionAt: null,
@@ -63,7 +72,8 @@ class MockNurseDashboardRepository implements NurseDashboardRepository {
       MonitoringSubmission(
         id: 'ms-1',
         patientId: 'p1',
-        submittedAt: DateTime.now().subtract(const Duration(minutes: 12)),
+        submittedAt: kMockDashboardSubmissionsAnchor
+            .subtract(const Duration(minutes: 12)),
         spo2: 89,
         dyspneaScore: 3,
         coughStatus: 'Plus importante',
@@ -74,7 +84,7 @@ class MockNurseDashboardRepository implements NurseDashboardRepository {
       MonitoringSubmission(
         id: 'ms-2',
         patientId: 'p2',
-        submittedAt: DateTime.now().subtract(const Duration(hours: 2)),
+        submittedAt: kMockDashboardSubmissionsAnchor.subtract(const Duration(hours: 2)),
         spo2: 93,
         dyspneaScore: 2,
         coughStatus: 'Stable',

@@ -1,10 +1,12 @@
 import '../../dashboard/models/monitoring_rule.dart';
 import '../models/monitoring_submission.dart';
+import '../models/respiratory_trend.dart';
 import 'nurse_monitoring_repository.dart';
 
 class MockNurseMonitoringRepository implements NurseMonitoringRepository {
   @override
-  Future<List<MonitoringSubmission>> getMonitoringHistory(String patientId) async {
+  Future<List<MonitoringSubmission>> getMonitoringHistory(
+      String patientId) async {
     await Future.delayed(const Duration(milliseconds: 250));
     if (patientId == 'p1') {
       return [
@@ -24,7 +26,8 @@ class MockNurseMonitoringRepository implements NurseMonitoringRepository {
               title: 'Saturation basse',
               matched: true,
               evidence: ['SpO₂ à 89 %'],
-              summary: 'Certain monitoring information meets configured surveillance criteria.',
+              summary:
+                  'Certain monitoring information meets configured surveillance criteria.',
               priority: PriorityLevel.high,
             ),
             RuleEvaluationResult(
@@ -53,7 +56,8 @@ class MockNurseMonitoringRepository implements NurseMonitoringRepository {
               title: 'Dyspnée aggravée',
               matched: false,
               evidence: ['Dyspnée mMRC 2'],
-              summary: 'Aucun élément de surveillance prioritaire n’a été identifié.',
+              summary:
+                  'Aucun élément de surveillance prioritaire n’a été identifié.',
               priority: PriorityLevel.informational,
             ),
           ],
@@ -62,7 +66,7 @@ class MockNurseMonitoringRepository implements NurseMonitoringRepository {
     }
     return [
       MonitoringSubmission(
-        id: 'ms-${patientId}-base',
+        id: 'ms-$patientId-base',
         patientId: patientId,
         submittedAt: DateTime.now().subtract(const Duration(hours: 3)),
         spo2: 94,
@@ -82,7 +86,8 @@ class MockNurseMonitoringRepository implements NurseMonitoringRepository {
   }
 
   @override
-  Future<List<RuleEvaluationResult>> evaluateSubmission(MonitoringSubmission submission) async {
+  Future<List<RuleEvaluationResult>> evaluateSubmission(
+      MonitoringSubmission submission) async {
     await Future.delayed(const Duration(milliseconds: 200));
     final results = <RuleEvaluationResult>[];
     if (submission.spo2 < 90) {
@@ -91,7 +96,8 @@ class MockNurseMonitoringRepository implements NurseMonitoringRepository {
         title: 'Saturation basse',
         matched: true,
         evidence: ['SpO₂ en dessous du seuil de surveillance'],
-        summary: 'Certain monitoring information meets configured surveillance criteria.',
+        summary:
+            'Certain monitoring information meets configured surveillance criteria.',
         priority: PriorityLevel.high,
       ));
     }
@@ -116,5 +122,78 @@ class MockNurseMonitoringRepository implements NurseMonitoringRepository {
       ));
     }
     return results;
+  }
+
+  @override
+  Future<List<RespiratoryTrendPoint>> getRespiratoryTrend(
+    String patientId, {
+    TrendTimeframe timeframe = TrendTimeframe.days14,
+  }) async {
+    await Future.delayed(const Duration(milliseconds: 250));
+
+    // Seed a 90-day series per patient (oldest → newest).
+    final seed = _seedTrend(patientId);
+
+    final window = timeframe.window();
+    return seed
+        .where((point) =>
+            !point.date.isBefore(window.start) && !point.date.isAfter(window.end))
+        .toList();
+  }
+
+  /// Deterministic per-patient 90-day series.
+  ///
+  /// Patient p1 (Ahmed, high priority) shows a gradual SpO₂ decline, rising
+  /// CAT/mMRC and worsening sputum — modelling gradual deterioration for the
+  /// nurse to evaluate. p2/p3 are more stable.
+  List<RespiratoryTrendPoint> _seedTrend(String patientId) {
+    final today = DateTime.now();
+    final points = <RespiratoryTrendPoint>[];
+
+    for (var i = 90; i >= 1; i--) {
+      final date =
+          DateTime(today.year, today.month, today.day).subtract(Duration(days: i - 1));
+
+      switch (patientId) {
+        case 'p1':
+          // SpO₂ drifts down from ~93 to ~89 over 90 days.
+          final spo2 = (94 - (90 - i) ~/ 6).clamp(86, 96);
+          final cat = (20 + (90 - i) ~/ 4).clamp(18, 40);
+          final mmrc = (3 - (i >= 30 ? 1 : 0)).clamp(1, 4);
+          final sputum = i >= 60
+              ? SputumSeverity.moderate
+              : (i >= 30 ? SputumSeverity.high : SputumSeverity.low);
+          points.add(RespiratoryTrendPoint(
+            date: date,
+            spo2: spo2,
+            catScore: cat,
+            mmrcGrade: mmrc,
+            sputum: sputum,
+            hasAlert: i % 25 == 0,
+          ));
+          break;
+        case 'p2':
+          points.add(RespiratoryTrendPoint(
+            date: date,
+            spo2: 94,
+            catScore: 14 + (i % 3),
+            mmrcGrade: 2,
+            sputum: SputumSeverity.low,
+            hasAlert: false,
+          ));
+          break;
+        default:
+          points.add(RespiratoryTrendPoint(
+            date: date,
+            spo2: 96,
+            catScore: 9 + (i % 2),
+            mmrcGrade: 1,
+            sputum: SputumSeverity.none,
+            hasAlert: false,
+          ));
+      }
+    }
+
+    return points;
   }
 }

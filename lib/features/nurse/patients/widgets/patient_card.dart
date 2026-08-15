@@ -72,7 +72,7 @@ class PatientCard extends StatelessWidget {
               const SizedBox(height: AppSpacing.sm),
               Row(
                 children: [
-                  Icon(Icons.schedule_rounded,
+                  const Icon(Icons.schedule_rounded,
                       size: 16.0, color: AppColors.textMuted),
                   const SizedBox(width: AppSpacing.xs),
                   Text(

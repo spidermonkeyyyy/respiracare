@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import '../../../../app/theme/colors.dart';
 import '../../../../app/theme/radius.dart';
 import '../../../../app/theme/spacing.dart';
 import '../../../../app/theme/typography.dart';
+import '../../../../core/navigation/route_names.dart';
 import '../../../../core/widgets/cards/app_card.dart';
 import '../../../../core/widgets/feedback/app_empty_state.dart';
 import '../../../../core/widgets/feedback/app_error_state.dart';
 import '../../dashboard/widgets/priority_badge.dart';
-import '../../monitoring/widgets/respiratory_trend_card.dart';
 import '../../patients/providers/nurse_patients_provider.dart';
 import '../../patients/widgets/patient_timeline.dart';
 import '../models/nurse_patient.dart';
@@ -63,79 +64,88 @@ class _NursePatientProfileScreenState
       return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
 
-    return Scaffold(
-      backgroundColor: AppColors.background,
-      appBar: AppBar(
-        title: Text(patient.fullName),
-        backgroundColor: AppColors.surface,
-        elevation: 0,
-      ),
-      body: SafeArea(
-        child: ListView(
-          padding: const EdgeInsets.all(AppSpacing.md),
-          children: [
-            AppCard(
-              padding: const EdgeInsets.all(AppSpacing.lg),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(patient.fullName, style: AppTypography.headlineLarge),
-                  const SizedBox(height: AppSpacing.xs),
-                  Text('${patient.condition} · ${patient.classification}',
-                      style: AppTypography.bodyMedium
-                          .copyWith(color: AppColors.textSecondary)),
-                  const SizedBox(height: AppSpacing.md),
-                  Row(
-                    children: [
-                      PriorityBadge(priority: patient.priority),
-                      const Spacer(),
-                      if (patient.hasNewSubmission)
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: AppSpacing.md,
-                              vertical: AppSpacing.xs),
-                          decoration: BoxDecoration(
-                              color: AppColors.success.withValues(alpha: 0.12),
-                              borderRadius:
-                                  BorderRadius.circular(AppRadius.pill)),
-                          child: Text('Nouveau suivi',
-                              style: AppTypography.labelMedium
-                                  .copyWith(color: AppColors.success)),
-                        ),
-                    ],
-                  ),
-                ],
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (_, __) => context.pop(),
+      child: Scaffold(
+        backgroundColor: AppColors.background,
+        appBar: AppBar(
+          title: Text(patient.fullName),
+          backgroundColor: AppColors.surface,
+          elevation: 0,
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back_rounded),
+            onPressed: () => context.pop(),
+          ),
+          automaticallyImplyLeading: true,
+        ),
+        body: SafeArea(
+          child: ListView(
+            padding: const EdgeInsets.all(AppSpacing.md),
+            children: [
+              AppCard(
+                padding: const EdgeInsets.all(AppSpacing.lg),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(patient.fullName, style: AppTypography.headlineLarge),
+                    const SizedBox(height: AppSpacing.xs),
+                    Text('${patient.condition} · ${patient.classification}',
+                        style: AppTypography.bodyMedium
+                            .copyWith(color: AppColors.textSecondary)),
+                    const SizedBox(height: AppSpacing.md),
+                    Row(
+                      children: [
+                        PriorityBadge(priority: patient.priority),
+                        const Spacer(),
+                        if (patient.hasNewSubmission)
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: AppSpacing.md,
+                                vertical: AppSpacing.xs),
+                            decoration: BoxDecoration(
+                                color: AppColors.success.withValues(alpha: 0.12),
+                                borderRadius:
+                                    BorderRadius.circular(AppRadius.pill)),
+                            child: Text('Nouveau suivi',
+                                style: AppTypography.labelMedium
+                                    .copyWith(color: AppColors.success)),
+                          ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
-            ),
-            const SizedBox(height: AppSpacing.md),
-            TabBar(
-              controller: _tabController,
-              isScrollable: true,
-              labelColor: AppColors.primary,
-              unselectedLabelColor: AppColors.textSecondary,
-              tabs: const [
-                Tab(text: 'Vue générale'),
-                Tab(text: 'Données'),
-                Tab(text: 'Traitement'),
-                Tab(text: 'Éducation'),
-                Tab(text: 'Historique'),
-              ],
-            ),
-            const SizedBox(height: AppSpacing.md),
-            SizedBox(
-              height: 400,
-              child: TabBarView(
+              const SizedBox(height: AppSpacing.md),
+              TabBar(
                 controller: _tabController,
-                children: [
-                  _buildOverview(patient),
-                  _buildData(patient),
-                  _buildTreatment(patient),
-                  _buildEducation(patient),
-                  _buildHistory(patient),
+                isScrollable: true,
+                labelColor: AppColors.primary,
+                unselectedLabelColor: AppColors.textSecondary,
+                tabs: const [
+                  Tab(text: 'Vue générale'),
+                  Tab(text: 'Données'),
+                  Tab(text: 'Traitement'),
+                  Tab(text: 'Éducation'),
+                  Tab(text: 'Historique'),
                 ],
               ),
-            ),
-          ],
+              const SizedBox(height: AppSpacing.md),
+              SizedBox(
+                height: 400,
+                child: TabBarView(
+                  controller: _tabController,
+                  children: [
+                    _buildOverview(patient),
+                    _buildData(patient),
+                    _buildTreatment(patient),
+                    _buildEducation(patient),
+                    _buildHistory(patient),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -147,7 +157,7 @@ class _NursePatientProfileScreenState
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Dernier suivi', style: AppTypography.titleLarge),
+          const Text('Dernier suivi', style: AppTypography.titleLarge),
           const SizedBox(height: AppSpacing.sm),
           Text(
               patient.latestSubmission != null
@@ -156,7 +166,7 @@ class _NursePatientProfileScreenState
               style: AppTypography.bodyMedium
                   .copyWith(color: AppColors.textSecondary)),
           const SizedBox(height: AppSpacing.md),
-          Text('Dernière observation', style: AppTypography.titleLarge),
+          const Text('Dernière observation', style: AppTypography.titleLarge),
           const SizedBox(height: AppSpacing.sm),
           Text(patient.latestObservation ?? 'Pas d’observation récente.',
               style: AppTypography.bodyMedium
@@ -174,7 +184,7 @@ class _NursePatientProfileScreenState
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('Dernières données', style: AppTypography.titleLarge),
+              const Text('Dernières données', style: AppTypography.titleLarge),
               const SizedBox(height: AppSpacing.sm),
               if (patient.latestSubmission != null) ...[
                 _MetricRow(
@@ -194,7 +204,27 @@ class _NursePatientProfileScreenState
           ),
         ),
         const SizedBox(height: AppSpacing.md),
-        const RespiratoryTrendCard(),
+        AppCard(
+          padding: const EdgeInsets.all(AppSpacing.lg),
+          onTap: () => context.push(
+            RouteNames.nursePatientTrends.replaceFirst(
+              ':patientId',
+              widget.patientId,
+            ),
+          ),
+          child: const Row(
+            children: [
+              Icon(Icons.query_stats_rounded, color: AppColors.primary),
+              SizedBox(width: AppSpacing.md),
+              Expanded(
+                child: Text('Évolution respiratoire',
+                    style: AppTypography.titleMedium),
+              ),
+              Icon(Icons.chevron_right_rounded,
+                  color: AppColors.textSecondary),
+            ],
+          ),
+        ),
       ],
     );
   }
@@ -205,7 +235,7 @@ class _NursePatientProfileScreenState
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Observance', style: AppTypography.titleLarge),
+          const Text('Observance', style: AppTypography.titleLarge),
           const SizedBox(height: AppSpacing.sm),
           if (patient.adherence != null) ...[
             Text(
@@ -230,7 +260,7 @@ class _NursePatientProfileScreenState
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Éducation', style: AppTypography.titleLarge),
+          const Text('Éducation', style: AppTypography.titleLarge),
           const SizedBox(height: AppSpacing.sm),
           Text(
               'Vidéo d’inhalation: ${patient.inhalerVideo != null ? 'réceptionnée' : 'à valider'}',
@@ -251,7 +281,7 @@ class _NursePatientProfileScreenState
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Historique', style: AppTypography.titleLarge),
+          const Text('Historique', style: AppTypography.titleLarge),
           const SizedBox(height: AppSpacing.sm),
           if (patient.timeline.isEmpty)
             const AppEmptyState(

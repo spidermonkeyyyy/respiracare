@@ -34,14 +34,15 @@ class AdherenceSummary extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
+        const Text(
           'Observance',
           style: AppTypography.titleLarge,
         ),
         const SizedBox(height: AppSpacing.sm),
         Text(
           'Cette semaine',
-          style: AppTypography.bodyMedium.copyWith(color: AppColors.textSecondary),
+          style:
+              AppTypography.bodyMedium.copyWith(color: AppColors.textSecondary),
         ),
         const SizedBox(height: AppSpacing.md),
         Container(
@@ -82,14 +83,17 @@ class AdherenceSummary extends StatelessWidget {
               const SizedBox(height: AppSpacing.sm),
               Text(
                 '$notConfirmedCount prise${notConfirmedCount > 1 ? 's' : ''} non confirmée${notConfirmedCount > 1 ? 's' : ''}',
-                style: AppTypography.bodyMedium.copyWith(color: AppColors.textSecondary),
+                style: AppTypography.bodyMedium
+                    .copyWith(color: AppColors.textSecondary),
               ),
               const SizedBox(height: AppSpacing.md),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: List.generate(weekdays.length, (index) {
                   final label = weekdays[index];
-                  final status = index < dayIcons.length ? dayIcons[index] : _DayStatus.empty;
+                  final status = index < dayIcons.length
+                      ? dayIcons[index]
+                      : _DayStatus.empty;
                   return Column(
                     children: [
                       Text(label, style: AppTypography.labelMedium),

@@ -10,10 +10,10 @@ class MockNurseTreatmentRepository implements NurseTreatmentRepository {
       confirmedCount: patientId == 'p1' ? 8 : 7,
       missedCount: patientId == 'p1' ? 2 : 1,
       weeklyCompliance: patientId == 'p1' ? 0.8 : 0.85,
-      history: [
-        const TreatmentDay(date: null, confirmed: true),
-        const TreatmentDay(date: null, confirmed: false),
-        const TreatmentDay(date: null, confirmed: true),
+      history: const [
+        TreatmentDay(date: null, confirmed: true),
+        TreatmentDay(date: null, confirmed: false),
+        TreatmentDay(date: null, confirmed: true),
       ],
     );
   }
